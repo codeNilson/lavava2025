@@ -1,26 +1,24 @@
 package io.github.codenilson.lavava2025.entities;
 
+import java.util.Objects;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
-import java.time.Instant;
-import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 public class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    private Integer id;
     private String userName;
     private String passWord;
     private boolean active;
-    private Instant createdAt;
 
-public Player(){}
+    public Player() {
+    }
 
     public Player(String userName, String passWord, boolean active) {
         this.userName = userName;
@@ -28,11 +26,9 @@ public Player(){}
         this.active = active;
     }
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
-
-
 
     public String getUserName() {
         return userName;
@@ -58,10 +54,6 @@ public Player(){}
         this.active = active;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
     @Override
     public String toString() {
         return userName;
@@ -69,7 +61,8 @@ public Player(){}
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Player player = (Player) o;
         return Objects.equals(id, player.id);
     }
