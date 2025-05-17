@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: lavava2025
+  profiles:
+    active: dev
