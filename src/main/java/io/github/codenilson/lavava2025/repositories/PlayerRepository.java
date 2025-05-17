@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import io.github.codenilson.lavava2025.entities.Player;
 
-public interface PlayerRepository extends JpaRepository<Player, UUID> {
+public interface PlayerRepository extends JpaRepository<Player, Integer> {
+
 
 }
