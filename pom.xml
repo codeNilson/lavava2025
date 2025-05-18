@@ -6,8 +6,8 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.4.5</version>
-		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>io.github.codenilson</groupId>
 	<artifactId>lavava2025</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -15,21 +15,38 @@
 	<description>Lavava 2025</description>
 	<url />
 	<licenses>
-		<license />
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+			<distribution>repo</distribution>
+		</license>
 	</licenses>
 	<developers>
-		<developer />
+		<developper>
+			<id>codenilson</id>
+			<name>Denilson Silva</name>
+			<email>fcodenilson@gmail.com</email>
+		</developper>
+		<developer>
+			<id>EricNascimento</id>
+			<name>Eric Nascimento</name>
+			<email>ericsilva075@gmail.com</email>
+		</developer>
 	</developers>
-	<scm>
-		<connection />
-		<developerConnection />
-		<tag />
-		<url />
-	</scm>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
+
 	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+			<version>3.4.5</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
