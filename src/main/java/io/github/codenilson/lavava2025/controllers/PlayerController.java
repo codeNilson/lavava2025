@@ -1,9 +1,12 @@
 package io.github.codenilson.lavava2025.controllers;
 
+import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.*;
 
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("players")
@@ -37,5 +40,11 @@ public class PlayerController {
          player.setId(id);
          playerRepository.save(player);
     }
+
+    @GetMapping
+    public List<Player> findByUserName(@RequestParam("userName") String userName){
+        return playerRepository.findByUserName(userName);
+    }
+
 
 }
