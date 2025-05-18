@@ -19,32 +19,31 @@ public class PlayerController {
     }
 
     @PostMapping
-    public void InsertPlayer(@RequestBody Player player) {
+    public void createPlayer(@RequestBody Player player) {
 
         playerRepository.save(player);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public void deleteForid(@PathVariable Integer id){
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Integer id) {
         playerRepository.deleteById(id);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public Player findById(@PathVariable("id") Integer id) {
         return playerRepository.findById(id).orElse(null);
 
     }
 
-    @PutMapping(value = "/{id}")
-    public void updatePlayer(@RequestBody Player player,@PathVariable("id") Integer id){
-         player.setId(id);
-         playerRepository.save(player);
+    @PutMapping("/{id}")
+    public void updatePlayer(@RequestBody Player player, @PathVariable("id") Integer id) {
+        player.setId(id);
+        playerRepository.save(player);
     }
 
     @GetMapping
-    public List<Player> findByUserName(@RequestParam("userName") String userName){
+    public List<Player> findByUserName(@RequestParam("userName") String userName) {
         return playerRepository.findByUserName(userName);
     }
-
 
 }
