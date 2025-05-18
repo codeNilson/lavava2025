@@ -32,4 +32,10 @@ public class PlayerController {
 
     }
 
+    @PutMapping(value = "/{id}")
+    public void updatePlayer(@RequestBody Player player,@PathVariable("id") Integer id){
+         player.setId(id);
+         playerRepository.save(player);
+    }
+
 }

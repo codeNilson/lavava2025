@@ -30,6 +30,10 @@ public class Player {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -66,6 +70,8 @@ public class Player {
         Player player = (Player) o;
         return Objects.equals(id, player.id);
     }
+
+
 
     @Override
     public int hashCode() {
