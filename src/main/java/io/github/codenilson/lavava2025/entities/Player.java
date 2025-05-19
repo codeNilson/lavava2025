@@ -1,7 +1,10 @@
 package io.github.codenilson.lavava2025.entities;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -11,6 +14,8 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -23,6 +28,10 @@ public class Player {
     @Column(unique = true, nullable = false)
     private String userName;
     private String passWord;
+
+    @OneToMany(mappedBy = "id.player")
+    private Set<PlayerTeam> teams = new HashSet<>();
+
     private boolean active;
 
     public Player() {
@@ -83,4 +92,10 @@ public class Player {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    @Transient
+    public Set<Team> getTeams() {
+        return teams.stream().map(PlayerTeam::getTeam).collect(Collectors.toSet());
+    }
+
 }
