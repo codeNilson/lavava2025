@@ -1,6 +1,7 @@
 package io.github.codenilson.lavava2025.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,18 +33,18 @@ public class PlayerController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Integer id) {
+    public void deleteById(@PathVariable UUID id) {
         playerRepository.deleteById(id);
     }
 
     @GetMapping("/{id}")
-    public Player findById(@PathVariable("id") Integer id) {
+    public Player findById(@PathVariable("id") UUID id) {
         return playerRepository.findById(id).orElse(null);
 
     }
 
     @PutMapping("/{id}")
-    public void updatePlayer(@RequestBody Player player, @PathVariable("id") Integer id) {
+    public void updatePlayer(@RequestBody Player player, @PathVariable("id") UUID id) {
         player.setId(id);
         playerRepository.save(player);
     }

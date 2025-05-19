@@ -1,18 +1,26 @@
 package io.github.codenilson.lavava2025.entities;
 
 import java.util.Objects;
+import java.util.UUID;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Player {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
+    @Column(unique = true, nullable = false)
     private String userName;
     private String passWord;
     private boolean active;
@@ -26,11 +34,11 @@ public class Player {
         this.active = active;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -70,8 +78,6 @@ public class Player {
         Player player = (Player) o;
         return Objects.equals(id, player.id);
     }
-
-
 
     @Override
     public int hashCode() {
