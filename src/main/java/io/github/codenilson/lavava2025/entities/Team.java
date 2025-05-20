@@ -1,6 +1,5 @@
 package io.github.codenilson.lavava2025.entities;
 
-import java.beans.Transient;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -10,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Team {
