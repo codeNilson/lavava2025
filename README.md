@@ -62,7 +62,7 @@ Este projeto está licenciado sob a licença MIT.
 
 - **Nilson** | [![Github](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/codeNilson) | 📧 fcodenilson@gmail.com
 
-- **EricNasciment** | [![Github](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/codeNilson) | 📧 Ericsilva075@gmail.com
+- **EricNasciment** | [![Github](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/EricNasciment) | 📧 Ericsilva075@gmail.com
 
 ---
 
