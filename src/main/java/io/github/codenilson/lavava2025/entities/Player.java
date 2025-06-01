@@ -33,7 +33,7 @@ public class Player {
     @Column(nullable = false)
     private String passWord;
 
-    @OneToMany(mappedBy = "id.player")
+    @OneToMany(mappedBy = "player")
     private Set<PlayerTeam> teams = new HashSet<>();
 
     private boolean active;

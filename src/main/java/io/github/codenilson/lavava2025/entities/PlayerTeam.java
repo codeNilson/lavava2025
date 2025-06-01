@@ -11,13 +11,26 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class PlayerTeam {
 
     @EmbeddedId
-    private PlayerTeamPk id = new PlayerTeamPk();
+    private PlayerTeamPk id;
+
+    @ManyToOne
+    @MapsId("playerId")
+    @JoinColumn(name = "player_id")
+    private Player player;
+
+    @ManyToOne
+    @MapsId("teamId")
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -31,24 +44,37 @@ public class PlayerTeam {
     }
 
     public PlayerTeam(Player player, Team team) {
-        this.id.setPlayer(player);
-        this.id.setTeam(team);
+        this.id = new PlayerTeamPk(player.getId(), team.getId());
+        this.player = player;
+        this.team = team;
+    }
+
+    public PlayerTeamPk getId() {
+        return id;
     }
 
     public Player getPlayer() {
-        return id.getPlayer();
+        return player;
     }
 
     public void setPlayer(Player player) {
-        this.id.setPlayer(player);
+        this.id.setPlayerId(player.getId());
+        if (id == null) {
+            this.id = new PlayerTeamPk();
+        }
+        id.setPlayerId(player.getId());
     }
 
     public Team getTeam() {
-        return id.getTeam();
+        return team;
     }
 
     public void setTeam(Team team) {
-        this.id.setTeam(team);
+        this.id.setTeamId(team.getId());
+        if (id == null) {
+            this.id = new PlayerTeamPk();
+        }
+        id.setTeamId(team.getId());
     }
 
     public LocalDateTime getCreatedAt() {
@@ -60,22 +86,28 @@ public class PlayerTeam {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof PlayerTeam))
-            return false;
-
-        PlayerTeam that = (PlayerTeam) o;
-
-        if (!id.getPlayer().equals(that.id.getPlayer()))
-            return false;
-        return id.getTeam().equals(that.id.getTeam());
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
     }
 
     @Override
-    public int hashCode() {
-        return id.getPlayer().hashCode() + id.getTeam().hashCode();
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PlayerTeam other = (PlayerTeam) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
 
 }

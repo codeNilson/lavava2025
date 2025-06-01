@@ -1,43 +1,39 @@
 package io.github.codenilson.lavava2025.entities.pks;
 
-import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.entities.Team;
+import java.io.Serializable;
+import java.util.UUID;
+
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 @Embeddable
-public class PlayerTeamPk {
-    @ManyToOne
-    @JoinColumn(name = "player_id")
-    private Player player;
+public class PlayerTeamPk implements Serializable {
 
-    @ManyToOne
-    @JoinColumn(name = "team_id")
-    private Team team;
+    private UUID playerId;
+
+    private UUID teamId;
 
     public PlayerTeamPk() {
     }
 
-    public PlayerTeamPk(Player player, Team team) {
-        this.player = player;
-        this.team = team;
+    public PlayerTeamPk(UUID playerId, UUID teamId) {
+        this.playerId = playerId;
+        this.teamId = teamId;
     }
 
-    public Player getPlayer() {
-        return player;
+    public UUID getPlayerId() {
+        return playerId;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setPlayerId(UUID playerId) {
+        this.playerId = playerId;
     }
 
-    public Team getTeam() {
-        return team;
+    public UUID getTeamId() {
+        return teamId;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setTeamId(UUID teamId) {
+        this.teamId = teamId;
     }
 
     @Override
@@ -49,15 +45,15 @@ public class PlayerTeamPk {
 
         PlayerTeamPk that = (PlayerTeamPk) o;
 
-        if (!player.equals(that.player))
+        if (!playerId.equals(that.playerId))
             return false;
-        return team.equals(that.team);
+        return teamId.equals(that.teamId);
     }
 
     @Override
     public int hashCode() {
-        int result = player.hashCode();
-        result = 31 * result + team.hashCode();
+        int result = playerId.hashCode();
+        result = 31 * result + teamId.hashCode();
         return result;
     }
 }

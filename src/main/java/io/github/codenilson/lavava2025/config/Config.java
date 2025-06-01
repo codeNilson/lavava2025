@@ -48,19 +48,17 @@ public class Config implements CommandLineRunner {
         teamRepository.save(team2);
 
         // 3. Criar vínculo: player1 participa de team1
-        PlayerTeam playerTeam1 = new PlayerTeam();
-        playerTeam1.setPlayer(player1); // isso usa setPlayer delegando para o ID interno
-        playerTeam1.setTeam(team1);
+        PlayerTeam playerTeam1 = new PlayerTeam(player1, team1);
 
         // 4. player2 participa de team1 também
-        PlayerTeam playerTeam2 = new PlayerTeam();
-        playerTeam2.setPlayer(player2);
-        playerTeam2.setTeam(team1);
+        PlayerTeam playerTeam2 = new PlayerTeam(player2, team1);
+        // playerTeam2.setPlayer(player2);
+        // playerTeam2.setTeam(team1);
 
         // 5. player2 também participa de team2
-        PlayerTeam playerTeam3 = new PlayerTeam();
-        playerTeam3.setPlayer(player2);
-        playerTeam3.setTeam(team2);
+        PlayerTeam playerTeam3 = new PlayerTeam(player2, team2);
+        // playerTeam3.setPlayer(player2);
+        // playerTeam3.setTeam(team2);
 
         // 6. Salvar os vínculos
         playerTeamRepository.save(playerTeam1);
