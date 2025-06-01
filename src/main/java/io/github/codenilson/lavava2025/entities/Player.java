@@ -36,6 +36,9 @@ public class Player {
     @OneToMany(mappedBy = "player")
     private Set<PlayerTeam> teams = new HashSet<>();
 
+    @OneToMany(mappedBy = "player")
+    private Set<PlayerPerfomance> performances = new HashSet<>();
+
     private boolean active;
 
     @CreatedDate

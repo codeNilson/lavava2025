@@ -15,6 +15,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -27,6 +28,12 @@ public class Team {
 
     @OneToMany(mappedBy = "team")
     private Set<PlayerTeam> players;
+
+    @ManyToOne
+    private Match match;
+
+    @OneToMany(mappedBy = "team")
+    private Set<PlayerPerfomance> performances;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -41,6 +48,14 @@ public class Team {
 
     public UUID getId() {
         return id;
+    }
+
+    public Match getMatch() {
+        return match;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
     }
 
     public LocalDateTime getCreatedAt() {

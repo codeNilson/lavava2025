@@ -1,6 +1,8 @@
 package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -14,7 +16,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -27,12 +31,27 @@ public class Match {
     private String map; // trocar depois para uma entidade Map
 
     @ManyToOne
-    @JoinColumn(name = "mvp_id")
-    private Player mvp;
+    @JoinColumn(name = "winner_id", referencedColumnName = "id")
+    private Team winner;
 
     @ManyToOne
-    @JoinColumn(name = "ace_id")
-    private Player ace;
+    @JoinColumns({
+            @JoinColumn(name = "mvp_player_id", referencedColumnName = "player_id"),
+            @JoinColumn(name = "mvp_team_id", referencedColumnName = "team_id"),
+            @JoinColumn(name = "mvp_match_id", referencedColumnName = "match_id")
+    })
+    private PlayerPerfomance mvp;
+
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "ace_player_id", referencedColumnName = "player_id"),
+            @JoinColumn(name = "ace_team_id", referencedColumnName = "team_id"),
+            @JoinColumn(name = "ace_match_id", referencedColumnName = "match_id")
+    })
+    private PlayerPerfomance ace;
+
+    @OneToMany(mappedBy = "match")
+    private Set<PlayerPerfomance> playerPerformances = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -45,8 +64,9 @@ public class Match {
     public Match() {
     }
 
-    public Match(String map, Player mvp, Player ace) {
+    public Match(String map, Team winner, PlayerPerfomance mvp, PlayerPerfomance ace) {
         this.map = map;
+        this.winner = winner;
         this.mvp = mvp;
         this.ace = ace;
     }
@@ -59,12 +79,24 @@ public class Match {
         return map;
     }
 
-    public Player getMvp() {
+    public Team getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Team winner) {
+        this.winner = winner;
+    }
+
+    public PlayerPerfomance getMvp() {
         return mvp;
     }
 
-    public Player getAce() {
+    public PlayerPerfomance getAce() {
         return ace;
+    }
+
+    public Set<PlayerPerfomance> getPlayerPerformances() {
+        return playerPerformances;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -79,11 +111,11 @@ public class Match {
         this.map = map;
     }
 
-    public void setMvp(Player mvp) {
+    public void setMvp(PlayerPerfomance mvp) {
         this.mvp = mvp;
     }
 
-    public void setAce(Player ace) {
+    public void setAce(PlayerPerfomance ace) {
         this.ace = ace;
     }
 
@@ -110,12 +142,6 @@ public class Match {
         } else if (!id.equals(other.id))
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Match [id=" + id + ", map=" + map + ", mvp=" + mvp + ", ace=" + ace + ", createdAt=" + createdAt
-                + ", updatedAt=" + updatedAt + "]";
     }
 
 }

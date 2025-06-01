@@ -42,7 +42,7 @@ public class PlayerPerfomance {
     private Integer assists;
 
     // criar entidade depois
-    private Integer agent;
+    private String agent;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -56,7 +56,7 @@ public class PlayerPerfomance {
     }
 
     public PlayerPerfomance(Player player, Team team, Match match, Integer kills, Integer deaths, Integer assists,
-            Integer agent) {
+            String agent) {
         this.id = new PlayerPerfomancePk(player.getId(), team.getId(), match.getId());
         this.player = player;
         this.team = team;
@@ -134,11 +134,11 @@ public class PlayerPerfomance {
         this.assists = assists;
     }
 
-    public Integer getAgent() {
+    public String getAgent() {
         return agent;
     }
 
-    public void setAgent(Integer agent) {
+    public void setAgent(String agent) {
         this.agent = agent;
     }
 
