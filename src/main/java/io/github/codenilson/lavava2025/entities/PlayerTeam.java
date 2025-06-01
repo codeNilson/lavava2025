@@ -2,6 +2,7 @@ package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -28,11 +29,13 @@ public class PlayerTeam {
     @ManyToOne
     @MapsId("playerId")
     @JoinColumn(name = "player_id")
+    @JsonBackReference(value = "player-teams") //evita repetição de json na chamada get do PlayerTeamcontroler.
     private Player player;
 
     @ManyToOne
     @MapsId("teamId")
     @JoinColumn(name = "team_id")
+    @JsonBackReference(value = "team-players")
     private Team team;
 
     @CreatedDate

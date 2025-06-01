@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -36,6 +37,7 @@ public class Player {
 
     @Comment("Set of teams the player is part of")
     @OneToMany(mappedBy = "player")
+    @JsonManagedReference(value = "player-teams") // evita repetição de json na hora de chamadas gets no PlayerTeamControler
     private Set<PlayerTeam> teams = new HashSet<>();
 
     @Comment("Set of performances of the player in matches")

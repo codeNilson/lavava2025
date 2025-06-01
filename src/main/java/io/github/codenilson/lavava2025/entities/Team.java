@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -29,6 +30,7 @@ public class Team {
 
     @OneToMany(mappedBy = "team")
     @Comment("Set of players in this team")
+    @JsonManagedReference(value = "team-players")
     private Set<PlayerTeam> players;
 
     @ManyToOne

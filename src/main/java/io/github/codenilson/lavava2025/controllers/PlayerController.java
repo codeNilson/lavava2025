@@ -47,10 +47,4 @@ public class PlayerController {
         player.setId(id);
         playerRepository.save(player);
     }
-
-    @GetMapping
-    public List<Player> findByUsername(@RequestParam("username") String username) {
-        return playerRepository.findByUsername(username);
-    }
-
 }
