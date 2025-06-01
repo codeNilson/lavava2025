@@ -16,7 +16,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Transient;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -52,7 +51,6 @@ public class Team {
         return updatedAt;
     }
 
-    @Transient
     public Set<Player> getPlayers() {
         return players.stream().map(PlayerTeam::getPlayer).collect(Collectors.toSet());
     }
