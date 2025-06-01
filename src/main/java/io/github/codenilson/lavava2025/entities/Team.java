@@ -44,6 +44,14 @@ public class Team {
         return id;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
     @Transient
     public Set<Player> getPlayers() {
         return players.stream().map(PlayerTeam::getPlayer).collect(Collectors.toSet());
