@@ -17,30 +17,30 @@ public class PlayerRepositoryTest {
     private PlayerRepository playerRepository;
 
     @Test
-    public void testFindByUserName() {
+    public void testFindByUsername() {
         // Given
-        String userName = "testUser";
+        String username = "testUser";
         String password = "example01";
         Player player = new Player();
-        player.setUserName(userName);
-        player.setPassWord(password);
+        player.setUsername(username);
+        player.setPassword(password);
         playerRepository.save(player);
 
         // When
-        List<Player> players = playerRepository.findByUserName(userName);
+        List<Player> players = playerRepository.findByUsername(username);
 
         // Then
         assertEquals(1, players.size());
-        assertEquals(userName, players.get(0).getUserName());
+        assertEquals(username, players.get(0).getUsername());
     }
 
     @Test
-    public void testFindByUserNameNotFound() {
+    public void testFindByUsernameNotFound() {
         // Given
-        String userName = "nonExistentUser";
+        String username = "nonExistentUser";
 
         // When
-        List<Player> players = playerRepository.findByUserName(userName);
+        List<Player> players = playerRepository.findByUsername(username);
 
         // Then
         assertEquals(0, players.size());

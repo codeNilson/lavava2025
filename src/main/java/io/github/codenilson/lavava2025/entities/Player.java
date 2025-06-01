@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,17 +29,20 @@ public class Player {
     private UUID id;
 
     @Column(unique = true, nullable = false)
-    private String userName;
+    private String username;
 
     @Column(nullable = false)
     private String password;
 
+    @Comment("Set of teams the player is part of")
     @OneToMany(mappedBy = "player")
     private Set<PlayerTeam> teams = new HashSet<>();
 
+    @Comment("Set of performances of the player in matches")
     @OneToMany(mappedBy = "player")
     private Set<PlayerPerfomance> performances = new HashSet<>();
 
+    @Comment("Indicates if the player is active. Do not delete players, just set them inactive.")
     private boolean active;
 
     @CreatedDate
@@ -52,8 +56,8 @@ public class Player {
     public Player() {
     }
 
-    public Player(String userName, String password, boolean active) {
-        this.userName = userName;
+    public Player(String username, String password, boolean active) {
+        this.username = username;
         this.password = password;
         this.active = active;
     }
@@ -66,19 +70,19 @@ public class Player {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getPassWord() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassWord(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -100,7 +104,7 @@ public class Player {
 
     @Override
     public String toString() {
-        return userName;
+        return username;
     }
 
     @Override

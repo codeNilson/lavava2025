@@ -50,8 +50,8 @@ public class PlayerController {
     }
 
     @GetMapping
-    public List<Player> findByUserName(@RequestParam("userName") String userName) {
-        return playerRepository.findByUserName(userName);
+    public List<Player> findByUsername(@RequestParam("username") String username) {
+        return playerRepository.findByUsername(username);
     }
 
 }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -34,6 +35,7 @@ public class Match {
     @JoinColumn(name = "winner_id", referencedColumnName = "id")
     private Team winner;
 
+    @Comment("Most Valuable Player of the match. This references the PlayerPerformance entity, not the Player entity.")
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "mvp_player_id", referencedColumnName = "player_id"),
@@ -42,6 +44,7 @@ public class Match {
     })
     private PlayerPerfomance mvp;
 
+    @Comment("Ace of the match. This references the PlayerPerformance entity, not the Player entity.")
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "ace_player_id", referencedColumnName = "player_id"),
@@ -50,6 +53,7 @@ public class Match {
     })
     private PlayerPerfomance ace;
 
+    @Comment("All player's performances in this match.")
     @OneToMany(mappedBy = "match")
     private Set<PlayerPerfomance> playerPerformances = new HashSet<>();
 

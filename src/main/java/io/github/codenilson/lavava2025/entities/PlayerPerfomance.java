@@ -2,6 +2,7 @@ package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,6 +18,7 @@ import jakarta.persistence.MapsId;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Comment("Represents the performance of a player in a specific match for a specific team. This entity is used to track individual player statistics such as kills, deaths, assists, and the agent played during the match.")
 public class PlayerPerfomance {
 
     @EmbeddedId

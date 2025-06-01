@@ -38,18 +38,18 @@ public class Config implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         Player player1 = new Player();
-        player1.setUserName("Jogador 1");
-        player1.setPassWord("123");
+        player1.setUsername("Jogador 1");
+        player1.setPassword("123");
         player1.setActive(true);
 
         Player player2 = new Player();
-        player2.setUserName("Jogador 2");
-        player2.setPassWord("123");
+        player2.setUsername("Jogador 2");
+        player2.setPassword("123");
         player2.setActive(true);
 
         Player player3 = new Player();
-        player3.setUserName("Jogador 3");
-        player3.setPassWord("123");
+        player3.setUsername("Jogador 3");
+        player3.setPassword("123");
         player3.setActive(true);
 
         playerRepository.save(player1);

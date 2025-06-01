@@ -9,5 +9,5 @@ import io.github.codenilson.lavava2025.entities.Player;
 
 public interface PlayerRepository extends JpaRepository<Player, UUID> {
 
-    List<Player> findByUserName(String userName);
+    List<Player> findByUsername(String username);
 }

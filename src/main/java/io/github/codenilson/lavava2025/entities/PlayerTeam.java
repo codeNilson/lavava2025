@@ -2,6 +2,7 @@ package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,8 +18,10 @@ import jakarta.persistence.MapsId;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Comment("Association between Player and Team. This  represents the membership of a player in a team.")
 public class PlayerTeam {
 
+    @Comment("Primary key composed of player and team IDs")
     @EmbeddedId
     private PlayerTeamPk id;
 

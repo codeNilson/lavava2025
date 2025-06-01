@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,12 +28,14 @@ public class Team {
     private UUID id;
 
     @OneToMany(mappedBy = "team")
+    @Comment("Set of players in this team")
     private Set<PlayerTeam> players;
 
     @ManyToOne
     private Match match;
 
     @OneToMany(mappedBy = "team")
+    @Comment("All player's performances in this team")
     private Set<PlayerPerfomance> performances;
 
     @CreatedDate
