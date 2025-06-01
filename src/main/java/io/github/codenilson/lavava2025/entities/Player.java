@@ -31,7 +31,7 @@ public class Player {
     private String userName;
 
     @Column(nullable = false)
-    private String passWord;
+    private String password;
 
     @OneToMany(mappedBy = "player")
     private Set<PlayerTeam> teams = new HashSet<>();
@@ -49,9 +49,9 @@ public class Player {
     public Player() {
     }
 
-    public Player(String userName, String passWord, boolean active) {
+    public Player(String userName, String password, boolean active) {
         this.userName = userName;
-        this.passWord = passWord;
+        this.password = password;
         this.active = active;
     }
 
@@ -72,11 +72,11 @@ public class Player {
     }
 
     public String getPassWord() {
-        return passWord;
+        return password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setPassWord(String password) {
+        this.password = password;
     }
 
     public boolean isActive() {

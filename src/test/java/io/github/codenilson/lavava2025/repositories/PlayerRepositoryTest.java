@@ -20,10 +20,10 @@ public class PlayerRepositoryTest {
     public void testFindByUserName() {
         // Given
         String userName = "testUser";
-        String passWord = "example01";
+        String password = "example01";
         Player player = new Player();
         player.setUserName(userName);
-        player.setPassWord(passWord);
+        player.setPassWord(password);
         playerRepository.save(player);
 
         // When
