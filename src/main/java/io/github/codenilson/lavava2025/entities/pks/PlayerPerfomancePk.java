@@ -5,17 +5,20 @@ import java.util.UUID;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class PlayerMatchPk {
+public class PlayerPerfomancePk {
 
     private UUID playerId;
 
+    private UUID teamId;
+
     private UUID matchId;
 
-    public PlayerMatchPk() {
+    public PlayerPerfomancePk() {
     }
 
-    public PlayerMatchPk(UUID playerId, UUID matchId) {
+    public PlayerPerfomancePk(UUID playerId, UUID teamId, UUID matchId) {
         this.playerId = playerId;
+        this.teamId = teamId;
         this.matchId = matchId;
     }
 
@@ -25,6 +28,14 @@ public class PlayerMatchPk {
 
     public void setPlayerId(UUID playerId) {
         this.playerId = playerId;
+    }
+
+    public UUID getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(UUID teamId) {
+        this.teamId = teamId;
     }
 
     public UUID getMatchId() {
@@ -40,6 +51,7 @@ public class PlayerMatchPk {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((playerId == null) ? 0 : playerId.hashCode());
+        result = prime * result + ((teamId == null) ? 0 : teamId.hashCode());
         result = prime * result + ((matchId == null) ? 0 : matchId.hashCode());
         return result;
     }
@@ -52,11 +64,16 @@ public class PlayerMatchPk {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        PlayerMatchPk other = (PlayerMatchPk) obj;
+        PlayerPerfomancePk other = (PlayerPerfomancePk) obj;
         if (playerId == null) {
             if (other.playerId != null)
                 return false;
         } else if (!playerId.equals(other.playerId))
+            return false;
+        if (teamId == null) {
+            if (other.teamId != null)
+                return false;
+        } else if (!teamId.equals(other.teamId))
             return false;
         if (matchId == null) {
             if (other.matchId != null)

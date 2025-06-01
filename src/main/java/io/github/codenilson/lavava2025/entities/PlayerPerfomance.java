@@ -6,7 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import io.github.codenilson.lavava2025.entities.pks.PlayerMatchPk;
+import io.github.codenilson.lavava2025.entities.pks.PlayerPerfomancePk;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -17,15 +17,20 @@ import jakarta.persistence.MapsId;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class MatchPlayer {
+public class PlayerPerfomance {
 
     @EmbeddedId
-    private PlayerMatchPk id;
+    private PlayerPerfomancePk id;
 
     @ManyToOne
     @MapsId("playerId")
     @JoinColumn(name = "player_id")
     private Player player;
+
+    @ManyToOne
+    @MapsId("teamId")
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     @ManyToOne
     @MapsId("matchId")
@@ -47,12 +52,14 @@ public class MatchPlayer {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    public MatchPlayer() {
+    public PlayerPerfomance() {
     }
 
-    public MatchPlayer(Player player, Match match, Integer kills, Integer deaths, Integer assists, Integer agent) {
-        this.id = new PlayerMatchPk(player.getId(), match.getId());
+    public PlayerPerfomance(Player player, Team team, Match match, Integer kills, Integer deaths, Integer assists,
+            Integer agent) {
+        this.id = new PlayerPerfomancePk(player.getId(), team.getId(), match.getId());
         this.player = player;
+        this.team = team;
         this.match = match;
         this.kills = kills;
         this.deaths = deaths;
@@ -60,7 +67,7 @@ public class MatchPlayer {
         this.agent = agent;
     }
 
-    public PlayerMatchPk getId() {
+    public PlayerPerfomancePk getId() {
         return id;
     }
 
@@ -72,9 +79,22 @@ public class MatchPlayer {
         this.player = player;
 
         if (id == null) {
-            this.id = new PlayerMatchPk();
+            this.id = new PlayerPerfomancePk();
         }
         this.id.setPlayerId(player.getId());
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+
+        if (id == null) {
+            this.id = new PlayerPerfomancePk();
+        }
+        this.id.setTeamId(team.getId());
     }
 
     public Match getMatch() {
@@ -85,7 +105,7 @@ public class MatchPlayer {
         this.match = match;
 
         if (id == null) {
-            this.id = new PlayerMatchPk();
+            this.id = new PlayerPerfomancePk();
         }
         this.id.setMatchId(match.getId());
     }
@@ -146,7 +166,7 @@ public class MatchPlayer {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        MatchPlayer other = (MatchPlayer) obj;
+        PlayerPerfomance other = (PlayerPerfomance) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
