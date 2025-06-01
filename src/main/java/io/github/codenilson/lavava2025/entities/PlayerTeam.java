@@ -58,7 +58,7 @@ public class PlayerTeam {
     }
 
     public void setPlayer(Player player) {
-        this.id.setPlayerId(player.getId());
+        this.player = player;
         if (id == null) {
             this.id = new PlayerTeamPk();
         }
@@ -70,7 +70,7 @@ public class PlayerTeam {
     }
 
     public void setTeam(Team team) {
-        this.id.setTeamId(team.getId());
+        this.team = team;
         if (id == null) {
             this.id = new PlayerTeamPk();
         }
