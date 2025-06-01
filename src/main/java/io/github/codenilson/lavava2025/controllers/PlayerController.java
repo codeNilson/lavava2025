@@ -28,7 +28,6 @@ public class PlayerController {
 
     @PostMapping
     public void createPlayer(@RequestBody Player player) {
-
         playerRepository.save(player);
     }
 
