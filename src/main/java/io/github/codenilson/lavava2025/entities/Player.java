@@ -1,11 +1,14 @@
 package io.github.codenilson.lavava2025.entities;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
@@ -27,12 +30,22 @@ public class Player {
 
     @Column(unique = true, nullable = false)
     private String userName;
+
+    @Column(nullable = false)
     private String passWord;
 
     @OneToMany(mappedBy = "id.player")
     private Set<PlayerTeam> teams = new HashSet<>();
 
     private boolean active;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     public Player() {
     }
@@ -73,6 +86,14 @@ public class Player {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
     @Override

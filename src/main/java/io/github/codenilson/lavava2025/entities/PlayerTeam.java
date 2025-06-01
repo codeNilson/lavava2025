@@ -1,14 +1,31 @@
 package io.github.codenilson.lavava2025.entities;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import io.github.codenilson.lavava2025.entities.pks.PlayerTeamPk;
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class PlayerTeam {
 
     @EmbeddedId
     private PlayerTeamPk id = new PlayerTeamPk();
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     public PlayerTeam() {
     }
@@ -32,6 +49,14 @@ public class PlayerTeam {
 
     public void setTeam(Team team) {
         this.id.setTeam(team);
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
     @Override
