@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,7 +34,8 @@ public class Match {
     private String map; // trocar depois para uma entidade Map
 
     @ManyToOne
-    @JoinColumn(name = "winner_id", referencedColumnName = "id")
+    @JoinColumn(name = "winner_id", referencedColumnName = "id", nullable = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Team winner;
 
     @Comment("Most Valuable Player of the match. This references the PlayerPerformance entity, not the Player entity.")
@@ -42,6 +45,7 @@ public class Match {
             @JoinColumn(name = "mvp_team_id", referencedColumnName = "team_id"),
             @JoinColumn(name = "mvp_match_id", referencedColumnName = "match_id")
     })
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private PlayerPerfomance mvp;
 
     @Comment("Ace of the match. This references the PlayerPerformance entity, not the Player entity.")
@@ -51,6 +55,7 @@ public class Match {
             @JoinColumn(name = "ace_team_id", referencedColumnName = "team_id"),
             @JoinColumn(name = "ace_match_id", referencedColumnName = "match_id")
     })
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private PlayerPerfomance ace;
 
     @Comment("All player's performances in this match.")

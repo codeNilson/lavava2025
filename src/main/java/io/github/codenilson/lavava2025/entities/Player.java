@@ -7,12 +7,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -35,9 +35,10 @@ public class Player {
     @Column(nullable = false)
     private String password;
 
+    private String agent;
+
     @Comment("Set of teams the player is part of")
     @OneToMany(mappedBy = "player")
-    @JsonManagedReference(value = "player-teams") // evita repetição de json na hora de chamadas gets no PlayerTeamControler
     private Set<PlayerTeam> teams = new HashSet<>();
 
     @Comment("Set of performances of the player in matches")
@@ -45,7 +46,7 @@ public class Player {
     private Set<PlayerPerfomance> performances = new HashSet<>();
 
     @Comment("Indicates if the player is active. Do not delete players, just set them inactive.")
-    private boolean active;
+    private boolean active = true;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -58,9 +59,10 @@ public class Player {
     public Player() {
     }
 
-    public Player(String username, String password, boolean active) {
+    public Player(String username, String password, String agent, boolean active) {
         this.username = username;
         this.password = password;
+        this.agent = agent;
         this.active = active;
     }
 
@@ -86,6 +88,14 @@ public class Player {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAgent() {
+        return agent;
+    }
+
+    public void setAgent(String agent) {
+        this.agent = agent;
     }
 
     public boolean isActive() {

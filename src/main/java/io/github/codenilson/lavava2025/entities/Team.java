@@ -5,12 +5,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,13 +32,13 @@ public class Team {
     @ManyToOne
     private Match match;
 
-    @OneToMany(mappedBy = "team")
     @Comment("Set of players in this team")
+    @OneToMany(mappedBy = "team")
     @JsonManagedReference(value = "team-players")
     private Set<PlayerTeam> players;
 
-    @OneToMany(mappedBy = "team")
     @Comment("All player's performances in this team")
+    @OneToMany(mappedBy = "team")
     private Set<PlayerPerfomance> performances;
 
     @CreatedDate
