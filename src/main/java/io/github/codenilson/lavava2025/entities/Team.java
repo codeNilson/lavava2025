@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
@@ -28,13 +29,13 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @ManyToOne
+    private Match match;
+
     @OneToMany(mappedBy = "team")
     @Comment("Set of players in this team")
     @JsonManagedReference(value = "team-players")
     private Set<PlayerTeam> players;
-
-    @ManyToOne
-    private Match match;
 
     @OneToMany(mappedBy = "team")
     @Comment("All player's performances in this team")
@@ -53,6 +54,10 @@ public class Team {
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public Match getMatch() {
