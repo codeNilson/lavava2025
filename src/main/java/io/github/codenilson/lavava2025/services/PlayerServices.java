@@ -3,6 +3,7 @@ package io.github.codenilson.lavava2025.services;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +29,11 @@ public class PlayerServices {
         return playerRepository.findByActiveTrue();
     }
 
-    public Player save(PlayerCreateDTO playerCreateDTO) {
+    public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
         Player player = playerMapper.toEntity(playerCreateDTO);
         playerRepository.save(player);
-        return player;
+        PlayerResponseDTO response = new PlayerResponseDTO(player);
+        return response;
     }
 
     public Player findById(UUID id) {

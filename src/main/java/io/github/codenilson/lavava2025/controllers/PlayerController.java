@@ -40,15 +40,14 @@ public class PlayerController {
     public ResponseEntity<List<PlayerResponseDTO>> findAllActivePlayers() {
         List<Player> players = playerServices.findActivePlayers();
 
-        List<PlayerResponseDTO> response = players.stream().map(playerMapper::toResponseDTO)
+        List<PlayerResponseDTO> response = players.stream().map(PlayerResponseDTO::new)
                 .toList();
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<PlayerResponseDTO> createPlayer(@RequestBody @Valid PlayerCreateDTO player) {
-        Player playerEntity = playerServices.save(player);
-        PlayerResponseDTO response = playerMapper.toResponseDTO(playerEntity);
+        PlayerResponseDTO response = playerServices.save(player);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -62,14 +61,14 @@ public class PlayerController {
     @GetMapping("/{id}")
     public ResponseEntity<PlayerResponseDTO> findById(@PathVariable("id") UUID id) {
         Player player = playerServices.findById(id);
-        PlayerResponseDTO response = playerMapper.toResponseDTO(player);
+        PlayerResponseDTO response =  new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("username/{username}")
     public ResponseEntity<PlayerResponseDTO> findByUsername(@PathVariable("username") String username) {
         Player player = playerServices.findByUsername(username);
-        PlayerResponseDTO response = playerMapper.toResponseDTO(player);
+        PlayerResponseDTO response = new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
     }
 
@@ -77,7 +76,7 @@ public class PlayerController {
     public ResponseEntity<PlayerResponseDTO> updatePlayer(@RequestBody PlayerUpdateDTO dto,
             @PathVariable("id") UUID id) {
         Player player = playerServices.updatePlayer(id, dto);
-        PlayerResponseDTO response = playerMapper.toResponseDTO(player);
+        PlayerResponseDTO response = new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
     }
 
