@@ -32,9 +32,7 @@ public class PlayerServices {
     public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
         Player player = playerMapper.toEntity(playerCreateDTO);
         playerRepository.save(player);
-        Player entity = playerRepository.findById(player.getId()).get();
-        PlayerResponseDTO response = new PlayerResponseDTO(entity);
-        return response;
+        return new PlayerResponseDTO(player);
     }
 
     public Player findById(UUID id) {

@@ -20,6 +20,8 @@ public class PlayerResponseDTO {
 
     public PlayerResponseDTO(Player player) {
         BeanUtils.copyProperties(player, this);
+        this.createdAt = player.getCreatedAt();
+        this.updatedAt = player.getUpdatedAt();
     }
 
     public UUID getId() {

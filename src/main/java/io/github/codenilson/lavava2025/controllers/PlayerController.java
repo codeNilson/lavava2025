@@ -19,7 +19,6 @@ import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.services.PlayerServices;
 import jakarta.validation.Valid;
 
@@ -28,12 +27,10 @@ import jakarta.validation.Valid;
 public class PlayerController {
 
     private final PlayerServices playerServices;
-    private final PlayerMapper playerMapper;
 
     @Autowired
-    public PlayerController(PlayerServices playerServices, PlayerMapper playerMapper) {
+    public PlayerController(PlayerServices playerServices) {
         this.playerServices = playerServices;
-        this.playerMapper = playerMapper;
     }
 
     @GetMapping
@@ -61,7 +58,7 @@ public class PlayerController {
     @GetMapping("/{id}")
     public ResponseEntity<PlayerResponseDTO> findById(@PathVariable("id") UUID id) {
         Player player = playerServices.findById(id);
-        PlayerResponseDTO response =  new PlayerResponseDTO(player);
+        PlayerResponseDTO response = new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
     }
 
