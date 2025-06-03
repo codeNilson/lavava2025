@@ -3,6 +3,8 @@ package io.github.codenilson.lavava2025.entities;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -26,17 +28,20 @@ public class PlayerPerfomance {
 
     @ManyToOne
     @MapsId("playerId")
-    @JoinColumn(name = "player_id")
+    @JoinColumn(name = "player_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Player player;
 
     @ManyToOne
     @MapsId("teamId")
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "team_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Team team;
 
     @ManyToOne
     @MapsId("matchId")
-    @JoinColumn(name = "match_id")
+    @JoinColumn(name = "match_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Match match;
 
     private Integer kills;

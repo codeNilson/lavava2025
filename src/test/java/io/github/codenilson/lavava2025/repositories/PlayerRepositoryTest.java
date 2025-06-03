@@ -2,7 +2,7 @@ package io.github.codenilson.lavava2025.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,11 @@ public class PlayerRepositoryTest {
         playerRepository.save(player);
 
         // When
-        List<Player> players = playerRepository.findByUsername(username);
+        Optional<Player> result = playerRepository.findByUsername(username);
 
         // Then
-        assertEquals(1, players.size());
-        assertEquals(username, players.get(0).getUsername());
+        assertEquals(true, result.isPresent());
+        assertEquals(username, result.get().getUsername());
     }
 
     @Test
@@ -40,10 +40,33 @@ public class PlayerRepositoryTest {
         String username = "nonExistentUser";
 
         // When
-        List<Player> players = playerRepository.findByUsername(username);
+        Optional<Player> player = playerRepository.findByUsername(username);
 
         // Then
-        assertEquals(0, players.size());
+        assertEquals(false, player.isPresent());
+    }
+
+    @Test
+    public void testFindByActiveTrue() {
+        // Given
+        Player activePlayer = new Player();
+        activePlayer.setUsername("activeUser");
+        activePlayer.setPassword("activePass");
+        activePlayer.setActive(true);
+        playerRepository.save(activePlayer);
+
+        Player inactivePlayer = new Player();
+        inactivePlayer.setUsername("inactiveUser");
+        inactivePlayer.setPassword("inactivePass");
+        inactivePlayer.setActive(false);
+        playerRepository.save(inactivePlayer);
+
+        // When
+        var players = playerRepository.findByActiveTrue();
+
+        // Then
+        assertEquals(1, players.size());
+        assertEquals(activePlayer.getUsername(), players.get(0).getUsername());
     }
 
 }

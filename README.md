@@ -33,11 +33,11 @@ Para rodar localmente:
 3. **Execute o projeto:**
    - Com Java e Maven instalados, rode:
      ```bash
-     ./mvnw spring-boot:run
+     mvn spring-boot:run
      ```
    - Ou, se preferir, gere o JAR e execute:
      ```bash
-     ./mvnw package
+     mvn package
      java -jar target/lavava2025-0.0.1-SNAPSHOT.jar
      ```
 

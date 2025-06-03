@@ -5,11 +5,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,16 +29,24 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+<<<<<<< HEAD
     @OneToMany(mappedBy = "team")
     @Comment("Set of players in this team")
     @JsonManagedReference(value = "team-players")//quebra de loop ao retornar json em player team
     private Set<PlayerTeam> players;
 
+=======
+>>>>>>> 59a0cdb8ce7d223064cd30f2dcbf13a06bfe41c9
     @ManyToOne
     private Match match;
 
+    @Comment("Set of players in this team")
     @OneToMany(mappedBy = "team")
+    @JsonManagedReference(value = "team-players")
+    private Set<PlayerTeam> players;
+
     @Comment("All player's performances in this team")
+    @OneToMany(mappedBy = "team")
     private Set<PlayerPerfomance> performances;
 
     @CreatedDate
@@ -53,6 +62,10 @@ public class Team {
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public Match getMatch() {

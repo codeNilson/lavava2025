@@ -40,17 +40,17 @@ public class Config implements CommandLineRunner {
         Player player1 = new Player();
         player1.setUsername("Jogador 1");
         player1.setPassword("123");
-        player1.setActive(true);
+        // player1.setActive(true);
 
         Player player2 = new Player();
         player2.setUsername("Jogador 2");
         player2.setPassword("123");
-        player2.setActive(true);
+        // player2.setActive(true);
 
         Player player3 = new Player();
         player3.setUsername("Jogador 3");
         player3.setPassword("123");
-        player3.setActive(true);
+        // player3.setActive(true);
 
         playerRepository.save(player1);
         playerRepository.save(player2);

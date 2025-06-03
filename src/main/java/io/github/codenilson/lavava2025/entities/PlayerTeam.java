@@ -2,8 +2,9 @@ package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,14 +29,14 @@ public class PlayerTeam {
 
     @ManyToOne
     @MapsId("playerId")
-    @JoinColumn(name = "player_id")
-    @JsonBackReference(value = "player-teams") //evita repetição de json na chamada get do PlayerTeamcontroler.
+    @JoinColumn(name = "player_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Player player;
 
     @ManyToOne
     @MapsId("teamId")
-    @JoinColumn(name = "team_id")
-    @JsonBackReference(value = "team-players")
+    @JoinColumn(name = "team_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Team team;
 
     @CreatedDate
