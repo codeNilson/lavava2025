@@ -1,5 +1,8 @@
 package io.github.codenilson.lavava2025.dto.player;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -17,13 +20,9 @@ public class PlayerCreateDTO {
 
     private String agent;
 
-    public PlayerCreateDTO() {
-    }
+    private Set<String> roles = new HashSet<>();
 
-    public PlayerCreateDTO(String username, String password, String agent) {
-        this.username = username;
-        this.password = password;
-        this.agent = agent;
+    public PlayerCreateDTO() {
     }
 
     public String getUsername() {
@@ -48,6 +47,22 @@ public class PlayerCreateDTO {
 
     public void setAgent(String agent) {
         this.agent = agent;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(String role) {
+        this.roles.add(role);
+    }
+
+    public void removeRole(String role) {
+        this.roles.remove(role);
     }
 
     @Override
