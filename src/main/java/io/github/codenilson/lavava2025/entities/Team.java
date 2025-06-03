@@ -29,14 +29,6 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-<<<<<<< HEAD
-    @OneToMany(mappedBy = "team")
-    @Comment("Set of players in this team")
-    @JsonManagedReference(value = "team-players")//quebra de loop ao retornar json em player team
-    private Set<PlayerTeam> players;
-
-=======
->>>>>>> 59a0cdb8ce7d223064cd30f2dcbf13a06bfe41c9
     @ManyToOne
     private Match match;
 
