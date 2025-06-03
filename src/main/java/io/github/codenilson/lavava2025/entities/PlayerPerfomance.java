@@ -20,7 +20,7 @@ import jakarta.persistence.MapsId;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Comment("Represents the performance of a player in a specific match for a specific team. This entity is used to track individual player statistics such as kills, deaths, assists, and the agent played during the match.")
+// @Comment("Represents the performance of a player in a specific match for a specific team.")
 public class PlayerPerfomance {
 
     @EmbeddedId

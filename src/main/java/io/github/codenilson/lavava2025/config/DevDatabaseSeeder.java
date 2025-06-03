@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
@@ -12,16 +13,16 @@ import io.github.codenilson.lavava2025.entities.PlayerTeam;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
-import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerTeamRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
+import io.github.codenilson.lavava2025.services.PlayerServices;
 
 @Configuration
 @Profile("dev")
-public class Config implements CommandLineRunner {
+public class DevDatabaseSeeder implements CommandLineRunner {
 
     @Autowired
-    private PlayerRepository playerRepository;
+    private PlayerServices playerServices;
 
     @Autowired
     private TeamRepository teamRepository;
@@ -37,32 +38,31 @@ public class Config implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Player player1 = new Player();
-        player1.setUsername("Jogador 1");
-        player1.setPassword("123");
-        // player1.setActive(true);
+        PlayerCreateDTO playerDTO1 = new PlayerCreateDTO();
+        playerDTO1.setUsername("Jogador 1");
+        playerDTO1.setPassword("Abc@123456");
 
-        Player player2 = new Player();
-        player2.setUsername("Jogador 2");
-        player2.setPassword("123");
-        // player2.setActive(true);
+        PlayerCreateDTO playerDTO2 = new PlayerCreateDTO();
+        playerDTO2.setUsername("Jogador 2");
+        playerDTO2.setPassword("Abc@123456");
 
-        Player player3 = new Player();
-        player3.setUsername("Jogador 3");
-        player3.setPassword("123");
-        // player3.setActive(true);
+        PlayerCreateDTO playerDTO3 = new PlayerCreateDTO();
+        playerDTO3.setUsername("Jogador 3");
+        playerDTO3.setPassword("Abc@123456");
 
-        playerRepository.save(player1);
-        playerRepository.save(player2);
-        playerRepository.save(player3);
+        playerServices.save(playerDTO1);
+        playerServices.save(playerDTO2);
+        playerServices.save(playerDTO3);
 
-        // 2. Criar uma partida
+        // Buscar entidades Player pelo username
+        Player player1 = playerServices.findByUsername("Jogador 1");
+        Player player2 = playerServices.findByUsername("Jogador 2");
+        Player player3 = playerServices.findByUsername("Jogador 3");
+
         Match match = new Match();
         match.setMap("Dust 2");
-
         matchRepository.save(match);
 
-        // 3. Criar times
         Team team1 = new Team();
         team1.setMatch(match);
         Team team2 = new Team();
@@ -71,25 +71,13 @@ public class Config implements CommandLineRunner {
         teamRepository.save(team1);
         teamRepository.save(team2);
 
-        // 4. Criar vínculo: player1 participa de team1
         PlayerTeam playerTeam1 = new PlayerTeam(player1, team1);
-
-        // 5. player2 participa de team1 também
         PlayerTeam playerTeam2 = new PlayerTeam(player2, team1);
-        // playerTeam2.setPlayer(player2);
-        // playerTeam2.setTeam(team1);
-
-        // 6. player2 também participa de team2
         PlayerTeam playerTeam3 = new PlayerTeam(player3, team2);
-        // playerTeam3.setPlayer(player2);
-        // playerTeam3.setTeam(team2);
 
-        // 6. Salvar os vínculos
         playerTeamRepository.save(playerTeam1);
         playerTeamRepository.save(playerTeam2);
         playerTeamRepository.save(playerTeam3);
-
-        System.out.println("Relacionamentos criados com sucesso!");
 
         PlayerPerfomance pf1 = new PlayerPerfomance();
         pf1.setPlayer(player1);
@@ -116,5 +104,7 @@ public class Config implements CommandLineRunner {
         match.setAce(pf2);
         match.setWinner(team1);
         matchRepository.save(match);
+
+        System.out.println("Relacionamentos criados com sucesso!");
     }
 }

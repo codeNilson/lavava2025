@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
@@ -16,13 +17,17 @@ import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 
 @Service
 public class PlayerServices {
+
     private final PlayerRepository playerRepository;
     private final PlayerMapper playerMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PlayerServices(PlayerRepository playerRepository, PlayerMapper playerMapper) {
+    public PlayerServices(PlayerRepository playerRepository, PlayerMapper playerMapper,
+            PasswordEncoder passwordEncoder) {
         this.playerRepository = playerRepository;
         this.playerMapper = playerMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Player> findActivePlayers() {
@@ -30,6 +35,8 @@ public class PlayerServices {
     }
 
     public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
+        String hash = passwordEncoder.encode(playerCreateDTO.getPassword());
+        playerCreateDTO.setPassword(hash);
         Player player = playerMapper.toEntity(playerCreateDTO);
         playerRepository.save(player);
         return new PlayerResponseDTO(player);

@@ -1,6 +1,7 @@
 package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,9 +38,9 @@ public class Team {
     @JsonManagedReference(value = "team-players")
     private Set<PlayerTeam> players;
 
-    @Comment("All player's performances in this team")
+    @Comment("All players performances in this team")
     @OneToMany(mappedBy = "team")
-    private Set<PlayerPerfomance> performances;
+    private Set<PlayerPerfomance> performances = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
