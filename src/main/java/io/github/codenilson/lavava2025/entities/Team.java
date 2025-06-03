@@ -30,7 +30,7 @@ public class Team {
 
     @OneToMany(mappedBy = "team")
     @Comment("Set of players in this team")
-    @JsonManagedReference(value = "team-players")
+    @JsonManagedReference(value = "team-players")//quebra de loop ao retornar json em player team
     private Set<PlayerTeam> players;
 
     @ManyToOne
