@@ -20,8 +20,8 @@ import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.mappers.PlayerMapper;
-import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.services.PlayerServices;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("players")
@@ -29,19 +29,16 @@ public class PlayerController {
 
     private final PlayerServices playerServices;
     private final PlayerMapper playerMapper;
-    private final PlayerRepository playerRepository;
 
     @Autowired
-    public PlayerController(PlayerServices playerServices, PlayerMapper playerMapper,
-            PlayerRepository playerRepository) {
+    public PlayerController(PlayerServices playerServices, PlayerMapper playerMapper) {
         this.playerServices = playerServices;
         this.playerMapper = playerMapper;
-        this.playerRepository = playerRepository;
     }
 
     @GetMapping
-    public ResponseEntity<List<PlayerResponseDTO>> findAll() {
-        List<Player> players = playerRepository.findAll();
+    public ResponseEntity<List<PlayerResponseDTO>> findAllActivePlayers() {
+        List<Player> players = playerServices.findActivePlayers();
 
         List<PlayerResponseDTO> response = players.stream().map(playerMapper::toResponseDTO)
                 .toList();
@@ -49,7 +46,7 @@ public class PlayerController {
     }
 
     @PostMapping
-    public ResponseEntity<PlayerResponseDTO> createPlayer(@RequestBody PlayerCreateDTO player) {
+    public ResponseEntity<PlayerResponseDTO> createPlayer(@RequestBody @Valid PlayerCreateDTO player) {
         Player playerEntity = playerServices.save(player);
         PlayerResponseDTO response = playerMapper.toResponseDTO(playerEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -58,9 +55,6 @@ public class PlayerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         Player player = playerServices.findById(id);
-        if (player == null) {
-            return ResponseEntity.notFound().build();
-        }
         playerServices.delete(player);
         return ResponseEntity.noContent().build();
     }
@@ -68,9 +62,13 @@ public class PlayerController {
     @GetMapping("/{id}")
     public ResponseEntity<PlayerResponseDTO> findById(@PathVariable("id") UUID id) {
         Player player = playerServices.findById(id);
-        if (player == null) {
-            return ResponseEntity.notFound().build();
-        }
+        PlayerResponseDTO response = playerMapper.toResponseDTO(player);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("username/{username}")
+    public ResponseEntity<PlayerResponseDTO> findByUsername(@PathVariable("username") String username) {
+        Player player = playerServices.findByUsername(username);
         PlayerResponseDTO response = playerMapper.toResponseDTO(player);
         return ResponseEntity.ok(response);
     }
@@ -78,9 +76,6 @@ public class PlayerController {
     @PatchMapping("/{id}")
     public ResponseEntity<PlayerResponseDTO> updatePlayer(@RequestBody PlayerUpdateDTO dto,
             @PathVariable("id") UUID id) {
-        if (!playerServices.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
         Player player = playerServices.updatePlayer(id, dto);
         PlayerResponseDTO response = playerMapper.toResponseDTO(player);
         return ResponseEntity.ok(response);

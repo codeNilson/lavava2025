@@ -1,5 +1,6 @@
 package io.github.codenilson.lavava2025.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,9 @@ import org.springframework.stereotype.Service;
 import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
 import io.github.codenilson.lavava2025.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class PlayerServices {
@@ -23,6 +24,10 @@ public class PlayerServices {
         this.playerMapper = playerMapper;
     }
 
+    public List<Player> findActivePlayers() {
+        return playerRepository.findByActiveTrue();
+    }
+
     public Player save(PlayerCreateDTO playerCreateDTO) {
         Player player = playerMapper.toEntity(playerCreateDTO);
         playerRepository.save(player);
@@ -30,7 +35,11 @@ public class PlayerServices {
     }
 
     public Player findById(UUID id) {
-        return playerRepository.findById(id).orElse(null);
+        return playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException(id));
+    }
+
+    public Player findByUsername(String username) {
+        return playerRepository.findByUsername(username).orElseThrow(() -> new PlayerNotFoundException(username));
     }
 
     public void delete(Player player) {
@@ -39,7 +48,7 @@ public class PlayerServices {
 
     public Player updatePlayer(UUID id, PlayerUpdateDTO dto) {
         Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Player not found"));
+                .orElseThrow(() -> new PlayerNotFoundException(id));
 
         if (dto.getUsername() != null) {
             player.setUsername(dto.getUsername());
