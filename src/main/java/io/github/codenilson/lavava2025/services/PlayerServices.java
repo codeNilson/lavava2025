@@ -3,11 +3,11 @@ package io.github.codenilson.lavava2025.services;
 import java.util.List;
 import java.util.UUID;
 
-import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
+import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
@@ -32,7 +32,8 @@ public class PlayerServices {
     public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
         Player player = playerMapper.toEntity(playerCreateDTO);
         playerRepository.save(player);
-        PlayerResponseDTO response = new PlayerResponseDTO(player);
+        Player entity = playerRepository.findById(player.getId()).get();
+        PlayerResponseDTO response = new PlayerResponseDTO(entity);
         return response;
     }
 

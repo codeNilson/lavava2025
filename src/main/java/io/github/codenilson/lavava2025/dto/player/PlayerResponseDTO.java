@@ -1,29 +1,32 @@
 package io.github.codenilson.lavava2025.dto.player;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
-import io.github.codenilson.lavava2025.entities.Player;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.beans.BeanUtils;
 
+import io.github.codenilson.lavava2025.entities.Player;
+
 public class PlayerResponseDTO {
-    private String id;
+    private UUID id;
     private String username;
     private String agent;
     private boolean active;
-    private String createdAt;
-    private String updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public PlayerResponseDTO() {
     }
 
     public PlayerResponseDTO(Player player) {
-        BeanUtils.copyProperties(player,this);
+        BeanUtils.copyProperties(player, this);
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -51,11 +54,11 @@ public class PlayerResponseDTO {
         this.active = active;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public String getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
