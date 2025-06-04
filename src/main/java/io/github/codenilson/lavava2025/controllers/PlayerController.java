@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.codenilson.lavava2025.authentication.PlayerDetails;
 import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
@@ -56,10 +58,19 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PlayerResponseDTO> findById(@PathVariable("id") UUID id) {
-        Player player = playerServices.findById(id);
-        PlayerResponseDTO response = new PlayerResponseDTO(player);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<PlayerResponseDTO> findById(@PathVariable("id") UUID id,
+            @AuthenticationPrincipal PlayerDetails userDetails) {
+
+        boolean isAdmin = userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (isAdmin || userDetails.getId().equals(id)) {
+            Player player = playerServices.findById(id);
+            PlayerResponseDTO response = new PlayerResponseDTO(player);
+            return ResponseEntity.ok(response);
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @GetMapping("username/{username}")

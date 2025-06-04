@@ -1,7 +1,7 @@
 package io.github.codenilson.lavava2025.authentication;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +22,10 @@ public class PlayerDetails implements UserDetails {
         return player.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .toList();
+    }
+
+    public UUID getId() {
+        return player.getId();
     }
 
     @Override
