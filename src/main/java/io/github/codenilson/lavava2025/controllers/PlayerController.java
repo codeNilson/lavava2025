@@ -26,6 +26,7 @@ import jakarta.validation.Valid;
 @RequestMapping("players")
 public class PlayerController {
 
+    @Autowired
     private final PlayerServices playerServices;
 
     @Autowired
