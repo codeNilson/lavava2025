@@ -20,7 +20,7 @@ import jakarta.persistence.MapsId;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-// @Comment("Represents the performance of a player in a specific match for a specific team.")
+@Comment("Represents the performance of a player in a specific match for a specific team.")
 public class PlayerPerfomance {
 
     @EmbeddedId
