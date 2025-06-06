@@ -40,12 +40,12 @@ public class PlayerDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return player.isActive();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return player.isActive();
     }
 
     @Override

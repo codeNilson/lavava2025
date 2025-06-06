@@ -35,9 +35,6 @@ public class PlayerDetailsServices implements UserDetailsService {
 
         boolean isOwner = user.getId().equals(id);
 
-        System.out.println("Checking if user is admin or owner: isAdmin=" + isAdmin + ", isOwner=" + isOwner);
-
         return isAdmin || isOwner;
     }
-
 }
