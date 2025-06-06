@@ -1,5 +1,8 @@
 package io.github.codenilson.lavava2025.authentication;
 
+import java.util.UUID;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +25,19 @@ public class PlayerDetailsServices implements UserDetailsService {
         Player player = playerRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Player not found with username: " + username));
         return new PlayerDetails(player);
+    }
+
+    public boolean isAdminOrOwner(UUID id, Authentication authentication) {
+        PlayerDetails user = (PlayerDetails) authentication.getPrincipal();
+
+        boolean isAdmin = user.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        boolean isOwner = user.getId().equals(id);
+
+        System.out.println("Checking if user is admin or owner: isAdmin=" + isAdmin + ", isOwner=" + isOwner);
+
+        return isAdmin || isOwner;
     }
 
 }
