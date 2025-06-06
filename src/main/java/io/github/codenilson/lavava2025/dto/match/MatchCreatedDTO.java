@@ -13,6 +13,9 @@ public class MatchCreatedDTO {
 
     private  PlayerPerfomance ace;
 
+    public MatchCreatedDTO() {
+    }
+
     public MatchCreatedDTO(Match match) {
         BeanUtils.copyProperties(match,this);
     }

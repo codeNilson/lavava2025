@@ -1,11 +1,12 @@
 package io.github.codenilson.lavava2025.dto.match;
 
+import java.util.Objects;
+
+import org.springframework.beans.BeanUtils;
+
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
-import org.springframework.beans.BeanUtils;
-
-import java.util.Objects;
 
 public class MatchUpdateDTO {
 
@@ -14,6 +15,9 @@ public class MatchUpdateDTO {
     private PlayerPerfomance mvp;
 
     private PlayerPerfomance ace;
+
+    public MatchUpdateDTO() {
+    }
 
     public MatchUpdateDTO(Match match) {
         BeanUtils.copyProperties(match, this);
@@ -45,7 +49,8 @@ public class MatchUpdateDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         MatchUpdateDTO that = (MatchUpdateDTO) o;
         return Objects.equals(winner, that.winner);
     }
