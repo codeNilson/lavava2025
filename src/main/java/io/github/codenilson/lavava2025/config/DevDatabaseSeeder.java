@@ -39,25 +39,32 @@ public class DevDatabaseSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         PlayerCreateDTO playerDTO1 = new PlayerCreateDTO();
-        playerDTO1.setUsername("Jogador 1");
+        playerDTO1.setUsername("Jogador1");
         playerDTO1.setPassword("Abc@123456");
+        playerDTO1.setAgent("Reyna");
+        playerDTO1.addRole("PLAYER");
+        playerDTO1.addRole("ADMIN");
 
         PlayerCreateDTO playerDTO2 = new PlayerCreateDTO();
-        playerDTO2.setUsername("Jogador 2");
+        playerDTO2.setUsername("Jogador2");
         playerDTO2.setPassword("Abc@123456");
+        playerDTO2.setAgent("Phoenix");
+        playerDTO2.addRole("PLAYER");
 
         PlayerCreateDTO playerDTO3 = new PlayerCreateDTO();
-        playerDTO3.setUsername("Jogador 3");
+        playerDTO3.setUsername("Jogador3");
         playerDTO3.setPassword("Abc@123456");
+        playerDTO3.setAgent("Sage");
+        playerDTO3.addRole("PLAYER");
 
         playerServices.save(playerDTO1);
         playerServices.save(playerDTO2);
         playerServices.save(playerDTO3);
 
         // Buscar entidades Player pelo username
-        Player player1 = playerServices.findByUsername("Jogador 1");
-        Player player2 = playerServices.findByUsername("Jogador 2");
-        Player player3 = playerServices.findByUsername("Jogador 3");
+        Player player1 = playerServices.findByUsername("Jogador1");
+        Player player2 = playerServices.findByUsername("Jogador2");
+        Player player3 = playerServices.findByUsername("Jogador3");
 
         Match match = new Match();
         match.setMap("Dust 2");

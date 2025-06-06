@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -49,6 +50,7 @@ public class PlayerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         Player player = playerServices.findById(id);
@@ -58,9 +60,11 @@ public class PlayerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PlayerResponseDTO> findById(@PathVariable("id") UUID id) {
+
         Player player = playerServices.findById(id);
         PlayerResponseDTO response = new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
+
     }
 
     @GetMapping("username/{username}")
@@ -70,6 +74,7 @@ public class PlayerController {
         return ResponseEntity.ok(response);
     }
 
+    // @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
     @PatchMapping("/{id}")
     public ResponseEntity<PlayerResponseDTO> updatePlayer(@RequestBody PlayerUpdateDTO dto,
             @PathVariable("id") UUID id) {

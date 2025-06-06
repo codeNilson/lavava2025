@@ -1,6 +1,8 @@
 package io.github.codenilson.lavava2025.dto.player;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -12,6 +14,7 @@ public class PlayerResponseDTO {
     private String username;
     private String agent;
     private boolean active;
+    private Set<String> roles = new HashSet<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -46,6 +49,14 @@ public class PlayerResponseDTO {
 
     public void setAgent(String agent) {
         this.agent = agent;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     public boolean isActive() {

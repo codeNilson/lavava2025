@@ -12,9 +12,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +38,10 @@ public class Player {
     private String password;
 
     private String agent;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable
+    private Set<String> roles = new HashSet<>();
 
     @Comment("Set of teams the player is part of")
     @OneToMany(mappedBy = "player")
@@ -95,6 +102,22 @@ public class Player {
 
     public void setAgent(String agent) {
         this.agent = agent;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(String role) {
+        this.roles.add(role);
+    }
+
+    public void removeRole(String role) {
+        this.roles.remove(role);
     }
 
     public boolean isActive() {
