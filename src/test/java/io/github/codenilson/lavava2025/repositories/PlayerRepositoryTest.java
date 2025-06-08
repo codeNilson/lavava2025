@@ -1,6 +1,8 @@
 package io.github.codenilson.lavava2025.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
@@ -94,11 +96,31 @@ public class PlayerRepositoryTest {
         playerRepository.save(player);
 
         // When
-        Optional<Player> result = playerRepository.findByUsername("testUser");
+        Player result = playerRepository.findByUsername("testUser").get();
 
         // Then
-        assertEquals(true, result.isPresent());
-        assertEquals(player.getCreatedAt(), result.get().getCreatedAt());
+        assertNotNull(result.getCreatedAt());
+        assertTrue(player.getCreatedAt().isBefore(result.getCreatedAt().plusSeconds(1)));
+    }
+
+    @Test
+    public void testUpdatedAt() throws InterruptedException {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        playerRepository.save(player);
+        Thread.sleep(1500); // Ensure a time difference for update
+
+        // When
+        Player result = playerRepository.findByUsername("testUser").get();  
+        result.setUsername("updatedUser");
+        playerRepository.saveAndFlush(result);
+
+        // Then
+
+        assertNotNull(result.getUpdatedAt());
+        assertTrue(result.getCreatedAt().isBefore(result.getUpdatedAt()));
     }
 
 }
