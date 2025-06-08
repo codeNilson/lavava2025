@@ -69,4 +69,36 @@ public class PlayerRepositoryTest {
         assertEquals(activePlayer.getUsername(), players.get(0).getUsername());
     }
 
+    @Test
+    public void testFindByActiveTrueReturnsEmptyWhenNoActivePlayers() {
+        // Given
+        Player inactivePlayer = new Player();
+        inactivePlayer.setUsername("inactiveUser");
+        inactivePlayer.setPassword("inactivePass");
+        inactivePlayer.setActive(false);
+        playerRepository.save(inactivePlayer);
+
+        // When
+        var players = playerRepository.findByActiveTrue();
+
+        // Then
+        assertEquals(0, players.size());
+    }
+
+    @Test
+    public void testCreatedAt() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        playerRepository.save(player);
+
+        // When
+        Optional<Player> result = playerRepository.findByUsername("testUser");
+
+        // Then
+        assertEquals(true, result.isPresent());
+        assertEquals(player.getCreatedAt(), result.get().getCreatedAt());
+    }
+
 }
