@@ -16,13 +16,13 @@ import io.github.codenilson.lavava2025.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 
 @Service
-public class PlayerServices {
+public class PlayerService {
     private final PlayerRepository playerRepository;
     private final PlayerMapper playerMapper;
     private final PasswordEncoder encoder;
 
     @Autowired
-    public PlayerServices(PlayerRepository playerRepository, PlayerMapper playerMapper,
+    public PlayerService(PlayerRepository playerRepository, PlayerMapper playerMapper,
             PasswordEncoder encoder) {
         this.playerRepository = playerRepository;
         this.playerMapper = playerMapper;

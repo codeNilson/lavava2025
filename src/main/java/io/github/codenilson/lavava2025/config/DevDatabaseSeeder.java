@@ -15,14 +15,14 @@ import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerTeamRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
-import io.github.codenilson.lavava2025.services.PlayerServices;
+import io.github.codenilson.lavava2025.services.PlayerService;
 
 @Configuration
 @Profile("dev")
 public class DevDatabaseSeeder implements CommandLineRunner {
 
     @Autowired
-    private PlayerServices playerServices;
+    private PlayerService playerServices;
 
     @Autowired
     private TeamRepository teamRepository;
