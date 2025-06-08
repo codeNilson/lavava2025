@@ -1,0 +1,139 @@
+package io.github.codenilson.lavava2025.dto.players;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
+import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+
+public class PlayerCreateDTOTest {
+
+    private final Validator validator;
+
+    public PlayerCreateDTOTest() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
+
+    @Test
+    void testValidPlayerCreateDTO() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("ValidUser");
+        dto.setPassword("Valid@123");
+        dto.setAgent("agent1");
+        dto.addRole("PLAYER");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    void testUsernameBlank() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("");
+        dto.setPassword("Valid@123");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("username")));
+    }
+
+    @Test
+    void testUsernameTooShort() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("abc");
+        dto.setPassword("Valid@123");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("username")));
+    }
+
+    @Test
+    void testUsernameTooLong() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("thisusernameistoolong");
+        dto.setPassword("Valid@123");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("username")));
+    }
+
+    @Test
+    void testPasswordBlank() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("ValidUser");
+        dto.setPassword("");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+    }
+
+    @Test
+    void testPasswordTooShort() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("ValidUser");
+        dto.setPassword("A@1a");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+    }
+
+    @Test
+    void testPasswordMissingUppercase() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("ValidUser");
+        dto.setPassword("valid@123");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+    }
+
+    @Test
+    void testPasswordMissingLowercase() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("ValidUser");
+        dto.setPassword("VALID@123");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+    }
+
+    @Test
+    void testPasswordMissingNumber() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("ValidUser");
+        dto.setPassword("Valid@abc");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+    }
+
+    @Test
+    void testPasswordMissingSpecialCharacter() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("ValidUser");
+        dto.setPassword("Valid1234");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+    }
+
+    @Test
+    void testPasswordTooLong() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("ValidUser");
+        dto.setPassword("Valid@12345678901234567890");
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+    }
+}
