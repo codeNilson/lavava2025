@@ -1,11 +1,7 @@
 package io.github.codenilson.lavava2025.dto.players;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -45,6 +41,7 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("username")));
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("Username is required")));
     }
 
     @Test
@@ -55,6 +52,8 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("username")));
+        assertTrue(violations.stream()
+                .anyMatch(v -> v.getMessage().contains("Username must be between 4 and 15 characters")));
     }
 
     @Test
@@ -65,6 +64,8 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("username")));
+        assertTrue(violations.stream()
+                .anyMatch(v -> v.getMessage().contains("Username must be between 4 and 15 characters")));
     }
 
     @Test
@@ -75,6 +76,7 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("Password is required")));
     }
 
     @Test
@@ -85,6 +87,8 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(violations.stream()
+                .anyMatch(v -> v.getMessage().contains("Password must be between 8 and 20 characters")));
     }
 
     @Test
@@ -95,6 +99,8 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains(
+                "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character")));
     }
 
     @Test
@@ -105,6 +111,8 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains(
+                "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character")));
     }
 
     @Test
@@ -115,6 +123,8 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains(
+                "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character")));
     }
 
     @Test
@@ -125,6 +135,8 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains(
+                "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character")));
     }
 
     @Test
@@ -135,5 +147,8 @@ public class PlayerCreateDTOTest {
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
+
+        assertTrue(violations.stream()
+                .anyMatch(v -> v.getMessage().contains("Password must be between 8 and 20 characters")));
     }
 }
