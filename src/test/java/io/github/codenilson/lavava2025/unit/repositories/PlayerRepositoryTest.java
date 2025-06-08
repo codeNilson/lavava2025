@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.repositories;
+package io.github.codenilson.lavava2025.unit.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 
 @DataJpaTest
 public class PlayerRepositoryTest {

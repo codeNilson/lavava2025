@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.services;
+package io.github.codenilson.lavava2025.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,6 +26,7 @@ import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
 import io.github.codenilson.lavava2025.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
+import io.github.codenilson.lavava2025.services.PlayerService;
 
 class PlayerServiceTest {
 

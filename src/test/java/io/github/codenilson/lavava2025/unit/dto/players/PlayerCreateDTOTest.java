@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.dto.players;
+package io.github.codenilson.lavava2025.unit.dto.players;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
