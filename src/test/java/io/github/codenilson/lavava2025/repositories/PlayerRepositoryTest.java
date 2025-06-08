@@ -1,7 +1,9 @@
 package io.github.codenilson.lavava2025.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -9,6 +11,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import io.github.codenilson.lavava2025.entities.Player;
 
@@ -113,7 +116,7 @@ public class PlayerRepositoryTest {
         Thread.sleep(1500); // Ensure a time difference for update
 
         // When
-        Player result = playerRepository.findByUsername("testUser").get();  
+        Player result = playerRepository.findByUsername("testUser").get();
         result.setUsername("updatedUser");
         playerRepository.saveAndFlush(result);
 
@@ -136,6 +139,70 @@ public class PlayerRepositoryTest {
 
         // Then
         assertTrue(result.isActive());
+    }
+
+    @Test
+    public void testPlayerRoles() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        player.addRole("PLAYER");
+        player.addRole("ADMIN");
+        playerRepository.save(player);
+
+        // When
+        Player result = playerRepository.findById(player.getId()).get();
+
+        // Then
+        assertTrue(result.getRoles().contains("PLAYER"));
+        assertTrue(result.getRoles().contains("ADMIN"));
+        assertFalse(result.getRoles().contains("GUEST"));
+    }
+
+    @Test
+    public void testPlayerRolesEmpty() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        playerRepository.save(player);
+
+        // When
+        Player result = playerRepository.findById(player.getId()).get();
+
+        // Then
+        assertTrue(result.getRoles().isEmpty());
+    }
+
+    @Test
+    public void testPlayerRolesRemove() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        player.addRole("PLAYER");
+        playerRepository.save(player);
+
+        // When
+        Player result = playerRepository.findById(player.getId()).get();
+        result.removeRole("PLAYER");
+        playerRepository.save(result);
+
+        // Then
+        assertFalse(result.getRoles().contains("PLAYER"));
+    }
+
+    @Test
+    public void testPlayerUsernameCanNotBeNull() {
+        Player player = new Player();
+        player.setUsername(null);
+        player.setPassword("example01");
+        player.setAgent("agent1");
+
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            playerRepository.saveAndFlush(player);
+        });
     }
 
 }
