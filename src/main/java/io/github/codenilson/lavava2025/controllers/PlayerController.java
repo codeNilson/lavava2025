@@ -20,7 +20,7 @@ import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.services.PlayerServices;
+import io.github.codenilson.lavava2025.services.PlayerService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -28,10 +28,10 @@ import jakarta.validation.Valid;
 public class PlayerController {
 
     @Autowired
-    private final PlayerServices playerServices;
+    private final PlayerService playerServices;
 
     @Autowired
-    public PlayerController(PlayerServices playerServices) {
+    public PlayerController(PlayerService playerServices) {
         this.playerServices = playerServices;
     }
 
