@@ -123,4 +123,19 @@ public class PlayerRepositoryTest {
         assertTrue(result.getCreatedAt().isBefore(result.getUpdatedAt()));
     }
 
+    @Test
+    public void testActiveDefaultTrue() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        playerRepository.save(player);
+
+        // When
+        Player result = playerRepository.findByUsername("testUser").get();
+
+        // Then
+        assertTrue(result.isActive());
+    }
+
 }
