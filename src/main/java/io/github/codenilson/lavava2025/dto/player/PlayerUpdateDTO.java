@@ -1,52 +1,27 @@
 package io.github.codenilson.lavava2025.dto.player;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
 public class PlayerUpdateDTO {
+
+    @Getter
+    @Setter
     private String username;
+
+    @Getter
+    @Setter
     private String password;
+
+    @Getter
+    @Setter
     private String agent;
+
+    @Getter
+    @Setter
     private Boolean active;
-
-    public PlayerUpdateDTO() {
-    }
-
-    public PlayerUpdateDTO(String username, String password, String agent, boolean active) {
-        this.username = username;
-        this.password = password;
-        this.agent = agent;
-        this.active = active;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAgent() {
-        return agent;
-    }
-
-    public void setAgent(String agent) {
-        this.agent = agent;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
 
     @Override
     public int hashCode() {

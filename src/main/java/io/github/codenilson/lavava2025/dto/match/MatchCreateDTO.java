@@ -1,43 +1,31 @@
 package io.github.codenilson.lavava2025.dto.match;
 
+import org.springframework.beans.BeanUtils;
+
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
-import org.springframework.beans.BeanUtils;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Data
 public class MatchCreateDTO {
 
+    @Getter
+    @Setter
     private Team winner;
 
+    @Getter
+    @Setter
     private PlayerPerfomance mvp;
 
-    private  PlayerPerfomance ace;
+    @Getter
+    @Setter
+    private PlayerPerfomance ace;
 
     public MatchCreateDTO(Match match) {
-        BeanUtils.copyProperties(match,this);
-    }
+        BeanUtils.copyProperties(match, this);
 
-    public Team getWinner() {
-        return winner;
-    }
-
-    public void setWinner(Team winner) {
-        this.winner = winner;
-    }
-
-    public PlayerPerfomance getMvp() {
-        return mvp;
-    }
-
-    public void setMvp(PlayerPerfomance mvp) {
-        this.mvp = mvp;
-    }
-
-    public PlayerPerfomance getAce() {
-        return ace;
-    }
-
-    public void setAce(PlayerPerfomance ace) {
-        this.ace = ace;
     }
 }

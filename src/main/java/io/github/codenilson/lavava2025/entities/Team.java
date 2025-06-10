@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -21,89 +22,70 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@ToString
+@EqualsAndHashCode
 public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
+    @Setter
     private UUID id;
 
     @ManyToOne
+    @Getter
+    @Setter
     private Match match;
 
     @Comment("Set of players in this team")
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "team-players")
-    private Set<PlayerTeam> players;
+    private Set<PlayerTeam> players = new HashSet<>();
 
     @Comment("All players performances in this team")
     @OneToMany(mappedBy = "team")
+    @Getter
     private Set<PlayerPerfomance> performances = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
+    @Getter
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
+    @Getter
     private LocalDateTime updatedAt;
 
     public Team() {
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public Match getMatch() {
-        return match;
-    }
-
-    public void setMatch(Match match) {
-        this.match = match;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 
     public Set<Player> getPlayers() {
         return players.stream().map(PlayerTeam::getPlayer).collect(Collectors.toSet());
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+    public void addPlayer(Player player) {
+        players.add(new PlayerTeam(player, this));
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Team other = (Team) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+    public void removePlayer(Player player) {
+        players.removeIf(pt -> pt.getPlayer().equals(player));
+    }
+
+    public void addPerfomance(PlayerPerfomance performance) {
+        performance.setTeam(this);
+        performances.add(performance);
+    }
+
+    public void removePerfomance(PlayerPerfomance performance) {
+        performances.remove(performance);
     }
 
 }

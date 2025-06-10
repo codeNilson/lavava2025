@@ -3,7 +3,6 @@ package io.github.codenilson.lavava2025.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,17 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("teams")
+@RequiredArgsConstructor
 public class TeamController {
 
     private final TeamRepository teamRepository;
-
-    @Autowired
-    public TeamController(TeamRepository teamRepository) {
-        this.teamRepository = teamRepository;
-    }
 
     @GetMapping
     public List<Team> findAll() {

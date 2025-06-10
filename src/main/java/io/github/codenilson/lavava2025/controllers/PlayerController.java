@@ -22,18 +22,15 @@ import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("players")
+@RequiredArgsConstructor
 public class PlayerController {
 
     @Autowired
     private final PlayerService playerServices;
-
-    @Autowired
-    public PlayerController(PlayerService playerServices) {
-        this.playerServices = playerServices;
-    }
 
     @GetMapping
     public ResponseEntity<List<PlayerResponseDTO>> findAllActivePlayers() {

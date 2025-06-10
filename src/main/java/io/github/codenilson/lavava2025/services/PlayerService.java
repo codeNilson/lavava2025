@@ -14,20 +14,14 @@ import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
 import io.github.codenilson.lavava2025.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PlayerService {
     private final PlayerRepository playerRepository;
     private final PlayerMapper playerMapper;
     private final PasswordEncoder encoder;
-
-    @Autowired
-    public PlayerService(PlayerRepository playerRepository, PlayerMapper playerMapper,
-            PasswordEncoder encoder) {
-        this.playerRepository = playerRepository;
-        this.playerMapper = playerMapper;
-        this.encoder = encoder;
-    }
 
     public List<Player> findActivePlayers() {
         return playerRepository.findByActiveTrue();

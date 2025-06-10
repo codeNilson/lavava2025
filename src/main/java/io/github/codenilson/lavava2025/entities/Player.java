@@ -22,26 +22,41 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotBlank;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@ToString
+@EqualsAndHashCode
 public class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
+    @Setter
     private UUID id;
 
     @Column(unique = true, nullable = false)
+    @Getter
+    @Setter
     private String username;
 
     @Column(nullable = false)
+    @Getter
+    @Setter
     private String password;
 
+    @Getter
+    @Setter
     private String agent;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable
+    @Getter
+    @Setter
     private Set<String> roles = new HashSet<>();
 
     @Comment("Set of teams the player is part of")
@@ -53,14 +68,18 @@ public class Player {
     private Set<PlayerPerfomance> performances = new HashSet<>();
 
     @Comment("Indicates if the player is active. Do not delete players, just set them inactive.")
+    @Getter
+    @Setter
     private boolean active = true;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
+    @Getter
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
+    @Getter
     private LocalDateTime updatedAt;
 
     public Player() {
@@ -73,94 +92,12 @@ public class Player {
         this.active = active;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAgent() {
-        return agent;
-    }
-
-    public void setAgent(String agent) {
-        this.agent = agent;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
-
     public void addRole(String role) {
         this.roles.add(role);
     }
 
     public void removeRole(String role) {
         this.roles.remove(role);
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    @Override
-    public String toString() {
-        return username;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Player player = (Player) o;
-        return Objects.equals(id, player.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 
     public Set<Team> getTeams() {

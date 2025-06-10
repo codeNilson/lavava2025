@@ -8,14 +8,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import io.github.codenilson.lavava2025.entities.Player;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class PlayerDetails implements UserDetails {
 
     private final Player player;
-
-    public PlayerDetails(Player player) {
-        this.player = player;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

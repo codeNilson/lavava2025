@@ -10,15 +10,13 @@ import org.springframework.stereotype.Service;
 
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PlayerDetailsServices implements UserDetailsService {
 
     private final PlayerRepository playerRepository;
-
-    public PlayerDetailsServices(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
