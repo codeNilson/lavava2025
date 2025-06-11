@@ -92,7 +92,7 @@ public class PlayerService {
         playerRepository.save(player);
     }
 
-    public Boolean existByUsername(String username) {
+    public boolean existByUsername(String username) {
         return playerRepository.existsByUsername(username);
     }
 

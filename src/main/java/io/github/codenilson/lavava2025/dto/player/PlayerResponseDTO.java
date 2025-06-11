@@ -8,42 +8,26 @@ import java.util.UUID;
 import org.springframework.beans.BeanUtils;
 
 import io.github.codenilson.lavava2025.entities.Player;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@NoArgsConstructor
+@Data
 public class PlayerResponseDTO {
 
-    @Getter
-    @Setter
     private UUID id;
 
-    @Getter
-    @Setter
     private String username;
 
-    @Getter
-    @Setter
     private String agent;
 
-    @Getter
-    @Setter
     private boolean active;
 
-    @Getter
-    @Setter
     private Set<String> roles = new HashSet<>();
 
-    @Getter
     private LocalDateTime createdAt;
 
-    @Getter
     private LocalDateTime updatedAt;
 
     public PlayerResponseDTO(Player player) {
         BeanUtils.copyProperties(player, this);
-        this.createdAt = player.getCreatedAt();
-        this.updatedAt = player.getUpdatedAt();
     }
 }

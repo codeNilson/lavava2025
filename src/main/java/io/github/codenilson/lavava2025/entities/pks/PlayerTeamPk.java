@@ -6,16 +6,17 @@ import java.util.UUID;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Embeddable
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class PlayerTeamPk implements Serializable {
 
     private UUID playerId;
 
     private UUID teamId;
+
+    public PlayerTeamPk() {
+    }
 
 }

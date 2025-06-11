@@ -19,4 +19,7 @@ public class PlayerMapper {
         return player;
     }
 
+    public PlayerMapper() {
+    }
+
 }

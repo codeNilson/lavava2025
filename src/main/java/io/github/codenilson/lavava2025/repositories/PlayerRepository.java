@@ -12,7 +12,7 @@ public interface PlayerRepository extends JpaRepository<Player, UUID> {
 
     Optional<Player> findByUsername(String username);
 
-    Boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
     List<Player> findByActiveTrue();
 }
