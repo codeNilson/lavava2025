@@ -38,20 +38,24 @@ public class Player {
     @Getter
     private UUID id;
 
+    @Comment("Username of the player, must be unique.")
     @Column(unique = true, nullable = false)
     @Getter
     @Setter
     private String username;
 
+    @Comment("Password of the player, should be hashed before saving.")
     @Column(nullable = false)
     @Getter
     @Setter
     private String password;
 
+    @Comment("Favorite agent of the player, e.g., Jett, Reyna, etc.")
     @Getter
     @Setter
     private String agent;
 
+    @Comment("Set of roles assigned to the player, e.g., ADMIN, PLAYER, etc.")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable
     @Getter
