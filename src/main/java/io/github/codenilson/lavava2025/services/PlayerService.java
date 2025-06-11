@@ -12,6 +12,7 @@ import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
+import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,11 @@ public class PlayerService {
     }
 
     public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
+
+        if (existByUsername(playerCreateDTO.getUsername())) {
+            throw new UsernameAlreadyExistsException(playerCreateDTO.getUsername());
+        }
+
         String encodedPassword = encoder.encode(playerCreateDTO.getPassword());
         playerCreateDTO.setPassword(encodedPassword);
 
@@ -77,6 +83,10 @@ public class PlayerService {
         Player player = findById(id);
         player.getRoles().addAll(roles);
         playerRepository.save(player);
+    }
+
+    public Boolean existByUsername(String username) {
+        return playerRepository.existsByUsername(username);
     }
 
 }

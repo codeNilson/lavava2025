@@ -44,6 +44,10 @@ public class PlayerController {
 
     @PostMapping
     public ResponseEntity<PlayerResponseDTO> createPlayer(@RequestBody @Valid PlayerCreateDTO player) {
+        // if (playerServices.existByUsername(player.getUsername())) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(null);
+        // }
         PlayerResponseDTO response = playerServices.save(player);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
