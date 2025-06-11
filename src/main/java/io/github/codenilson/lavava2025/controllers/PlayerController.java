@@ -44,10 +44,6 @@ public class PlayerController {
 
     @PostMapping
     public ResponseEntity<PlayerResponseDTO> createPlayer(@RequestBody @Valid PlayerCreateDTO player) {
-        // if (playerServices.existByUsername(player.getUsername())) {
-        //     return ResponseEntity.status(HttpStatus.CONFLICT)
-        //             .body(null);
-        // }
         PlayerResponseDTO response = playerServices.save(player);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -90,6 +86,14 @@ public class PlayerController {
     public ResponseEntity<Void> addRoles(@PathVariable("id") UUID id,
             @RequestBody RoleDTO roles) {
         playerServices.addRoles(id, roles.getRoles());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}/roles")
+    public ResponseEntity<Void> removeRoles(@PathVariable("id") UUID id,
+            @RequestBody RoleDTO roles) {
+        playerServices.removeRoles(id, roles.getRoles());
         return ResponseEntity.noContent().build();
     }
 

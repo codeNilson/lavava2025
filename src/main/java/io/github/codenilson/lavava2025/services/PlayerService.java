@@ -85,6 +85,13 @@ public class PlayerService {
         playerRepository.save(player);
     }
 
+    public void removeRoles(UUID id, Set<String> roles) {
+        Player player = findById(id);
+        roles.removeIf(role -> role.equals("PLAYER"));
+        player.getRoles().removeAll(roles);
+        playerRepository.save(player);
+    }
+
     public Boolean existByUsername(String username) {
         return playerRepository.existsByUsername(username);
     }
