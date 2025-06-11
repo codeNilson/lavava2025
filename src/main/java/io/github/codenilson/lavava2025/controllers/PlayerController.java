@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
+import io.github.codenilson.lavava2025.dto.player.RoleDTO;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import jakarta.validation.Valid;
@@ -78,6 +79,14 @@ public class PlayerController {
         Player player = playerServices.updatePlayer(id, dto);
         PlayerResponseDTO response = new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{id}/roles")
+    public ResponseEntity<Void> addRoles(@PathVariable("id") UUID id,
+            @RequestBody RoleDTO roles) {
+        playerServices.addRoles(id, roles.getRoles());
+        return ResponseEntity.noContent().build();
     }
 
 }

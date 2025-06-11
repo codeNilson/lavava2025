@@ -30,6 +30,7 @@ public class PlayerTeam {
 
     @Comment("Primary key composed of player and team IDs")
     @EmbeddedId
+    @Getter
     private PlayerTeamPk id;
 
     @ManyToOne

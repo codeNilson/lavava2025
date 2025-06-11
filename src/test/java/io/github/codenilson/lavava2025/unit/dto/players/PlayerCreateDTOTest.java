@@ -27,7 +27,6 @@ public class PlayerCreateDTOTest {
         dto.setUsername("ValidUser");
         dto.setPassword("Valid@123");
         dto.setAgent("agent1");
-        dto.addRole("PLAYER");
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());

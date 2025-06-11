@@ -3,7 +3,6 @@ package io.github.codenilson.lavava2025.services;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -71,8 +70,10 @@ public class PlayerService {
         return player;
     }
 
-    public boolean existsById(UUID id) {
-        return playerRepository.existsById(id);
+    public void addRoles(UUID id, List<String> roles) {
+        Player player = findById(id);
+        player.getRoles().addAll(roles);
+        playerRepository.save(player);
     }
 
 }

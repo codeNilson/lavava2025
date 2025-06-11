@@ -65,7 +65,6 @@ class PlayerServiceTest {
         dto.setPassword("plainpass");
         Player player = new Player();
         Player savedPlayer = new Player();
-        savedPlayer.setId(UUID.randomUUID());
 
         when(encoder.encode("plainpass")).thenReturn("hashedpass");
         when(playerMapper.toEntity(dto)).thenReturn(player);
@@ -131,7 +130,6 @@ class PlayerServiceTest {
     void testUpdatePlayer() {
         UUID id = UUID.randomUUID();
         Player player = new Player();
-        player.setId(id);
         player.setUsername("old");
         player.setPassword("oldpass");
         player.setAgent("oldAgent");
@@ -162,14 +160,5 @@ class PlayerServiceTest {
         when(playerRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(PlayerNotFoundException.class, () -> playerService.updatePlayer(id, dto));
-    }
-
-    @Test
-    void testExistsById() {
-        UUID id = UUID.randomUUID();
-        when(playerRepository.existsById(id)).thenReturn(true);
-
-        assertTrue(playerService.existsById(id));
-        verify(playerRepository).existsById(id);
     }
 }

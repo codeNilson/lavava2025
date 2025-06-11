@@ -2,7 +2,6 @@ package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -12,6 +11,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -36,7 +36,6 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
-    @Setter
     private UUID id;
 
     @Column(unique = true, nullable = false)
@@ -56,15 +55,15 @@ public class Player {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable
     @Getter
-    @Setter
     private Set<String> roles = new HashSet<>();
 
     @Comment("Set of teams the player is part of")
-    @OneToMany(mappedBy = "player")
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
     private Set<PlayerTeam> teams = new HashSet<>();
 
     @Comment("Set of performances of the player in matches")
     @OneToMany(mappedBy = "player")
+    @Getter
     private Set<PlayerPerfomance> performances = new HashSet<>();
 
     @Comment("Indicates if the player is active. Do not delete players, just set them inactive.")

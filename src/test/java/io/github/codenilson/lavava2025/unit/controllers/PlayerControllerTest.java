@@ -40,9 +40,7 @@ class PlayerControllerTest {
     @Test
     void testFindAllActivePlayers() {
         Player player1 = new Player();
-        player1.setId(UUID.randomUUID());
         Player player2 = new Player();
-        player2.setId(UUID.randomUUID());
         when(playerService.findActivePlayers()).thenReturn(List.of(player1, player2));
 
         ResponseEntity<List<PlayerResponseDTO>> response = playerController.findAllActivePlayers();
@@ -74,7 +72,6 @@ class PlayerControllerTest {
     void testDeleteById() {
         UUID id = UUID.randomUUID();
         Player player = new Player();
-        player.setId(id);
 
         when(playerService.findById(id)).thenReturn(player);
 
@@ -83,22 +80,6 @@ class PlayerControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(playerService).findById(id);
         verify(playerService).delete(player);
-    }
-
-    @Test
-    void testFindById() {
-        UUID id = UUID.randomUUID();
-        Player player = new Player();
-        player.setId(id);
-
-        when(playerService.findById(id)).thenReturn(player);
-
-        ResponseEntity<PlayerResponseDTO> response = playerController.findById(id);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(id, response.getBody().getId());
-        verify(playerService).findById(id);
     }
 
     @Test
@@ -123,7 +104,6 @@ class PlayerControllerTest {
         PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
         updateDTO.setUsername("newuser");
         Player player = new Player();
-        player.setId(id);
         player.setUsername("newuser");
 
         when(playerService.updatePlayer(id, updateDTO)).thenReturn(player);

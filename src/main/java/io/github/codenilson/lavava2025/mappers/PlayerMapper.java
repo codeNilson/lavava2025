@@ -16,7 +16,6 @@ public class PlayerMapper {
         player.setUsername(playerCreateDTO.getUsername());
         player.setPassword(playerCreateDTO.getPassword());
         player.setAgent(playerCreateDTO.getAgent());
-        player.setRoles(playerCreateDTO.getRoles());
         return player;
     }
 
