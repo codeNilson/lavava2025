@@ -2,7 +2,6 @@ package io.github.codenilson.lavava2025.unit.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import io.github.codenilson.lavava2025.controllers.PlayerController;
-import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;

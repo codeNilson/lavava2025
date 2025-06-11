@@ -71,12 +71,4 @@ public class Team {
     public Set<Player> getPlayers() {
         return players.stream().map(PlayerTeam::getPlayer).collect(Collectors.toSet());
     }
-
-    public void addPlayer(Player player) {
-        players.add(new PlayerTeam(player, this));
-    }
-
-    public void removePlayer(Player player) {
-        players.removeIf(pt -> pt.getPlayer().equals(player));
-    }
 }

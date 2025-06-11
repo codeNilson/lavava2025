@@ -114,7 +114,7 @@ public class PlayerRepositoryTest {
         player.setUsername("testUser");
         player.setPassword("example01");
         playerRepository.save(player);
-        Thread.sleep(1500); // Ensure a time difference for update
+        Thread.sleep(1000);
 
         // When
         Player result = playerRepository.findByUsername("testUser").get();
@@ -122,7 +122,6 @@ public class PlayerRepositoryTest {
         playerRepository.saveAndFlush(result);
 
         // Then
-
         assertNotNull(result.getUpdatedAt());
         assertTrue(result.getCreatedAt().isBefore(result.getUpdatedAt()));
     }
@@ -169,4 +168,59 @@ public class PlayerRepositoryTest {
         });
     }
 
+    @Test
+    public void testPlayerUsernameMustBeUnique() {
+        Player player1 = new Player();
+        player1.setUsername("testUser");
+        player1.setPassword("example01");
+        playerRepository.saveAndFlush(player1);
+
+        Player player2 = new Player();
+        player2.setUsername("testUser");
+        player2.setPassword("example02");
+
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            playerRepository.saveAndFlush(player2);
+        });
+    }
+
+    @Test
+    public void testPlayerPasswordCanNotBeNull() {
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword(null);
+        player.setAgent("agent1");
+
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            playerRepository.saveAndFlush(player);
+        });
+    }
+
+    @Test
+    public void testExistsByUsername() {
+        // Given
+        String username = "testUser";
+        Player player = new Player();
+        player.setUsername(username);
+        player.setPassword("example01");
+        playerRepository.save(player);
+
+        // When
+        boolean exists = playerRepository.existsByUsername(username);
+
+        // Then
+        assertTrue(exists);
+    }
+
+    @Test
+    public void testExistsByUsernameNotFound() {
+        // Given
+        String username = "nonExistentUser";
+
+        // When
+        boolean exists = playerRepository.existsByUsername(username);
+
+        // Then
+        assertFalse(exists);
+    }
 }

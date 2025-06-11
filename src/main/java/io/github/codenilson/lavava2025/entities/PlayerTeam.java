@@ -35,14 +35,14 @@ public class PlayerTeam {
 
     @ManyToOne
     @MapsId("playerId")
-    @JoinColumn(name = "player_id", nullable = true)
+    @JoinColumn(name = "player_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Getter
     private Player player;
 
     @ManyToOne
     @MapsId("teamId")
-    @JoinColumn(name = "team_id", nullable = true)
+    @JoinColumn(name = "team_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Getter
     private Team team;

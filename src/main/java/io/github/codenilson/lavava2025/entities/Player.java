@@ -92,12 +92,4 @@ public class Player {
         return teams.stream().map(PlayerTeam::getTeam).collect(Collectors.toSet());
     }
 
-    public void addTeam(Team team) {
-        teams.add(new PlayerTeam(this, team));
-    }
-
-    public void removeTeam(Team team) {
-        teams.removeIf(pt -> pt.getTeam().equals(team));
-    }
-
 }
