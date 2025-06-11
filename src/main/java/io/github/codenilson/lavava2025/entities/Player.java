@@ -91,14 +91,6 @@ public class Player {
         this.active = active;
     }
 
-    public void addRole(String role) {
-        this.roles.add(role);
-    }
-
-    public void removeRole(String role) {
-        this.roles.remove(role);
-    }
-
     public Set<Team> getTeams() {
         return teams.stream().map(PlayerTeam::getTeam).collect(Collectors.toSet());
     }

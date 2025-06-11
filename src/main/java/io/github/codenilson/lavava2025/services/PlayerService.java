@@ -1,6 +1,7 @@
 package io.github.codenilson.lavava2025.services;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,8 @@ public class PlayerService {
 
         Player player = playerMapper.toEntity(playerCreateDTO);
         Player savedPlayer = playerRepository.save(player);
+        addRoles(savedPlayer.getId(), Set.of("PLAYER")); // Ensure PLAYER role is always present
+        playerRepository.save(savedPlayer); // Save again to ensure roles are persisted
 
         return new PlayerResponseDTO(savedPlayer);
     }
@@ -70,7 +73,7 @@ public class PlayerService {
         return player;
     }
 
-    public void addRoles(UUID id, List<String> roles) {
+    public void addRoles(UUID id, Set<String> roles) {
         Player player = findById(id);
         player.getRoles().addAll(roles);
         playerRepository.save(player);

@@ -1,6 +1,6 @@
 package io.github.codenilson.lavava2025.config;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -64,10 +64,10 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         Player player2 = playerServices.findByUsername("Jogador2");
         Player player3 = playerServices.findByUsername("Jogador3");
 
-        playerServices.addRoles(player1.getId(), List.of("ADMIN"));
-        playerServices.addRoles(player1.getId(), List.of("PLAYER"));
-        playerServices.addRoles(player2.getId(), List.of("PLAYER"));
-        playerServices.addRoles(player3.getId(), List.of("PLAYER"));
+        playerServices.addRoles(player1.getId(), Set.of("ADMIN"));
+        playerServices.addRoles(player1.getId(), Set.of("PLAYER"));
+        playerServices.addRoles(player2.getId(), Set.of("PLAYER"));
+        playerServices.addRoles(player3.getId(), Set.of("PLAYER"));
 
         Match match = new Match();
         match.setMap("Dust 2");
