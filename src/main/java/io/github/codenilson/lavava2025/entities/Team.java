@@ -36,9 +36,10 @@ public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
-    @Setter
+    @Setter // retirar
     private UUID id;
 
+    @Comment("The match this team belongs to")
     @ManyToOne
     @Getter
     @Setter
@@ -78,14 +79,4 @@ public class Team {
     public void removePlayer(Player player) {
         players.removeIf(pt -> pt.getPlayer().equals(player));
     }
-
-    public void addPerfomance(PlayerPerfomance performance) {
-        performance.setTeam(this);
-        performances.add(performance);
-    }
-
-    public void removePerfomance(PlayerPerfomance performance) {
-        performances.remove(performance);
-    }
-
 }

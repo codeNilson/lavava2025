@@ -75,6 +75,7 @@ public class Match {
 
     @Comment("All player's performances in this match.")
     @OneToMany(mappedBy = "match")
+    @Getter
     private Set<PlayerPerfomance> playerPerformances = new HashSet<>();
 
     @CreatedDate
@@ -95,10 +96,6 @@ public class Match {
         this.winner = winner;
         this.mvp = mvp;
         this.ace = ace;
-    }
-
-    public Set<PlayerPerfomance> getPlayerPerformances() {
-        return playerPerformances;
     }
 
 }

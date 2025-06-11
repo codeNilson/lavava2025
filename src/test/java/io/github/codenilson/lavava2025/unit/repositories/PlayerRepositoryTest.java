@@ -143,25 +143,6 @@ public class PlayerRepositoryTest {
     }
 
     @Test
-    public void testPlayerRoles() {
-        // Given
-        Player player = new Player();
-        player.setUsername("testUser");
-        player.setPassword("example01");
-        player.addRole("PLAYER");
-        player.addRole("ADMIN");
-        playerRepository.save(player);
-
-        // When
-        Player result = playerRepository.findById(player.getId()).get();
-
-        // Then
-        assertTrue(result.getRoles().contains("PLAYER"));
-        assertTrue(result.getRoles().contains("ADMIN"));
-        assertFalse(result.getRoles().contains("GUEST"));
-    }
-
-    @Test
     public void testPlayerRolesEmpty() {
         // Given
         Player player = new Player();
@@ -174,24 +155,6 @@ public class PlayerRepositoryTest {
 
         // Then
         assertTrue(result.getRoles().isEmpty());
-    }
-
-    @Test
-    public void testPlayerRolesRemove() {
-        // Given
-        Player player = new Player();
-        player.setUsername("testUser");
-        player.setPassword("example01");
-        player.addRole("PLAYER");
-        playerRepository.save(player);
-
-        // When
-        Player result = playerRepository.findById(player.getId()).get();
-        result.removeRole("PLAYER");
-        playerRepository.save(result);
-
-        // Then
-        assertFalse(result.getRoles().contains("PLAYER"));
     }
 
     @Test

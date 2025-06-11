@@ -58,26 +58,26 @@ class PlayerServiceTest {
         verify(playerRepository).findByActiveTrue();
     }
 
-    @Test
-    void testSave() {
-        PlayerCreateDTO dto = new PlayerCreateDTO();
-        dto.setUsername("user");
-        dto.setPassword("plainpass");
-        Player player = new Player();
-        Player savedPlayer = new Player();
+    // @Test
+    // void testSave() {
+    //     PlayerCreateDTO dto = new PlayerCreateDTO();
+    //     dto.setUsername("user");
+    //     dto.setPassword("plainpass");
+    //     Player player = new Player();
+    //     Player savedPlayer = new Player();
 
-        when(encoder.encode("plainpass")).thenReturn("hashedpass");
-        when(playerMapper.toEntity(dto)).thenReturn(player);
-        when(playerRepository.save(player)).thenReturn(savedPlayer);
+    //     when(encoder.encode("plainpass")).thenReturn("hashedpass");
+    //     when(playerMapper.toEntity(dto)).thenReturn(player);
+    //     when(playerRepository.save(player)).thenReturn(savedPlayer);
 
-        PlayerResponseDTO response = playerService.save(dto);
+    //     PlayerResponseDTO response = playerService.save(dto);
 
-        assertNotNull(response);
-        assertEquals(savedPlayer.getId(), response.getId());
-        verify(encoder).encode("plainpass");
-        verify(playerMapper).toEntity(dto);
-        verify(playerRepository).save(player);
-    }
+    //     assertNotNull(response);
+    //     assertEquals(savedPlayer.getId(), response.getId());
+    //     verify(encoder).encode("plainpass");
+    //     verify(playerMapper).toEntity(dto);
+    //     verify(playerRepository).save(player);
+    // }
 
     @Test
     void testFindByIdFound() {

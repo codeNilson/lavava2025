@@ -65,20 +65,4 @@ public class PlayerTeam {
         this.player = player;
         this.team = team;
     }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-        if (id == null) {
-            this.id = new PlayerTeamPk();
-        }
-        id.setPlayerId(player.getId());
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-        if (id == null) {
-            this.id = new PlayerTeamPk();
-        }
-        id.setTeamId(team.getId());
-    }
 }

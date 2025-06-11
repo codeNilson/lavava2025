@@ -88,13 +88,6 @@ public class Player {
     public Player() {
     }
 
-    public Player(String username, String password, String agent, boolean active) {
-        this.username = username;
-        this.password = password;
-        this.agent = agent;
-        this.active = active;
-    }
-
     public Set<Team> getTeams() {
         return teams.stream().map(PlayerTeam::getTeam).collect(Collectors.toSet());
     }
