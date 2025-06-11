@@ -1,6 +1,7 @@
 package io.github.codenilson.lavava2025.handlers;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PlayerNotFoundException.class)
     public ResponseEntity<Object> handlePlayerNotFoundException(PlayerNotFoundException ex) {
         Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
+        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         response.put("status", HttpStatus.NOT_FOUND.value());
         response.put("error", "Player Not Found");
         response.put("message", ex.getMessage());
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler {
                         (existing, replacement) -> existing));
 
         Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
+        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         response.put("status", HttpStatus.BAD_REQUEST.value());
         response.put("error", "Validation Error");
         response.put("errors", errors);
@@ -49,7 +50,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(UsernameAlreadyExistsException ex) {
         Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
+        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         response.put("status", HttpStatus.CONFLICT.value());
         response.put("error", "Data Integrity Violation");
         response.put("message", ex.getMessage());
