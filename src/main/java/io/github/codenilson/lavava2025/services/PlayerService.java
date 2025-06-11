@@ -33,9 +33,9 @@ public class PlayerService {
 
         Player player = playerMapper.toEntity(playerCreateDTO);
         Player savedPlayer = playerRepository.save(player);
-        addRoles(savedPlayer.getId(), Set.of("PLAYER")); // Ensure PLAYER role is always present
-        playerRepository.save(savedPlayer); // Save again to ensure roles are persisted
-
+        if (!savedPlayer.getRoles().contains("PLAYER")) {
+            addRoles(savedPlayer.getId(), Set.of("PLAYER"));
+        }
         return new PlayerResponseDTO(savedPlayer);
     }
 
@@ -55,12 +55,12 @@ public class PlayerService {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id));
 
+        // username must be unique
         if (dto.getUsername() != null) {
             player.setUsername(dto.getUsername());
         }
         if (dto.getPassword() != null) {
-            player.setPassword(dto.getPassword());
-            // depois trata a questão do hash aqui
+            player.setPassword(encoder.encode(dto.getPassword()));
         }
         if (dto.getAgent() != null) {
             player.setAgent(dto.getAgent());

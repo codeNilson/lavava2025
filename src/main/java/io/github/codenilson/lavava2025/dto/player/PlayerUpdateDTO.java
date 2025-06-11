@@ -1,10 +1,8 @@
 package io.github.codenilson.lavava2025.dto.player;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 public class PlayerUpdateDTO {
 
     @Getter
@@ -22,6 +20,9 @@ public class PlayerUpdateDTO {
     @Getter
     @Setter
     private Boolean active;
+
+    public PlayerUpdateDTO() {
+    }
 
     @Override
     public int hashCode() {
