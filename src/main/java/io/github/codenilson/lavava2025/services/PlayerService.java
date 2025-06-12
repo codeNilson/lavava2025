@@ -55,12 +55,15 @@ public class PlayerService {
         playerRepository.delete(player);
     }
 
-    public Player updatePlayer(UUID id, PlayerUpdateDTO dto) {
+    public PlayerResponseDTO updatePlayer(UUID id, PlayerUpdateDTO dto) {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id));
 
         // username must be unique
         if (dto.getUsername() != null) {
+            if (playerRepository.existsByUsername(dto.getUsername())) {
+                throw new UsernameAlreadyExistsException(dto.getUsername());
+            }
             player.setUsername(dto.getUsername());
         }
         if (dto.getPassword() != null) {
@@ -74,7 +77,7 @@ public class PlayerService {
         }
 
         playerRepository.save(player);
-        return player;
+        return new PlayerResponseDTO(player);
     }
 
     public void addRoles(UUID id, Set<String> roles) {

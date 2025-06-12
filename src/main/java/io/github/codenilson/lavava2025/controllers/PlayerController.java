@@ -76,8 +76,7 @@ public class PlayerController {
     @PatchMapping("/{id}")
     public ResponseEntity<PlayerResponseDTO> updatePlayer(@RequestBody PlayerUpdateDTO dto,
             @PathVariable("id") UUID id) {
-        Player player = playerServices.updatePlayer(id, dto);
-        PlayerResponseDTO response = new PlayerResponseDTO(player);
+        PlayerResponseDTO response = playerServices.updatePlayer(id, dto);
         return ResponseEntity.ok(response);
     }
 
