@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,6 +24,7 @@ public class PlayerRepositoryTest {
     private PlayerRepository playerRepository;
 
     @Test
+    @DisplayName("Should find Player by username")
     public void testFindByUsername() {
         // Given
         String username = "testUser";
@@ -41,6 +43,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should return empty Optional when username not found")
     public void testFindByUsernameNotFound() {
         // Given
         String username = "nonExistentUser";
@@ -53,6 +56,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should find only active players")
     public void testFindByActiveTrue() {
         // Given
         Player activePlayer = new Player();
@@ -76,6 +80,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should return empty list when no active players")
     public void testFindByActiveTrueReturnsEmptyWhenNoActivePlayers() {
         // Given
         Player inactivePlayer = new Player();
@@ -92,6 +97,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should set createdAt when saving Player")
     public void testCreatedAt() {
         // Given
         Player player = new Player();
@@ -108,6 +114,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should update updatedAt when Player is updated")
     public void testUpdatedAt() throws InterruptedException {
         // Given
         Player player = new Player();
@@ -127,6 +134,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should set active to true by default")
     public void testActiveDefaultTrue() {
         // Given
         Player player = new Player();
@@ -142,6 +150,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should have empty roles by default")
     public void testPlayerRolesEmpty() {
         // Given
         Player player = new Player();
@@ -157,6 +166,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should not allow null username")
     public void testPlayerUsernameCanNotBeNull() {
         Player player = new Player();
         player.setUsername(null);
@@ -169,6 +179,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should not allow duplicate usernames")
     public void testPlayerUsernameMustBeUnique() {
         Player player1 = new Player();
         player1.setUsername("testUser");
@@ -185,6 +196,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should not allow null password")
     public void testPlayerPasswordCanNotBeNull() {
         Player player = new Player();
         player.setUsername("testUser");
@@ -197,6 +209,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Test that PlayerRepository existsByUsername returns true for existing username")
     public void testExistsByUsername() {
         // Given
         String username = "testUser";
@@ -213,6 +226,7 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should return false for existsByUsername when username does not exist")
     public void testExistsByUsernameNotFound() {
         // Given
         String username = "nonExistentUser";

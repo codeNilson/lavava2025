@@ -36,6 +36,7 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
+    @Setter
     private UUID id;
 
     @Comment("Username of the player, must be unique.")

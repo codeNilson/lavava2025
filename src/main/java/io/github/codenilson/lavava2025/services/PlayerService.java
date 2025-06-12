@@ -38,10 +38,8 @@ public class PlayerService {
         playerCreateDTO.setPassword(encodedPassword);
 
         Player player = playerMapper.toEntity(playerCreateDTO);
+        player.getRoles().add("PLAYER");
         Player savedPlayer = playerRepository.save(player);
-        if (!savedPlayer.getRoles().contains("PLAYER")) {
-            addRoles(savedPlayer.getId(), Set.of("PLAYER"));
-        }
         return new PlayerResponseDTO(savedPlayer);
     }
 
