@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         response.put("status", HttpStatus.CONFLICT.value());
-        response.put("error", "Data Integrity Violation");
+        response.put("error", "Username already exists");
         response.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(response);
