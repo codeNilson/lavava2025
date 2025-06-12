@@ -8,7 +8,6 @@ import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 public class MatchUpdateDTO {
