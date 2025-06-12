@@ -25,7 +25,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Should find Player by username")
-    public void testFindByUsername() {
+    public void testFindByUsernameShouldReturnPlayer() {
         // Given
         String username = "testUser";
         String password = "example01";
@@ -44,7 +44,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Should return empty Optional when username not found")
-    public void testFindByUsernameNotFound() {
+    public void testFindByUsernameShouldReturnEmptyWhenNotFound() {
         // Given
         String username = "nonExistentUser";
 
@@ -57,7 +57,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Should find only active players")
-    public void testFindByActiveTrue() {
+    public void testFindByActiveTrueShouldReturnOnlyActivePlayers() {
         // Given
         Player activePlayer = new Player();
         activePlayer.setUsername("activeUser");
@@ -81,7 +81,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Should return empty list when no active players")
-    public void testFindByActiveTrueReturnsEmptyWhenNoActivePlayers() {
+    public void testFindByActiveTrueShouldReturnEmptyWhenNoActivePlayers() {
         // Given
         Player inactivePlayer = new Player();
         inactivePlayer.setUsername("inactiveUser");
@@ -98,7 +98,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Should set createdAt when saving Player")
-    public void testCreatedAt() {
+    public void testCreatedAtShouldBeSet() {
         // Given
         Player player = new Player();
         player.setUsername("testUser");
@@ -115,7 +115,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Should update updatedAt when Player is updated")
-    public void testUpdatedAt() throws InterruptedException {
+    public void testUpdatedAtShouldBeSet() throws InterruptedException {
         // Given
         Player player = new Player();
         player.setUsername("testUser");
@@ -180,7 +180,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Should not allow duplicate usernames")
-    public void testPlayerUsernameMustBeUnique() {
+    public void testPlayerUsernameShouldBeUnique() {
         Player player1 = new Player();
         player1.setUsername("testUser");
         player1.setPassword("example01");
@@ -197,7 +197,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Should not allow null password")
-    public void testPlayerPasswordCanNotBeNull() {
+    public void testPlayerPasswordShouldNotBeNull() {
         Player player = new Player();
         player.setUsername("testUser");
         player.setPassword(null);
@@ -210,7 +210,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Test that PlayerRepository existsByUsername returns true for existing username")
-    public void testExistsByUsername() {
+    public void testExistsByUsernameShouldReturnTrueIfUsernameExists() {
         // Given
         String username = "testUser";
         Player player = new Player();
@@ -227,7 +227,7 @@ public class PlayerRepositoryTest {
 
     @Test
     @DisplayName("Should return false for existsByUsername when username does not exist")
-    public void testExistsByUsernameNotFound() {
+    public void testExistsByUsernameShouldReturnFalseIfUsernameDoesNotExist() {
         // Given
         String username = "nonExistentUser";
 

@@ -1,6 +1,7 @@
 package io.github.codenilson.lavava2025.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -10,10 +11,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -50,6 +55,7 @@ class PlayerServiceTest {
     }
 
     @Test
+    @DisplayName("Should create a new player when username does not exist")
     void saveShouldCreateNewPlayer() {
         // Given
         PlayerCreateDTO createDTO = new PlayerCreateDTO();
@@ -81,6 +87,7 @@ class PlayerServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception when username already exists")
     public void saveShouldRaiseExceptionWhenUsernameExists() {
         // Given
         PlayerCreateDTO createDTO = new PlayerCreateDTO();
@@ -98,6 +105,7 @@ class PlayerServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception when player not found by ID")
     public void findByIdShouldRaiseErrorIfPlayerNotFound() {
         // Given
         when(playerRepository.findById(any(UUID.class)))
@@ -113,6 +121,7 @@ class PlayerServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception when player not found by username")
     public void findByUsernameShouldRaiseErrorIfPlayerNotFound() {
         // Given
         String username = "nonexistentplayer";
@@ -128,6 +137,7 @@ class PlayerServiceTest {
     }
 
     @Test
+    @DisplayName("Should update player details successfully")
     public void updatePlayerShouldUpdatePlayerDetails() {
         // Given
         UUID playerId = UUID.randomUUID();
@@ -162,6 +172,7 @@ class PlayerServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw exception when updating non-existent player")
     public void updatePlayerShouldRaiseErrorIfPlayerNotFound() {
         // Given
         UUID playerId = UUID.randomUUID();
@@ -176,5 +187,117 @@ class PlayerServiceTest {
                 () -> playerService.updatePlayer(playerId, dto));
 
         verify(playerRepository).findById(playerId);
+    }
+
+    @Test
+    @DisplayName("Should add roles to player successfully")
+    public void addRolesShouldAddRolesToPlayer() {
+        // Given
+        UUID playerId = UUID.randomUUID();
+        Player player = new Player();
+        player.setId(playerId);
+        player.setUsername("existingplayer");
+        player.getRoles().add("PLAYER");
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
+        when(playerRepository.save(player)).thenReturn(player);
+        Set<String> rolesToAdd = new HashSet<>(Arrays.asList("ADMIN", "MODERATOR"));
+
+        // When
+        playerService.addRoles(playerId, rolesToAdd);
+
+        // Then
+        assertEquals(3, player.getRoles().size());
+        assertTrue(player.getRoles().contains("ADMIN"));
+        assertTrue(player.getRoles().contains("MODERATOR"));
+        assertTrue(player.getRoles().contains("PLAYER"));
+
+        verify(playerRepository).findById(playerId);
+        verify(playerRepository).save(player);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when adding roles to non-existent player")
+    public void addRolesShouldRaiseErrorIfPlayerNotFound() {
+        // Given
+        UUID playerId = UUID.randomUUID();
+        Set<String> rolesToAdd = new HashSet<>(Arrays.asList("ADMIN", "MODERATOR"));
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(
+                PlayerNotFoundException.class,
+                () -> playerService.addRoles(playerId, rolesToAdd));
+        verify(playerRepository).findById(playerId);
+        verify(playerRepository, times(0)).save(any(Player.class));
+    }
+
+    @Test
+    @DisplayName("Should remove specified roles from player")
+    public void removeRolesShouldRemoveRolesFromPlayer() {
+        // Given
+        UUID playerId = UUID.randomUUID();
+        Player player = new Player();
+        player.setId(playerId);
+        player.setUsername("existingplayer");
+        player.getRoles().addAll(new HashSet<>(Arrays.asList("PLAYER", "ADMIN", "MODERATOR")));
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
+        when(playerRepository.save(player)).thenReturn(player);
+        Set<String> rolesToRemove = new HashSet<>(Arrays.asList("ADMIN", "MODERATOR"));
+        // When
+        playerService.removeRoles(playerId, rolesToRemove);
+        // Then
+        assertEquals(1, player.getRoles().size());
+        assertTrue(player.getRoles().contains("PLAYER"));
+        assertFalse(player.getRoles().contains("ADMIN"));
+        assertFalse(player.getRoles().contains("MODERATOR"));
+        verify(playerRepository).findById(playerId);
+        verify(playerRepository).save(player);
+    }
+
+    @Test
+    @DisplayName("Should not remove PLAYER role from player")
+    public void removeRolesShouldNotRemovePlayerRole() {
+        // Given
+        UUID playerId = UUID.randomUUID();
+        Player player = new Player();
+        player.setId(playerId);
+        player.setUsername("existingplayer");
+        player.getRoles().addAll(new HashSet<>(Arrays.asList("PLAYER", "ADMIN", "MODERATOR")));
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
+        when(playerRepository.save(player)).thenReturn(player);
+        Set<String> rolesToRemove = new HashSet<>(Arrays.asList("PLAYER", "MODERATOR"));
+
+        // When
+        playerService.removeRoles(playerId, rolesToRemove);
+        
+        // Then
+        assertEquals(2, player.getRoles().size());
+        assertTrue(player.getRoles().contains("PLAYER"));
+        assertTrue(player.getRoles().contains("ADMIN"));
+        assertFalse(player.getRoles().contains("MODERATOR"));
+
+        verify(playerRepository).findById(playerId);
+        verify(playerRepository).save(player);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when removing roles from non-existent player")
+    public void removeRolesShouldRaiseErrorIfPlayerNotFound() {
+        // Given
+        UUID playerId = UUID.randomUUID();
+        Set<String> rolesToRemove = new HashSet<>(Arrays.asList("ADMIN", "MODERATOR"));
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(
+                PlayerNotFoundException.class,
+                () -> playerService.removeRoles(playerId, rolesToRemove));
+        verify(playerRepository).findById(playerId);
+        verify(playerRepository, times(0)).save(any(Player.class));
     }
 }
