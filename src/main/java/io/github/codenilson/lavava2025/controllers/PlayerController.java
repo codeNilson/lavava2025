@@ -35,10 +35,7 @@ public class PlayerController {
 
     @GetMapping
     public ResponseEntity<List<PlayerResponseDTO>> findAllActivePlayers() {
-        List<Player> players = playerServices.findActivePlayers();
-
-        List<PlayerResponseDTO> response = players.stream().map(PlayerResponseDTO::new)
-                .toList();
+        List<PlayerResponseDTO> response = playerServices.findActivePlayers();
         return ResponseEntity.ok(response);
     }
 

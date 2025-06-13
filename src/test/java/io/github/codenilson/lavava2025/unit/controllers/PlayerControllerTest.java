@@ -1,0 +1,252 @@
+package io.github.codenilson.lavava2025.unit.controllers;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Set;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.github.codenilson.lavava2025.authentication.PlayerDetails;
+import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
+import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
+import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.repositories.PlayerRepository;
+import io.github.codenilson.lavava2025.services.PlayerService;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+public class PlayerControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private PlayerService playerService;
+
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    private PlayerDetails playerDetails;
+
+    @BeforeEach
+    public void setUp() {
+
+        // Clear the database before each test
+        playerRepository.deleteAll();
+
+        // Create test players
+
+        PlayerCreateDTO player1 = new PlayerCreateDTO();
+        player1.setUsername("player1");
+        player1.setPassword("Test@1234");
+        player1.setAgent("Reyna");
+
+        PlayerCreateDTO player2 = new PlayerCreateDTO();
+        player2.setUsername("player2");
+        player2.setPassword("Test@1234");
+        player2.setAgent("Deadlock");
+
+        PlayerCreateDTO player3 = new PlayerCreateDTO();
+        player3.setUsername("player3");
+        player3.setPassword("Test@1234");
+        player3.setAgent("Gekko");
+
+        PlayerCreateDTO player4 = new PlayerCreateDTO();
+        player4.setUsername("player4");
+        player4.setPassword("Test@1234");
+        player4.setAgent("Gekko");
+
+        // Save players to the database
+        playerService.save(player1);
+        playerService.save(player2);
+        playerService.save(player3);
+        playerService.save(player4);
+
+        // Set player4 as inactive. This simulates a player that should not be returned
+        // in the active players list.
+        PlayerUpdateDTO playerUpdateDTO = new PlayerUpdateDTO();
+        playerUpdateDTO.setActive(false);
+        playerService.updatePlayer(playerService.findByUsername("player4"), playerUpdateDTO);
+
+        // Add ADMIN role to player1
+        Player savedPlayer1 = playerService.findByUsername("player1");
+        playerService.addRoles(savedPlayer1.getId(), Set.of("ADMIN"));
+
+        // Create PlayerDetails for the authenticated user
+        this.playerDetails = new PlayerDetails(savedPlayer1);
+    }
+
+    @Test
+    public void testFindAllActivePlayers() throws Exception {
+
+        mockMvc.perform(get("/players")
+                .with(user(playerDetails)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$[*].id").exists())
+                .andExpect(jsonPath("$[*].username", containsInAnyOrder("player1", "player2", "player3")))
+                .andExpect(jsonPath("$[*].agent", containsInAnyOrder("Reyna", "Deadlock", "Gekko")))
+                .andExpect(jsonPath("$[*].active", containsInAnyOrder(true, true, true)))
+                .andExpect(jsonPath("$[*].roles").isArray())
+                .andExpect(jsonPath("$[0].roles", containsInAnyOrder("PLAYER", "ADMIN")))
+                .andExpect(jsonPath("$[1].roles", containsInAnyOrder("PLAYER")))
+                .andExpect(jsonPath("$[2].roles", containsInAnyOrder("PLAYER")))
+                .andExpect(jsonPath("$[*].password").doesNotExist());
+    }
+
+    @Test
+    public void testFindAllActivePlayers_Unauthenticated() throws Exception {
+        mockMvc.perform(get("/players"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testCreatePlayer() throws Exception {
+        PlayerCreateDTO newPlayer = new PlayerCreateDTO();
+        newPlayer.setUsername("newPlayer");
+        newPlayer.setPassword("New@1234");
+        newPlayer.setAgent("Phoenix");
+
+        mockMvc.perform(post("/players")
+                .with(user(playerDetails))
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(newPlayer)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.username").value("newPlayer"))
+                .andExpect(jsonPath("$.agent").value("Phoenix"))
+                .andExpect(jsonPath("$.active").value(true))
+                .andExpect(jsonPath("$.createdAt").exists())
+                .andExpect(jsonPath("$.updatedAt").exists())
+                .andExpect(jsonPath("$.roles", containsInAnyOrder("PLAYER")))
+                .andExpect(jsonPath("$[*].password").doesNotExist());
+    }
+
+    @Test
+    public void testCreatePlayer_UsernameAlreadyExists() throws Exception {
+        PlayerCreateDTO existingPlayer = new PlayerCreateDTO();
+        existingPlayer.setUsername("player1");
+        existingPlayer.setPassword("New@1234");
+        existingPlayer.setAgent("Phoenix");
+
+        mockMvc.perform(post("/players")
+                .with(user(playerDetails))
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(existingPlayer)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value("Username 'player1' already exists."))
+                .andExpect(jsonPath("$.error").value("Username already exists"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.CONFLICT.value()));
+    }
+
+    @Test
+    public void testCreatePlayer_InvalidPassword() throws Exception {
+        PlayerCreateDTO invalidPlayer = new PlayerCreateDTO();
+        invalidPlayer.setUsername("invalidPlayer");
+        invalidPlayer.setPassword("Abc@1");
+        invalidPlayer.setAgent("Phoenix");
+
+        mockMvc.perform(post("/players")
+                .with(user(playerDetails))
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(invalidPlayer)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Validation Error"))
+                .andExpect(jsonPath("$.errors.password").value("Password must be between 8 and 20 characters"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @Test
+    public void testCreatePlayer_InvalidUsername() throws Exception {
+        PlayerCreateDTO invalidPlayer = new PlayerCreateDTO();
+        invalidPlayer.setUsername("ab");
+        invalidPlayer.setPassword("New@1234");
+        invalidPlayer.setAgent("Phoenix");
+
+        mockMvc.perform(post("/players")
+                .with(user(playerDetails))
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(invalidPlayer)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Validation Error"))
+                .andExpect(jsonPath("$.errors.username").value("Username must be between 4 and 15 characters"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @Test
+    public void testCreatePlayer_PasswordWithoutSpecialCharacter() throws Exception {
+        PlayerCreateDTO invalidPlayer = new PlayerCreateDTO();
+        invalidPlayer.setUsername("invalidPlayer");
+        invalidPlayer.setPassword("New123456");
+        invalidPlayer.setAgent("Phoenix");
+
+        mockMvc.perform(post("/players")
+                .with(user(playerDetails))
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(invalidPlayer)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Validation Error"))
+                .andExpect(jsonPath("$.errors.password").value(
+                        "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @Test
+    public void testCreatePlayer_Unauthenticated() throws Exception {
+        PlayerCreateDTO newPlayer = new PlayerCreateDTO();
+        newPlayer.setUsername("newPlayer");
+        newPlayer.setPassword("New@1234");
+        newPlayer.setAgent("Phoenix");
+
+        mockMvc.perform(post("/players")
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(newPlayer)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void testFindById() throws Exception {
+        Player player = playerService.findByUsername("player1");
+
+        mockMvc.perform(get("/players/{id}", player.getId())
+                .with(user(playerDetails)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(player.getId().toString()))
+                .andExpect(jsonPath("$.username").value("player1"))
+                .andExpect(jsonPath("$.agent").value("Reyna"))
+                .andExpect(jsonPath("$.active").value(true))
+                .andExpect(jsonPath("$.roles", containsInAnyOrder("PLAYER", "ADMIN")))
+                .andExpect(jsonPath("$.password").doesNotExist());
+    }
+
+    @Test
+    public void testFindById_PlayerNotFound() throws Exception {
+        mockMvc.perform(get("/players/{id}", "00000000-0000-0000-0000-000000000000")
+                .with(user(playerDetails)))
+                .andExpect(status().isNotFound())
+                .andExpect(
+                        jsonPath("$.message").value("Player not found with ID: 00000000-0000-0000-0000-000000000000"))
+                .andExpect(jsonPath("$.error").value("Player Not Found"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+}

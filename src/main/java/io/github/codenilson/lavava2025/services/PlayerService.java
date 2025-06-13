@@ -24,8 +24,11 @@ public class PlayerService {
     private final PlayerMapper playerMapper;
     private final PasswordEncoder encoder;
 
-    public List<Player> findActivePlayers() {
-        return playerRepository.findByActiveTrue();
+    public List<PlayerResponseDTO> findActivePlayers() {
+        List<Player> activePlayers = playerRepository.findByActiveTrue();
+        List<PlayerResponseDTO> response = activePlayers.stream().map(PlayerResponseDTO::new)
+                .toList();
+        return response;
     }
 
     public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
@@ -59,7 +62,15 @@ public class PlayerService {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id));
 
-        // username must be unique
+        return updatePlayerData(player, dto);
+    }
+
+    // adicionar testes para isso
+    public PlayerResponseDTO updatePlayer(Player player, PlayerUpdateDTO dto) {
+        return updatePlayerData(player, dto);
+    }
+
+    private PlayerResponseDTO updatePlayerData(Player player, PlayerUpdateDTO dto) {
         if (dto.getUsername() != null) {
             if (playerRepository.existsByUsername(dto.getUsername())) {
                 throw new UsernameAlreadyExistsException(dto.getUsername());
@@ -95,6 +106,12 @@ public class PlayerService {
 
     public boolean existByUsername(String username) {
         return playerRepository.existsByUsername(username);
+    }
+
+    public UUID findIdByUsername(String username) {
+        Player player = playerRepository.findIdByUsername(username)
+                .orElseThrow(() -> new PlayerNotFoundException(username));
+        return player.getId();
     }
 
 }
