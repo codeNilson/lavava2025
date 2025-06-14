@@ -81,7 +81,7 @@ class PlayerServiceTest {
         assertInstanceOf(PlayerResponseDTO.class, response);
         assertTrue(response.getRoles().contains(Roles.PLAYER));
 
-        verify(encoder).encode("123456");
+        verify(encoder).encode("1234567");
         verify(playerRepository).existsByUsername("newplayer");
         verify(playerRepository).save(any(Player.class));
         verify(playerMapper).toEntity(createDTO);
