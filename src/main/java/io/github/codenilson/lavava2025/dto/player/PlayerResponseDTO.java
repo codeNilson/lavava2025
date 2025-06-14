@@ -30,13 +30,4 @@ public class PlayerResponseDTO {
     public PlayerResponseDTO(Player player) {
         BeanUtils.copyProperties(player, this);
     }
-
-    public PlayerResponseDTO(String username, String password) {
-        this.username = username;
-        this.agent = "Unknown";
-        this.active = true;
-        this.roles.add("PLAYER");
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
 }

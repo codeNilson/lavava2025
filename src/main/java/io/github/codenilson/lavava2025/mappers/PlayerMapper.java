@@ -9,9 +9,6 @@ import io.github.codenilson.lavava2025.entities.Player;
 public class PlayerMapper {
 
     public Player toEntity(PlayerCreateDTO playerCreateDTO) {
-        if (playerCreateDTO == null) {
-            return null;
-        }
         Player player = new Player();
         player.setUsername(playerCreateDTO.getUsername());
         player.setPassword(playerCreateDTO.getPassword());
