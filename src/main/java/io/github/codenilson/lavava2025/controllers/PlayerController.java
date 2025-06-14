@@ -46,9 +46,17 @@ public class PlayerController {
     }
 
     @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         Player player = playerServices.findById(id);
+        playerServices.delete(player);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
+    @DeleteMapping("/username/{username}")
+    public ResponseEntity<Void> deleteByUsername(@PathVariable String username) {
+        Player player = playerServices.findByUsername(username);
         playerServices.delete(player);
         return ResponseEntity.noContent().build();
     }

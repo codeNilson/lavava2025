@@ -2,6 +2,7 @@ package io.github.codenilson.lavava2025.unit.controllers;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Set;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +49,6 @@ public class PlayerControllerTest {
 
         @BeforeEach
         public void setUp() {
-
-                // Clear the database before each test
-                playerRepository.deleteAll();
 
                 // Create test players
 
@@ -92,6 +91,12 @@ public class PlayerControllerTest {
 
                 // Create PlayerDetails for the authenticated user
                 this.playerDetails = new PlayerDetails(savedPlayer1);
+        }
+
+        @AfterEach
+        public void tearDown() {
+                // Clear the database after each test
+                playerRepository.deleteAll();
         }
 
         @Test
@@ -428,6 +433,17 @@ public class PlayerControllerTest {
         }
 
         @Test
+        public void testAddRoles_Unauthenticated() throws Exception {
+                RoleDTO roleDTO = new RoleDTO();
+                roleDTO.setRoles(Set.of("ADMIN", "MODERATOR"));
+
+                mockMvc.perform(post("/players/{id}/roles", "00000000-0000-0000-0000-000000000000")
+                                .contentType("application/json")
+                                .content(new ObjectMapper().writeValueAsString(roleDTO)))
+                                .andExpect(status().isUnauthorized());
+        }
+
+        @Test
         public void testAddRoles_UserNotAdmin() throws Exception {
                 Player player = playerService.findByUsername("player2");
 
@@ -455,7 +471,7 @@ public class PlayerControllerTest {
                 RoleDTO roleDTO = new RoleDTO();
                 roleDTO.setRoles(Set.of("ADMIN"));
 
-                mockMvc.perform(post("/players/{id}/roles", player.getId())
+                mockMvc.perform(delete("/players/{id}/roles", player.getId())
                                 .with(user(playerDetails))
                                 .contentType("application/json")
                                 .content(new ObjectMapper().writeValueAsString(roleDTO)))
@@ -463,22 +479,11 @@ public class PlayerControllerTest {
         }
 
         @Test
-        public void testAddRoles_Unauthenticated() throws Exception {
-                RoleDTO roleDTO = new RoleDTO();
-                roleDTO.setRoles(Set.of("ADMIN", "MODERATOR"));
-
-                mockMvc.perform(post("/players/{id}/roles", "00000000-0000-0000-0000-000000000000")
-                                .contentType("application/json")
-                                .content(new ObjectMapper().writeValueAsString(roleDTO)))
-                                .andExpect(status().isUnauthorized());
-        }
-
-        @Test
         public void testRemoveRoles_PlayerNotFound() throws Exception {
                 RoleDTO roleDTO = new RoleDTO();
                 roleDTO.setRoles(Set.of("ADMIN", "MODERATOR"));
 
-                mockMvc.perform(post("/players/{id}/roles", "00000000-0000-0000-0000-000000000000")
+                mockMvc.perform(delete("/players/{id}/roles", "00000000-0000-0000-0000-000000000000")
                                 .with(user(playerDetails))
                                 .contentType("application/json")
                                 .content(new ObjectMapper().writeValueAsString(roleDTO)))
@@ -505,6 +510,108 @@ public class PlayerControllerTest {
                                 .with(user(playerDetails))
                                 .contentType("application/json")
                                 .content(new ObjectMapper().writeValueAsString(roleDTO)))
+                                .andExpect(status().isForbidden())
+                                .andExpect(jsonPath("$.timestamp").exists())
+                                .andExpect(jsonPath("$.message").value("Access Denied"))
+                                .andExpect(jsonPath("$.error").value("Forbidden"))
+                                .andExpect(jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()));
+        }
+
+        @Test
+        public void testDeletePlayer() throws Exception {
+                Player player = playerService.findByUsername("player2");
+
+                mockMvc.perform(delete("/players/id/{id}", player.getId())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNoContent());
+
+                // Verify that the player is no longer in the database
+                mockMvc.perform(get("/players/{id}", player.getId())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNotFound());
+        }
+
+        @Test
+        public void testDeletePlayer_PlayerNotFound() throws Exception {
+                mockMvc.perform(delete("/players/id/{id}", "00000000-0000-0000-0000-000000000000")
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNotFound())
+                                .andExpect(
+                                                jsonPath("$.message").value(
+                                                                "Player not found with ID: 00000000-0000-0000-0000-000000000000"))
+                                .andExpect(jsonPath("$.error").value("Player Not Found"))
+                                .andExpect(jsonPath("$.timestamp").exists())
+                                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+        }
+
+        @Test
+        public void testDeletePlayer_Unauthenticated() throws Exception {
+                Player player = playerService.findByUsername("player1");
+
+                mockMvc.perform(delete("/players/id/{id}", player.getId()))
+                                .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        public void testDeletePlayer_ForbiddenAccess() throws Exception {
+                Player player2 = playerService.findByUsername("player2");
+                Player player3 = playerService.findByUsername("player3");
+
+                PlayerDetails playerDetails = new PlayerDetails(player2);
+
+                // Attempting to delete another player without ADMIN role should be forbidden
+                mockMvc.perform(delete("/players/id/{id}", player3.getId())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isForbidden())
+                                .andExpect(jsonPath("$.timestamp").exists())
+                                .andExpect(jsonPath("$.message").value("Access Denied"))
+                                .andExpect(jsonPath("$.error").value("Forbidden"))
+                                .andExpect(jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()));
+        }
+
+        @Test
+        public void testDelePlayerByUsername() throws Exception {
+                Player player = playerService.findByUsername("player2");
+
+                mockMvc.perform(delete("/players/username/{username}", player.getUsername())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNoContent());
+
+                // Verify that the player is no longer in the database
+                mockMvc.perform(get("/players/username/{username}", player.getUsername())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNotFound());
+        }
+
+        @Test
+        public void testDeletePlayerByUsername_PlayerNotFound() throws Exception {
+                mockMvc.perform(delete("/players/username/{username}", "nonexistent")
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.message").value("Player not found with username: nonexistent"))
+                                .andExpect(jsonPath("$.error").value("Player Not Found"))
+                                .andExpect(jsonPath("$.timestamp").exists())
+                                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+        }
+
+        @Test
+        public void testDeletePlayerByUsername_Unauthenticated() throws Exception {
+                Player player = playerService.findByUsername("player1");
+
+                mockMvc.perform(delete("/players/username/{username}", player.getUsername()))
+                                .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        public void testDeletePlayerByUsername_ForbiddenAccess() throws Exception {
+                Player player2 = playerService.findByUsername("player2");
+                Player player3 = playerService.findByUsername("player3");
+
+                PlayerDetails playerDetails = new PlayerDetails(player2);
+
+                // Attempting to delete another player without ADMIN role should be forbidden
+                mockMvc.perform(delete("/players/username/{username}", player3.getUsername())
+                                .with(user(playerDetails)))
                                 .andExpect(status().isForbidden())
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.message").value("Access Denied"))
