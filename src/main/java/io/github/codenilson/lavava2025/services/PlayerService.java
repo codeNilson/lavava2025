@@ -108,10 +108,4 @@ public class PlayerService {
         return playerRepository.existsByUsername(username);
     }
 
-    public UUID findIdByUsername(String username) {
-        Player player = playerRepository.findIdByUsername(username)
-                .orElseThrow(() -> new PlayerNotFoundException(username));
-        return player.getId();
-    }
-
 }

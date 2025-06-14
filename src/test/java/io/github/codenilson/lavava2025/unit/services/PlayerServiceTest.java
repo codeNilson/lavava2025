@@ -121,6 +121,32 @@ class PlayerServiceTest {
     }
 
     @Test
+    @DisplayName("Should find player by username successfully")
+    public void findByUsernameShouldReturnPlayer() {
+        // Given
+        String username = "existingplayer";
+        Player player = new Player();
+        player.setId(UUID.randomUUID());
+        player.setUsername(username);
+        player.setAgent("Jett");
+        player.setActive(true);
+
+        when(playerRepository.findByUsername(username))
+                .thenReturn(Optional.of(player));
+
+        // When
+        Player foundPlayer = playerService.findByUsername(username);
+
+        // Then
+        assertNotNull(foundPlayer);
+        assertEquals(username, foundPlayer.getUsername());
+        assertEquals("Jett", foundPlayer.getAgent());
+        assertTrue(foundPlayer.isActive());
+
+        verify(playerRepository).findByUsername(username);
+    }
+
+    @Test
     @DisplayName("Should throw exception when player not found by username")
     public void findByUsernameShouldRaiseErrorIfPlayerNotFound() {
         // Given
@@ -273,7 +299,7 @@ class PlayerServiceTest {
 
         // When
         playerService.removeRoles(playerId, rolesToRemove);
-        
+
         // Then
         assertEquals(2, player.getRoles().size());
         assertTrue(player.getRoles().contains("PLAYER"));

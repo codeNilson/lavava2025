@@ -237,35 +237,4 @@ public class PlayerRepositoryTest {
         // Then
         assertFalse(exists);
     }
-
-    @Test
-    @DisplayName("Test getIdByUsername should return id if username exists")
-    public void testGetIdByUsernameShouldReturnIdIfUsernameExists() {
-        // Given
-        String username = "testUser";
-        Player player = new Player();
-        player.setUsername(username);
-        player.setPassword("example01");
-        playerRepository.save(player);
-
-        // When
-        Optional<Player> result = playerRepository.findIdByUsername(username);
-
-        // Then
-        assertTrue(result.isPresent());
-        assertEquals(player.getId(), result.get().getId());
-    }
-
-    @Test
-    @DisplayName("Test getIdByUsername should return empty if username does not exist")
-    public void testGetIdByUsernameShouldReturnEmptyIfUsernameDoesNotExist() {
-        // Given
-        String username = "nonExistentUser";
-
-        // When
-        Optional<Player> result = playerRepository.findIdByUsername(username);
-
-        // Then
-        assertFalse(result.isPresent());
-    }
 }

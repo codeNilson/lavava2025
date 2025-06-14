@@ -15,6 +15,4 @@ public interface PlayerRepository extends JpaRepository<Player, UUID> {
     boolean existsByUsername(String username);
 
     List<Player> findByActiveTrue();
-
-    Optional<Player> findIdByUsername(String username);
 }
