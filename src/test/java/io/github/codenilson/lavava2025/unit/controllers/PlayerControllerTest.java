@@ -3,11 +3,10 @@ package io.github.codenilson.lavava2025.unit.controllers;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,7 +84,8 @@ public class PlayerControllerTest {
 
         // Add ADMIN role to player1
         Player savedPlayer1 = playerService.findByUsername("player1");
-        playerService.addRoles(savedPlayer1.getId(), Set.of("ADMIN"));
+        savedPlayer1.getRoles().add("ADMIN");
+        playerRepository.save(savedPlayer1);
 
         // Create PlayerDetails for the authenticated user
         this.playerDetails = new PlayerDetails(savedPlayer1);
@@ -247,6 +247,113 @@ public class PlayerControllerTest {
                 .andExpect(jsonPath("$.error").value("Player Not Found"))
                 .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void testFindById_Unauthenticated() throws Exception {
+        Player player = playerService.findByUsername("player1");
+
+        mockMvc.perform(get("/players/{id}", player.getId()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testFindByUsername() throws Exception {
+        mockMvc.perform(get("/players/username/{username}", "player1")
+                .with(user(playerDetails)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("player1"))
+                .andExpect(jsonPath("$.agent").value("Reyna"))
+                .andExpect(jsonPath("$.active").value(true))
+                .andExpect(jsonPath("$.roles", containsInAnyOrder("PLAYER", "ADMIN")))
+                .andExpect(jsonPath("$.password").doesNotExist());
+    }
+
+    @Test
+    public void testFindByUsername_PlayerNotFound() throws Exception {
+        mockMvc.perform(get("/players/username/{username}", "nonexistent")
+                .with(user(playerDetails)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Player not found with username: nonexistent"))
+                .andExpect(jsonPath("$.error").value("Player Not Found"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void testFindByUsername_Unauthenticated() throws Exception {
+        mockMvc.perform(get("/players/username/{username}", "player1"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testUpdatePlayer() throws Exception {
+        Player player = playerService.findByUsername("player1");
+        PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
+        updateDTO.setAgent("Phoenix");
+        updateDTO.setActive(false);
+
+        mockMvc.perform(patch("/players/{id}", player.getId())
+                .with(user(playerDetails))
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("player1"))
+                .andExpect(jsonPath("$.agent").value("Phoenix"))
+                .andExpect(jsonPath("$.active").value(false))
+                .andExpect(jsonPath("$.roles", containsInAnyOrder("PLAYER", "ADMIN")))
+                .andExpect(jsonPath("$.password").doesNotExist());
+    }
+
+    @Test
+    public void testUpdatePlayer_ForbiddenAccess() throws Exception {
+
+        Player player2 = playerService.findByUsername("player2");
+
+        PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
+        updateDTO.setAgent("Phoenix");
+        updateDTO.setActive(false);
+
+        mockMvc.perform(patch("/players/{id}", player2.getId())
+                .with(user(playerDetails))
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(updateDTO)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.message").value("Access Denied"))
+                .andExpect(jsonPath("$.error").value("Forbidden"))
+                .andExpect(jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()));
+    }
+
+    @Test
+    public void testUpdatePlayer_PlayerNotFound() throws Exception {
+        PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
+        updateDTO.setAgent("Phoenix");
+        updateDTO.setActive(false);
+
+        mockMvc.perform(patch("/players/{id}", "00000000-0000-0000-0000-000000000000")
+                .with(user(playerDetails))
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(updateDTO)))
+                .andExpect(status().isNotFound())
+                .andExpect(
+                        jsonPath("$.message").value("Player not found with ID: 00000000-0000-0000-0000-000000000000"))
+                .andExpect(jsonPath("$.error").value("Player Not Found"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void testUpdatePlayer_Unauthenticated() throws Exception {
+        Player player = playerService.findByUsername("player1");
+        PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
+        updateDTO.setAgent("Phoenix");
+        updateDTO.setActive(false);
+
+        mockMvc.perform(patch("/players/{id}", player.getId())
+                .contentType("application/json")
+                .content(new ObjectMapper().writeValueAsString(updateDTO)))
+                .andExpect(status().isUnauthorized());
     }
 
 }

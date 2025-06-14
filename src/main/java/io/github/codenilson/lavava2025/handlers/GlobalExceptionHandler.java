@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -55,6 +56,17 @@ public class GlobalExceptionHandler {
         response.put("error", "Username already exists");
         response.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<Object> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        response.put("status", HttpStatus.FORBIDDEN.value());
+        response.put("error", "Forbidden");
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(response);
     }
 }
