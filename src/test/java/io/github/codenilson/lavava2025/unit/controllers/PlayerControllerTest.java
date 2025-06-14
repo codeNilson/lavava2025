@@ -571,7 +571,7 @@ public class PlayerControllerTest {
         }
 
         @Test
-        public void testDelePlayerByUsername() throws Exception {
+        public void testDeletePlayerByUsername() throws Exception {
                 Player player = playerService.findByUsername("player2");
 
                 mockMvc.perform(delete("/players/username/{username}", player.getUsername())
