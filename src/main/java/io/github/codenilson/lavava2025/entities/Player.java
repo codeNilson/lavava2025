@@ -11,6 +11,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -60,7 +61,7 @@ public class Player {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable
     @Getter
-    private Set<String> roles = new HashSet<>();
+    private Set<Roles> roles = new HashSet<>();
 
     @Comment("Set of teams the player is part of")
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)

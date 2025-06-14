@@ -13,6 +13,7 @@ import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.PlayerTeam;
 import io.github.codenilson.lavava2025.entities.Team;
+import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerTeamRepository;
@@ -64,10 +65,10 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         Player player2 = playerServices.findByUsername("Jogador2");
         Player player3 = playerServices.findByUsername("Jogador3");
 
-        playerServices.addRoles(player1.getId(), Set.of("ADMIN"));
-        playerServices.addRoles(player1.getId(), Set.of("PLAYER"));
-        playerServices.addRoles(player2.getId(), Set.of("PLAYER"));
-        playerServices.addRoles(player3.getId(), Set.of("PLAYER"));
+        playerServices.addRoles(player1.getId(), Set.of(Roles.ADMIN, Roles.PLAYER));
+        playerServices.addRoles(player1.getId(), Set.of(Roles.PLAYER));
+        playerServices.addRoles(player2.getId(), Set.of(Roles.PLAYER));
+        playerServices.addRoles(player3.getId(), Set.of(Roles.PLAYER));
 
         Match match = new Match();
         match.setMap("Dust 2");
