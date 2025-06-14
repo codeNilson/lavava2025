@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.BeanUtils;
 
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import lombok.Data;
 
 @Data
@@ -21,7 +22,7 @@ public class PlayerResponseDTO {
 
     private boolean active;
 
-    private Set<String> roles = new HashSet<>();
+    private Set<Roles> roles = new HashSet<>();
 
     private LocalDateTime createdAt;
 

@@ -28,6 +28,7 @@ import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.dto.player.RoleDTO;
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
 
@@ -86,7 +87,7 @@ public class PlayerControllerTest {
 
                 // Add ADMIN role to player1
                 Player savedPlayer1 = playerService.findByUsername("player1");
-                savedPlayer1.getRoles().add("ADMIN");
+                savedPlayer1.getRoles().add(Roles.ADMIN);
                 playerRepository.save(savedPlayer1);
 
                 // Create PlayerDetails for the authenticated user
@@ -405,7 +406,7 @@ public class PlayerControllerTest {
                 Player player = playerService.findByUsername("player2");
 
                 RoleDTO roleDTO = new RoleDTO();
-                roleDTO.setRoles(Set.of("ADMIN", "MODERATOR"));
+                roleDTO.setRoles(Set.of(Roles.ADMIN));
 
                 mockMvc.perform(post("/players/{id}/roles", player.getId())
                                 .with(user(playerDetails))
@@ -417,7 +418,7 @@ public class PlayerControllerTest {
         @Test
         public void testAddRoles_PlayerNotFound() throws Exception {
                 RoleDTO roleDTO = new RoleDTO();
-                roleDTO.setRoles(Set.of("ADMIN", "MODERATOR"));
+                roleDTO.setRoles(Set.of(Roles.ADMIN));
 
                 mockMvc.perform(post("/players/{id}/roles", "00000000-0000-0000-0000-000000000000")
                                 .with(user(playerDetails))
@@ -435,7 +436,7 @@ public class PlayerControllerTest {
         @Test
         public void testAddRoles_Unauthenticated() throws Exception {
                 RoleDTO roleDTO = new RoleDTO();
-                roleDTO.setRoles(Set.of("ADMIN", "MODERATOR"));
+                roleDTO.setRoles(Set.of(Roles.ADMIN));
 
                 mockMvc.perform(post("/players/{id}/roles", "00000000-0000-0000-0000-000000000000")
                                 .contentType("application/json")
@@ -448,7 +449,7 @@ public class PlayerControllerTest {
                 Player player = playerService.findByUsername("player2");
 
                 RoleDTO roleDTO = new RoleDTO();
-                roleDTO.setRoles(Set.of("ADMIN", "MODERATOR"));
+                roleDTO.setRoles(Set.of(Roles.ADMIN));
 
                 PlayerDetails playerDetails = new PlayerDetails(player);
 
@@ -469,7 +470,7 @@ public class PlayerControllerTest {
                 Player player = playerService.findByUsername("player1");
 
                 RoleDTO roleDTO = new RoleDTO();
-                roleDTO.setRoles(Set.of("ADMIN"));
+                roleDTO.setRoles(Set.of(Roles.ADMIN));
 
                 mockMvc.perform(delete("/players/{id}/roles", player.getId())
                                 .with(user(playerDetails))
@@ -481,7 +482,7 @@ public class PlayerControllerTest {
         @Test
         public void testRemoveRoles_PlayerNotFound() throws Exception {
                 RoleDTO roleDTO = new RoleDTO();
-                roleDTO.setRoles(Set.of("ADMIN", "MODERATOR"));
+                roleDTO.setRoles(Set.of(Roles.ADMIN));
 
                 mockMvc.perform(delete("/players/{id}/roles", "00000000-0000-0000-0000-000000000000")
                                 .with(user(playerDetails))
@@ -501,7 +502,7 @@ public class PlayerControllerTest {
                 Player player = playerService.findByUsername("player2");
 
                 RoleDTO roleDTO = new RoleDTO();
-                roleDTO.setRoles(Set.of("ADMIN", "MODERATOR"));
+                roleDTO.setRoles(Set.of(Roles.ADMIN));
 
                 PlayerDetails playerDetails = new PlayerDetails(player);
 

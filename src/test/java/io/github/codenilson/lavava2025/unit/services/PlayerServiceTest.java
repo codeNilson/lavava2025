@@ -29,6 +29,7 @@ import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.mappers.PlayerMapper;
@@ -78,7 +79,7 @@ class PlayerServiceTest {
         // Then
         assertNotNull(response);
         assertInstanceOf(PlayerResponseDTO.class, response);
-        assertTrue(response.getRoles().contains("PLAYER"));
+        assertTrue(response.getRoles().contains(Roles.PLAYER));
 
         verify(encoder).encode("123456");
         verify(playerRepository).existsByUsername("newplayer");
@@ -223,20 +224,19 @@ class PlayerServiceTest {
         Player player = new Player();
         player.setId(playerId);
         player.setUsername("existingplayer");
-        player.getRoles().add("PLAYER");
+        player.getRoles().add(Roles.PLAYER);
 
         when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
         when(playerRepository.save(player)).thenReturn(player);
-        Set<String> rolesToAdd = new HashSet<>(Arrays.asList("ADMIN", "MODERATOR"));
+        Set<Roles> rolesToAdd = new HashSet<>(Arrays.asList(Roles.ADMIN));
 
         // When
         playerService.addRoles(playerId, rolesToAdd);
 
         // Then
-        assertEquals(3, player.getRoles().size());
-        assertTrue(player.getRoles().contains("ADMIN"));
-        assertTrue(player.getRoles().contains("MODERATOR"));
-        assertTrue(player.getRoles().contains("PLAYER"));
+        assertEquals(2, player.getRoles().size());
+        assertTrue(player.getRoles().contains(Roles.ADMIN));
+        assertTrue(player.getRoles().contains(Roles.PLAYER));
 
         verify(playerRepository).findById(playerId);
         verify(playerRepository).save(player);
@@ -247,7 +247,7 @@ class PlayerServiceTest {
     public void addRolesShouldRaiseErrorIfPlayerNotFound() {
         // Given
         UUID playerId = UUID.randomUUID();
-        Set<String> rolesToAdd = new HashSet<>(Arrays.asList("ADMIN", "MODERATOR"));
+        Set<Roles> rolesToAdd = new HashSet<>(Arrays.asList(Roles.ADMIN));
 
         when(playerRepository.findById(playerId)).thenReturn(Optional.empty());
 
@@ -267,16 +267,18 @@ class PlayerServiceTest {
         Player player = new Player();
         player.setId(playerId);
         player.setUsername("existingplayer");
-        player.getRoles().addAll(new HashSet<>(Arrays.asList("PLAYER", "ADMIN", "MODERATOR")));
+        player.getRoles().addAll(new HashSet<>(Arrays.asList(Roles.PLAYER, Roles.ADMIN)));
 
         when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
         when(playerRepository.save(player)).thenReturn(player);
-        Set<String> rolesToRemove = new HashSet<>(Arrays.asList("ADMIN", "MODERATOR"));
+        Set<Roles> rolesToRemove = new HashSet<>(Arrays.asList(Roles.ADMIN));
+
         // When
         playerService.removeRoles(playerId, rolesToRemove);
+
         // Then
         assertEquals(1, player.getRoles().size());
-        assertTrue(player.getRoles().contains("PLAYER"));
+        assertTrue(player.getRoles().contains(Roles.PLAYER));
         assertFalse(player.getRoles().contains("ADMIN"));
         assertFalse(player.getRoles().contains("MODERATOR"));
         verify(playerRepository).findById(playerId);
@@ -291,20 +293,19 @@ class PlayerServiceTest {
         Player player = new Player();
         player.setId(playerId);
         player.setUsername("existingplayer");
-        player.getRoles().addAll(new HashSet<>(Arrays.asList("PLAYER", "ADMIN", "MODERATOR")));
+        player.getRoles().addAll(new HashSet<>(Arrays.asList(Roles.PLAYER, Roles.ADMIN)));
 
         when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
         when(playerRepository.save(player)).thenReturn(player);
-        Set<String> rolesToRemove = new HashSet<>(Arrays.asList("PLAYER", "MODERATOR"));
+        Set<Roles> rolesToRemove = new HashSet<>(Arrays.asList(Roles.PLAYER, Roles.ADMIN));
 
         // When
         playerService.removeRoles(playerId, rolesToRemove);
 
         // Then
-        assertEquals(2, player.getRoles().size());
-        assertTrue(player.getRoles().contains("PLAYER"));
-        assertTrue(player.getRoles().contains("ADMIN"));
-        assertFalse(player.getRoles().contains("MODERATOR"));
+        assertEquals(1, player.getRoles().size());
+        assertTrue(player.getRoles().contains(Roles.PLAYER));
+        assertFalse(player.getRoles().contains(Roles.ADMIN));
 
         verify(playerRepository).findById(playerId);
         verify(playerRepository).save(player);
@@ -315,7 +316,7 @@ class PlayerServiceTest {
     public void removeRolesShouldRaiseErrorIfPlayerNotFound() {
         // Given
         UUID playerId = UUID.randomUUID();
-        Set<String> rolesToRemove = new HashSet<>(Arrays.asList("ADMIN", "MODERATOR"));
+        Set<Roles> rolesToRemove = new HashSet<>(Arrays.asList(Roles.ADMIN));
 
         when(playerRepository.findById(playerId)).thenReturn(Optional.empty());
 

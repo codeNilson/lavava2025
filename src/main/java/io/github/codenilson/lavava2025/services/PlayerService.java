@@ -11,6 +11,7 @@ import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.mappers.PlayerMapper;
@@ -41,7 +42,7 @@ public class PlayerService {
         playerCreateDTO.setPassword(encodedPassword);
 
         Player player = playerMapper.toEntity(playerCreateDTO);
-        player.getRoles().add("PLAYER");
+        player.getRoles().add(Roles.PLAYER); // Ensure PLAYER role is added
         Player savedPlayer = playerRepository.save(player);
         return new PlayerResponseDTO(savedPlayer);
     }
@@ -91,15 +92,15 @@ public class PlayerService {
         return new PlayerResponseDTO(player);
     }
 
-    public void addRoles(UUID id, Set<String> roles) {
+    public void addRoles(UUID id, Set<Roles> roles) {
         Player player = findById(id);
         player.getRoles().addAll(roles);
         playerRepository.save(player);
     }
 
-    public void removeRoles(UUID id, Set<String> roles) {
+    public void removeRoles(UUID id, Set<Roles> roles) {
         Player player = findById(id);
-        roles.removeIf(role -> role.equals("PLAYER"));
+        roles.removeIf(role -> role.equals(Roles.PLAYER)); // Prevent removing PLAYER role
         player.getRoles().removeAll(roles);
         playerRepository.save(player);
     }
