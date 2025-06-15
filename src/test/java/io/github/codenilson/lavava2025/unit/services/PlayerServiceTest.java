@@ -60,7 +60,7 @@ class PlayerServiceTest {
     void saveShouldCreateNewPlayer() {
         // Given
         PlayerCreateDTO createDTO = new PlayerCreateDTO();
-        createDTO.setUsername("newplayer");
+        createDTO.setUsername("newPlayer");
         createDTO.setPassword("123456");
 
         Player playerEntity = new Player();
