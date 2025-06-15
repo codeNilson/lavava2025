@@ -61,7 +61,7 @@ class PlayerServiceTest {
         // Given
         PlayerCreateDTO createDTO = new PlayerCreateDTO();
         createDTO.setUsername("newplayer");
-        createDTO.setPassword("123456789");
+        createDTO.setPassword("123456");
 
         Player playerEntity = new Player();
         playerEntity.setId(UUID.randomUUID());
