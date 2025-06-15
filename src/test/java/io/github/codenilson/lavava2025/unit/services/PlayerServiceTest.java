@@ -65,10 +65,10 @@ class PlayerServiceTest {
 
         Player playerEntity = new Player();
         playerEntity.setId(UUID.randomUUID());
-        playerEntity.setUsername("newplayer");
+        playerEntity.setUsername("newPlayer");
         playerEntity.setPassword("encodedPassword");
 
-        when(playerRepository.existsByUsername("newplayer")).thenReturn(false);
+        when(playerRepository.existsByUsername("newPlayer")).thenReturn(false);
         when(encoder.encode("123456")).thenReturn("encodedPassword");
         when(playerMapper.toEntity(createDTO)).thenReturn(playerEntity);
         when(playerRepository.save(any(Player.class))).thenReturn(playerEntity);
@@ -82,7 +82,7 @@ class PlayerServiceTest {
         assertTrue(response.getRoles().contains(Roles.PLAYER));
 
         verify(encoder).encode("123456");
-        verify(playerRepository).existsByUsername("newplayer");
+        verify(playerRepository).existsByUsername("newPlayer");
         verify(playerRepository).save(any(Player.class));
         verify(playerMapper).toEntity(createDTO);
     }
