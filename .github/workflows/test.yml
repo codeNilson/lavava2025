@@ -9,6 +9,8 @@ on:
 jobs:
   build:
 
+    name: mvn build and test
+
     runs-on: ubuntu-latest
 
     steps:
