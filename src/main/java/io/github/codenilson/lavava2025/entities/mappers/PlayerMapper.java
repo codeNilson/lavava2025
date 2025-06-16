@@ -1,9 +1,9 @@
-package io.github.codenilson.lavava2025.mappers;
+package io.github.codenilson.lavava2025.entities.mappers;
 
 import org.springframework.stereotype.Component;
 
-import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 
 @Component
 public class PlayerMapper {
