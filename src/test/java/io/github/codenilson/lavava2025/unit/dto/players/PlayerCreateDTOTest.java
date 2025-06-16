@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
+import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

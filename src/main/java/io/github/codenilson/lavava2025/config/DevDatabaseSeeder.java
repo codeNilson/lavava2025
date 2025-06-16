@@ -7,12 +7,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.PlayerTeam;
 import io.github.codenilson.lavava2025.entities.Team;
+import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;

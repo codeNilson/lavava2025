@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
-import io.github.codenilson.lavava2025.dto.player.PlayerResponseDTO;
-import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
-import io.github.codenilson.lavava2025.dto.player.RoleDTO;
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
+import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
+import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
+import io.github.codenilson.lavava2025.entities.dto.player.RoleDTO;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

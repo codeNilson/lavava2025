@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.dto.match;
+package io.github.codenilson.lavava2025.entities.dto.match;
 
 import java.util.Objects;
 

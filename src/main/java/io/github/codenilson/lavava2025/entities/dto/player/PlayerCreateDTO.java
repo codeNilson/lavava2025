@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.dto.player;
+package io.github.codenilson.lavava2025.entities.dto.player;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

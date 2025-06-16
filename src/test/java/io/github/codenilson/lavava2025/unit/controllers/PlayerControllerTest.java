@@ -24,10 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.codenilson.lavava2025.authentication.PlayerDetails;
-import io.github.codenilson.lavava2025.dto.player.PlayerCreateDTO;
-import io.github.codenilson.lavava2025.dto.player.PlayerUpdateDTO;
-import io.github.codenilson.lavava2025.dto.player.RoleDTO;
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
+import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
+import io.github.codenilson.lavava2025.entities.dto.player.RoleDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
