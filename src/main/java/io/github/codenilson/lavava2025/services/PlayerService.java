@@ -46,7 +46,11 @@ public class PlayerService {
     }
 
     public Player findById(UUID id) {
-        return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        Player player = playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        if (!player.isActive()) {
+            throw new EntityNotFoundException(id);
+        }
+        return player;
     }
 
     public Player findByIdAndActiveTrue(UUID id) {

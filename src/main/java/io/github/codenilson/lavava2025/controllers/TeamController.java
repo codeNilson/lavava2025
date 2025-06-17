@@ -3,6 +3,7 @@ package io.github.codenilson.lavava2025.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.codenilson.lavava2025.entities.Team;
+import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
 import io.github.codenilson.lavava2025.services.TeamService;
@@ -28,18 +30,27 @@ public class TeamController {
     private final TeamService teamService;
 
     @GetMapping
-    public List<TeamResponseDTO> findAll() {
-        return teamService.findAllTeams();
+    public ResponseEntity<List<TeamResponseDTO>> findAll() {
+        List<TeamResponseDTO> teams = teamService.findAllTeams();
+        return ResponseEntity.ok(teams);
     }
 
     @GetMapping("/{id}")
-    public TeamResponseDTO findById(@PathVariable UUID id) {
-        return teamService.findById(id);
+    public ResponseEntity<TeamResponseDTO> findById(@PathVariable UUID id) {
+        TeamResponseDTO team = teamService.findById(id);
+        return ResponseEntity.ok(team);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable UUID id) {
-        teamRepository.deleteById(id);
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
+        teamService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<TeamResponseDTO> createTeam(@RequestBody TeamCreateDTO team) {
+        TeamResponseDTO response = teamService.save(team);
+        return ResponseEntity.status(201).body(response);
     }
 
     @PutMapping("/{id}")
@@ -48,8 +59,4 @@ public class TeamController {
         teamRepository.save(team);
     }
 
-    @PostMapping
-    public void createTeam(@RequestBody Team team) {
-        teamRepository.save(team);
-    }
 }
