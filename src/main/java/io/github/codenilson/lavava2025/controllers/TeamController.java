@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
+import io.github.codenilson.lavava2025.services.TeamService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -24,12 +25,11 @@ public class TeamController {
 
     private final TeamRepository teamRepository;
 
+    private final TeamService teamService;
+
     @GetMapping
     public List<TeamResponseDTO> findAll() {
-        List<Team> teams = teamRepository.findAll();
-        return teams.stream()
-                .map(TeamResponseDTO::new)
-                .toList();
+        return teamService.findAllTeams();
     }
 
     @GetMapping("/{id}")

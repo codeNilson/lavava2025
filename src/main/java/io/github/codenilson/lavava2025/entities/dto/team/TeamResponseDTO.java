@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 
-import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import lombok.Data;
