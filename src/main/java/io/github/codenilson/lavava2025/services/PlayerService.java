@@ -49,8 +49,18 @@ public class PlayerService {
         return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
     }
 
+    public Player findByIdAndActiveTrue(UUID id) {
+        return playerRepository.findByIdAndActiveTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException(id));
+    }
+
     public Player findByUsername(String username) {
         return playerRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(username));
+    }
+
+    public Player findByUsernameAndActiveTrue(String username) {
+        return playerRepository.findByUsernameAndActiveTrue(username)
+                .orElseThrow(() -> new EntityNotFoundException(username));
     }
 
     public void delete(Player player) {
