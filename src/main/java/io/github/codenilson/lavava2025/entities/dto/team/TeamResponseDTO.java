@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.BeanUtils;
 
 import io.github.codenilson.lavava2025.entities.Match;
-import io.github.codenilson.lavava2025.entities.PlayerTeam;
+import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
 import lombok.Data;
 
@@ -15,7 +15,7 @@ import lombok.Data;
 public class TeamResponseDTO {
     private UUID id;
     private Match match;
-    private Set<PlayerTeam> players;
+    private Set<Player> players;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

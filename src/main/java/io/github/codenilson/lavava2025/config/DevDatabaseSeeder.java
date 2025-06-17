@@ -10,13 +10,11 @@ import org.springframework.context.annotation.Profile;
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
-import io.github.codenilson.lavava2025.entities.PlayerTeam;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
-import io.github.codenilson.lavava2025.repositories.PlayerTeamRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
 
@@ -29,9 +27,6 @@ public class DevDatabaseSeeder implements CommandLineRunner {
 
     @Autowired
     private TeamRepository teamRepository;
-
-    @Autowired
-    private PlayerTeamRepository playerTeamRepository;
 
     @Autowired
     private MatchRepository matchRepository;
@@ -76,19 +71,15 @@ public class DevDatabaseSeeder implements CommandLineRunner {
 
         Team team1 = new Team();
         team1.setMatch(match);
+        team1.getPlayers().add(player1);
+        team1.getPlayers().add(player2);
+
         Team team2 = new Team();
         team2.setMatch(match);
+        team2.getPlayers().add(player3);
 
         teamRepository.save(team1);
         teamRepository.save(team2);
-
-        PlayerTeam playerTeam1 = new PlayerTeam(player1, team1);
-        PlayerTeam playerTeam2 = new PlayerTeam(player2, team1);
-        PlayerTeam playerTeam3 = new PlayerTeam(player3, team2);
-
-        playerTeamRepository.save(playerTeam1);
-        playerTeamRepository.save(playerTeam2);
-        playerTeamRepository.save(playerTeam3);
 
         PlayerPerfomance pf1 = new PlayerPerfomance();
         pf1.setPlayer(player1);
