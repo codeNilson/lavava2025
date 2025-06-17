@@ -33,16 +33,12 @@ public class TeamService {
                 .toList();
     }
 
-    public TeamResponseDTO findById(UUID id) {
+    public Team findById(UUID id) {
         return teamRepository.findById(id)
-                .map(TeamResponseDTO::new)
                 .orElseThrow(() -> new EntityNotFoundException(id));
     }
 
-    public void deleteById(UUID id) {
-        if (!teamRepository.existsById(id)) {
-            throw new EntityNotFoundException(id);
-        }
-        teamRepository.deleteById(id);
+    public void delete(Team team) {
+        teamRepository.delete(team);
     }
 }

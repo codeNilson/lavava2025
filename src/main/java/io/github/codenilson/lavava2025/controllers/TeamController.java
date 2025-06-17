@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
-import io.github.codenilson.lavava2025.repositories.TeamRepository;
 import io.github.codenilson.lavava2025.services.TeamService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("teams")
 @RequiredArgsConstructor
 public class TeamController {
-
-    private final TeamRepository teamRepository;
 
     private final TeamService teamService;
 
@@ -37,13 +33,15 @@ public class TeamController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TeamResponseDTO> findById(@PathVariable UUID id) {
-        TeamResponseDTO team = teamService.findById(id);
-        return ResponseEntity.ok(team);
+        Team team = teamService.findById(id);
+        TeamResponseDTO response = new TeamResponseDTO(team);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
-        teamService.deleteById(id);
+        Team team = teamService.findById(id);
+        teamService.delete(team);
         return ResponseEntity.noContent().build();
     }
 
@@ -53,10 +51,10 @@ public class TeamController {
         return ResponseEntity.status(201).body(response);
     }
 
-    @PutMapping("/{id}")
-    public void updateTeam(@RequestBody Team team, @PathVariable UUID id) {
-        team.setId(id); // analisar
-        teamRepository.save(team);
-    }
+    // @PutMapping("/{id}")
+    // public void updateTeam(@RequestBody Team team, @PathVariable UUID id) {
+    // team.setId(id); // analisar
+    // teamRepository.save(team);
+    // }
 
 }

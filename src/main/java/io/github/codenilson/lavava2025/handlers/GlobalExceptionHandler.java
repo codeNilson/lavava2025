@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         response.put("status", HttpStatus.NOT_FOUND.value());
-        response.put("error", "Player Not Found");
+        response.put("error", "Resource Not Found");
         response.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(response);
