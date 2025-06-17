@@ -6,20 +6,27 @@ import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 
-import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
+import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import lombok.Data;
 
 @Data
 public class TeamResponseDTO {
     private UUID id;
-    private Match match;
-    private Set<Player> players;
+    // private Match match; // Uncomment when MatchResponseDTO is available
+    private Set<PlayerResponseDTO> players;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private TeamResponseDTO(Team team) {
+    public TeamResponseDTO(Team team) {
         BeanUtils.copyProperties(team, this);
+        this.id = team.getId();
+        // this.match = team.getMatch();
+        this.players = team.getPlayers().stream()
+                .map(PlayerResponseDTO::new)
+                .collect(java.util.stream.Collectors.toSet());
+        this.createdAt = team.getCreatedAt();
+        this.updatedAt = team.getUpdatedAt();
     }
 }
