@@ -279,8 +279,7 @@ class PlayerServiceTest {
         // Then
         assertEquals(1, player.getRoles().size());
         assertTrue(player.getRoles().contains(Roles.PLAYER));
-        assertFalse(player.getRoles().contains("ADMIN"));
-        assertFalse(player.getRoles().contains("MODERATOR"));
+        assertFalse(player.getRoles().contains(Roles.ADMIN));
         verify(playerRepository).findById(playerId);
         verify(playerRepository).save(player);
     }
