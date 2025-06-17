@@ -256,7 +256,7 @@ public class PlayerControllerTest {
                                 .andExpect(status().isNotFound())
                                 .andExpect(
                                                 jsonPath("$.message").value(
-                                                                "Player not found with ID: 00000000-0000-0000-0000-000000000000"))
+                                                                "It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
                                 .andExpect(jsonPath("$.error").value("Player Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
@@ -382,7 +382,7 @@ public class PlayerControllerTest {
                                 .andExpect(status().isNotFound())
                                 .andExpect(
                                                 jsonPath("$.message").value(
-                                                                "Player not found with ID: 00000000-0000-0000-0000-000000000000"))
+                                                                "It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
                                 .andExpect(jsonPath("$.error").value("Player Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
@@ -427,7 +427,7 @@ public class PlayerControllerTest {
                                 .andExpect(status().isNotFound())
                                 .andExpect(
                                                 jsonPath("$.message").value(
-                                                                "Player not found with ID: 00000000-0000-0000-0000-000000000000"))
+                                                                "It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
                                 .andExpect(jsonPath("$.error").value("Player Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
@@ -491,7 +491,7 @@ public class PlayerControllerTest {
                                 .andExpect(status().isNotFound())
                                 .andExpect(
                                                 jsonPath("$.message").value(
-                                                                "Player not found with ID: 00000000-0000-0000-0000-000000000000"))
+                                                                "It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
                                 .andExpect(jsonPath("$.error").value("Player Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
@@ -539,7 +539,7 @@ public class PlayerControllerTest {
                                 .andExpect(status().isNotFound())
                                 .andExpect(
                                                 jsonPath("$.message").value(
-                                                                "Player not found with ID: 00000000-0000-0000-0000-000000000000"))
+                                                                "It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
                                 .andExpect(jsonPath("$.error").value("Player Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));

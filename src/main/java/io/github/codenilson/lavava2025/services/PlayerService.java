@@ -13,7 +13,7 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
-import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
+import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,11 +48,11 @@ public class PlayerService {
     }
 
     public Player findById(UUID id) {
-        return playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException(id));
+        return playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
     }
 
     public Player findByUsername(String username) {
-        return playerRepository.findByUsername(username).orElseThrow(() -> new PlayerNotFoundException(username));
+        return playerRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(username));
     }
 
     public void delete(Player player) {
@@ -61,7 +61,7 @@ public class PlayerService {
 
     public PlayerResponseDTO updatePlayer(UUID id, PlayerUpdateDTO dto) {
         Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new PlayerNotFoundException(id));
+                .orElseThrow(() -> new EntityNotFoundException(id));
 
         return updatePlayerData(player, dto);
     }

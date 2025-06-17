@@ -31,7 +31,7 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
-import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
+import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
@@ -115,7 +115,7 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.findById(playerId));
 
         verify(playerRepository).findById(playerId);
@@ -157,7 +157,7 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.findByUsername(username));
 
         verify(playerRepository).findByUsername(username);
@@ -210,7 +210,7 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.updatePlayer(playerId, dto));
 
         verify(playerRepository).findById(playerId);
@@ -253,7 +253,7 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.addRoles(playerId, rolesToAdd));
         verify(playerRepository).findById(playerId);
         verify(playerRepository, times(0)).save(any(Player.class));
@@ -321,7 +321,7 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.removeRoles(playerId, rolesToRemove));
         verify(playerRepository).findById(playerId);
         verify(playerRepository, times(0)).save(any(Player.class));
