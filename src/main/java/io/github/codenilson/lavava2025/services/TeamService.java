@@ -1,6 +1,7 @@
 package io.github.codenilson.lavava2025.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -17,5 +18,11 @@ public class TeamService {
         return teamRepository.findAll().stream()
                 .map(TeamResponseDTO::new)
                 .toList();
+    }
+
+    public TeamResponseDTO findById(UUID id) {
+        return teamRepository.findById(id)
+                .map(TeamResponseDTO::new)
+                .orElse(null);
     }
 }

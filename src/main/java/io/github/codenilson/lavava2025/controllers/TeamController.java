@@ -33,8 +33,8 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public Team findById(@PathVariable UUID id) {
-        return teamRepository.findById(id).orElse(null);
+    public TeamResponseDTO findById(@PathVariable UUID id) {
+        return teamService.findById(id);
     }
 
     @DeleteMapping("/{id}")
