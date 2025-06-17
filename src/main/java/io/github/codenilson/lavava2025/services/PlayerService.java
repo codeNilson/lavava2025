@@ -25,11 +25,9 @@ public class PlayerService {
     private final PlayerMapper playerMapper;
     private final PasswordEncoder encoder;
 
-    public List<PlayerResponseDTO> findActivePlayers() {
+    public List<Player> findActivePlayers() {
         List<Player> activePlayers = playerRepository.findByActiveTrue();
-        List<PlayerResponseDTO> response = activePlayers.stream().map(PlayerResponseDTO::new)
-                .toList();
-        return response;
+        return activePlayers;
     }
 
     public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
