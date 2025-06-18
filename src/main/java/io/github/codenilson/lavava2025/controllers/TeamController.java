@@ -3,17 +3,22 @@ package io.github.codenilson.lavava2025.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.codenilson.lavava2025.entities.Team;
-import io.github.codenilson.lavava2025.repositories.TeamRepository;
+import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
+import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
+import io.github.codenilson.lavava2025.entities.dto.team.TeamUpdateDTO;
+import io.github.codenilson.lavava2025.services.TeamService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -21,31 +26,38 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TeamController {
 
-    private final TeamRepository teamRepository;
+    private final TeamService teamService;
 
     @GetMapping
-    public List<Team> findAll() {
-        return teamRepository.findAll();
+    public ResponseEntity<List<TeamResponseDTO>> findAll() {
+        List<TeamResponseDTO> teams = teamService.findAllTeams();
+        return ResponseEntity.ok(teams);
     }
 
     @GetMapping("/{id}")
-    public Team findById(@PathVariable UUID id) {
-        return teamRepository.findById(id).orElse(null);
+    public ResponseEntity<TeamResponseDTO> findById(@PathVariable UUID id) {
+        Team team = teamService.findById(id);
+        TeamResponseDTO response = new TeamResponseDTO(team);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable UUID id) {
-        teamRepository.deleteById(id);
-    }
-
-    @PutMapping("/{id}")
-    public void updateTeam(@RequestBody Team team, @PathVariable UUID id) {
-        team.setId(id); // analisar
-        teamRepository.save(team);
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
+        Team team = teamService.findById(id);
+        teamService.delete(team);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public void createTeam(@RequestBody Team team) {
-        teamRepository.save(team);
+    public ResponseEntity<TeamResponseDTO> createTeam(@RequestBody TeamCreateDTO team) {
+        TeamResponseDTO response = teamService.save(team);
+        return ResponseEntity.status(201).body(response);
     }
+
+    @PatchMapping("/{id}/players")
+    public ResponseEntity<TeamResponseDTO> updateTeam(@PathVariable UUID id, @Valid @RequestBody TeamUpdateDTO updateDTO) {
+        var team = teamService.updateTeamPlayers(id, updateDTO.getPlayersId(), updateDTO.getOperation());
+        return ResponseEntity.ok().body(team);
+    }
+
 }

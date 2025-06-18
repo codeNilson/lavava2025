@@ -31,7 +31,7 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
-import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
+import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
@@ -115,7 +115,7 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.findById(playerId));
 
         verify(playerRepository).findById(playerId);
@@ -157,7 +157,7 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.findByUsername(username));
 
         verify(playerRepository).findByUsername(username);
@@ -210,7 +210,7 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.updatePlayer(playerId, dto));
 
         verify(playerRepository).findById(playerId);
@@ -253,7 +253,7 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.addRoles(playerId, rolesToAdd));
         verify(playerRepository).findById(playerId);
         verify(playerRepository, times(0)).save(any(Player.class));
@@ -279,8 +279,7 @@ class PlayerServiceTest {
         // Then
         assertEquals(1, player.getRoles().size());
         assertTrue(player.getRoles().contains(Roles.PLAYER));
-        assertFalse(player.getRoles().contains("ADMIN"));
-        assertFalse(player.getRoles().contains("MODERATOR"));
+        assertFalse(player.getRoles().contains(Roles.ADMIN));
         verify(playerRepository).findById(playerId);
         verify(playerRepository).save(player);
     }
@@ -322,9 +321,72 @@ class PlayerServiceTest {
 
         // When & Then
         assertThrows(
-                PlayerNotFoundException.class,
+                EntityNotFoundException.class,
                 () -> playerService.removeRoles(playerId, rolesToRemove));
         verify(playerRepository).findById(playerId);
         verify(playerRepository, times(0)).save(any(Player.class));
+    }
+
+    @Test
+    @DisplayName("Should find player by ID and active status")
+    public void findByIdAndActiveTrueShouldReturnPlayer() {
+        // Given
+        UUID playerId = UUID.randomUUID();
+        Player player = new Player();
+        player.setId(playerId);
+        player.setUsername("activePlayer");
+        player.setActive(true);
+        when(playerRepository.findByIdAndActiveTrue(playerId)).thenReturn(Optional.of(player));
+
+        // When
+        Player foundPlayer = playerService.findByIdAndActiveTrue(playerId);
+
+        // Then
+        assertNotNull(foundPlayer);
+        assertEquals(playerId, foundPlayer.getId());
+        assertEquals("activePlayer", foundPlayer.getUsername());
+        assertTrue(foundPlayer.isActive());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when player not found by ID and active status")
+    public void findByIdAndActiveTrueShouldRaiseErrorIfPlayerNotFound() {
+        // Given
+        UUID playerId = UUID.randomUUID();
+        when(playerRepository.findByIdAndActiveTrue(playerId)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> playerService.findByIdAndActiveTrue(playerId));
+        verify(playerRepository).findByIdAndActiveTrue(playerId);
+    }
+
+    @Test
+    @DisplayName("Should find player by username and active status")
+    public void findByUsernameAndActiveTrueShouldReturnPlayer() {
+        // Given
+        String username = "activePlayer";
+        Player player = new Player();
+        player.setId(UUID.randomUUID());
+        player.setUsername(username);
+        player.setActive(true);
+        when(playerRepository.findByUsernameAndActiveTrue(username)).thenReturn(Optional.of(player));
+
+        // When
+        Player foundPlayer = playerService.findByUsernameAndActiveTrue(username);
+
+        // Then
+        assertNotNull(foundPlayer);
+        assertEquals(username, foundPlayer.getUsername());
+        assertTrue(foundPlayer.isActive());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when player not found by username and active status")
+    public void findByUsernameAndActiveTrueShouldRaiseErrorIfPlayerNotFound() {
+        // Given
+        String username = "nonexistentPlayer";
+        when(playerRepository.findByUsernameAndActiveTrue(username)).thenReturn(Optional.empty());
     }
 }

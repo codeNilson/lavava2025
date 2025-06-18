@@ -13,7 +13,7 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
-import io.github.codenilson.lavava2025.errors.PlayerNotFoundException;
+import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +25,9 @@ public class PlayerService {
     private final PlayerMapper playerMapper;
     private final PasswordEncoder encoder;
 
-    public List<PlayerResponseDTO> findActivePlayers() {
+    public List<Player> findActivePlayers() {
         List<Player> activePlayers = playerRepository.findByActiveTrue();
-        List<PlayerResponseDTO> response = activePlayers.stream().map(PlayerResponseDTO::new)
-                .toList();
-        return response;
+        return activePlayers;
     }
 
     public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
@@ -48,11 +46,25 @@ public class PlayerService {
     }
 
     public Player findById(UUID id) {
-        return playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException(id));
+        Player player = playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        if (!player.isActive()) {
+            throw new EntityNotFoundException(id);
+        }
+        return player;
+    }
+
+    public Player findByIdAndActiveTrue(UUID id) {
+        return playerRepository.findByIdAndActiveTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException(id));
     }
 
     public Player findByUsername(String username) {
-        return playerRepository.findByUsername(username).orElseThrow(() -> new PlayerNotFoundException(username));
+        return playerRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException(username));
+    }
+
+    public Player findByUsernameAndActiveTrue(String username) {
+        return playerRepository.findByUsernameAndActiveTrue(username)
+                .orElseThrow(() -> new EntityNotFoundException(username));
     }
 
     public void delete(Player player) {
@@ -61,7 +73,7 @@ public class PlayerService {
 
     public PlayerResponseDTO updatePlayer(UUID id, PlayerUpdateDTO dto) {
         Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new PlayerNotFoundException(id));
+                .orElseThrow(() -> new EntityNotFoundException(id));
 
         return updatePlayerData(player, dto);
     }
@@ -107,6 +119,10 @@ public class PlayerService {
 
     public boolean existByUsername(String username) {
         return playerRepository.existsByUsername(username);
+    }
+
+    public Set<Player> findPlayersByIds(Set<UUID> playerIds) {
+        return playerRepository.findAllByIdInAndActiveTrue(playerIds);
     }
 
 }

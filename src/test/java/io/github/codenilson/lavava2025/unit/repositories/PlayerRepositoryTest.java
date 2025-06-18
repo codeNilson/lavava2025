@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -236,5 +237,100 @@ public class PlayerRepositoryTest {
 
         // Then
         assertFalse(exists);
+    }
+
+    @Test
+    @DisplayName("Should find Player by id and active status")
+    public void testFindByIdAndActiveTrueShouldReturnPlayer() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        playerRepository.save(player);
+
+        // When
+        Optional<Player> result = playerRepository.findByIdAndActiveTrue(player.getId());
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(player.getUsername(), result.get().getUsername());
+    }
+
+    @Test
+    @DisplayName("Should return empty Optional when Player id not found or inactive")
+    public void testFindByIdAndActiveTrueShouldReturnEmptyWhenNotFoundOrInactive() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        player.setActive(false);
+        playerRepository.save(player);
+
+        // When
+        Optional<Player> result = playerRepository.findByIdAndActiveTrue(player.getId());
+
+        // Then
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    @DisplayName("Should find Player by username and active status")
+    public void testFindByUsernameAndActiveTrueShouldReturnPlayer() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        playerRepository.save(player);
+
+        // When
+        Optional<Player> result = playerRepository.findByUsernameAndActiveTrue(player.getUsername());
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(player.getUsername(), result.get().getUsername());
+    }
+
+    @Test
+    @DisplayName("Should return empty Optional when Player username not found or inactive")
+    public void testFindByUsernameAndActiveTrueShouldReturnEmptyWhenNotFoundOrInactive() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        player.setActive(false);
+        playerRepository.save(player);
+
+        // When
+        Optional<Player> result = playerRepository.findByUsernameAndActiveTrue(player.getUsername());
+
+        // Then
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    @DisplayName("Should find all Players by ids and active status")
+    public void testFindAllByIdInAndActiveTrueShouldReturnPlayers() {
+        // Given
+        Player player1 = new Player();
+        player1.setUsername("testUser1");
+        player1.setPassword("example01");
+        playerRepository.save(player1);
+
+        Player player2 = new Player();
+        player2.setUsername("testUser2");
+        player2.setPassword("example02");
+        playerRepository.save(player2);
+
+        Player player3 = new Player();
+        player3.setUsername("testUser3");
+        player3.setPassword("example02");
+        player3.setActive(false);
+        playerRepository.save(player3);
+
+        // When
+        var players = playerRepository.findAllByIdInAndActiveTrue(Set.of(player1.getId(), player2.getId(), player3.getId()));
+
+        // Then
+        assertEquals(2, players.size());
     }
 }

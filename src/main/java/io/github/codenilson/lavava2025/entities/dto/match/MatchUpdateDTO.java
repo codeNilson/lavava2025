@@ -24,7 +24,7 @@ public class MatchUpdateDTO {
     @Setter
     private PlayerPerfomance ace;
 
-    public void MatchUpdateDTO() {
+    public MatchUpdateDTO() {
     }
 
     // maybe unnecessary
