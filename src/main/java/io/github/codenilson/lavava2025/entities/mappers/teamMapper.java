@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class teamMapper {
+public class TeamMapper {
 
     private final PlayerService playerService;
 

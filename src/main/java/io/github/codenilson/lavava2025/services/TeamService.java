@@ -11,7 +11,7 @@ import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
-import io.github.codenilson.lavava2025.entities.mappers.teamMapper;
+import io.github.codenilson.lavava2025.entities.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
 import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
@@ -21,14 +21,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TeamService {
     private final TeamRepository teamRepository;
-    private final teamMapper teamMapper;
+    private final TeamMapper teamMapper;
     private final PlayerService playerService;
 
     @Transactional
     public TeamResponseDTO save(TeamCreateDTO teamCreateDTO) {
         Team team = teamMapper.toEntity(teamCreateDTO);
-        Team savedTeam = teamRepository.save(team);
-        return new TeamResponseDTO(savedTeam);
+        teamRepository.save(team);
+        return new TeamResponseDTO(team);
     }
 
     public List<TeamResponseDTO> findAllTeams() {
