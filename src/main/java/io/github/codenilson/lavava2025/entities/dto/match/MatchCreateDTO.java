@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class MatchCreateDTO {
 
+    private String map;
+
     private Team winner;
 
     private PlayerPerfomance mvp;
