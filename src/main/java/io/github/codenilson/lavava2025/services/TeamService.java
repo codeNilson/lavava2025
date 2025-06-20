@@ -3,6 +3,7 @@ package io.github.codenilson.lavava2025.services;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class TeamService {
     public List<TeamResponseDTO> findAllTeams() {
         return teamRepository.findAll().stream()
                 .map(TeamResponseDTO::new)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public Team findById(UUID id) {
@@ -60,14 +61,14 @@ public class TeamService {
 
     }
 
-    private TeamResponseDTO addPlayersToTeam(Team team, Set<Player> playerIds) {
-        team.getPlayers().addAll(playerIds);
+    private TeamResponseDTO addPlayersToTeam(Team team, Set<Player> players) {
+        team.getPlayers().addAll(players);
         Team updatedTeam = teamRepository.save(team);
         return new TeamResponseDTO(updatedTeam);
     }
 
-    private TeamResponseDTO removePlayersFromTeam(Team team, Set<Player> playerIds) {
-        team.getPlayers().removeAll(playerIds);
+    private TeamResponseDTO removePlayersFromTeam(Team team, Set<Player> players) {
+        team.getPlayers().removeAll(players);
         Team updatedTeam = teamRepository.save(team);
         return new TeamResponseDTO(updatedTeam);
     }
