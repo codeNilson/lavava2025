@@ -63,8 +63,6 @@ public class TeamServiceTest {
         team.setMatch(match);
         team.setPlayers(players);
 
-        TeamResponseDTO teamResponseDTO = new TeamResponseDTO(team);
-
         when(playerService.findPlayersByIds(playersIds)).thenReturn(players);
         when(teamMapper.toEntity(teamCreateDTO)).thenReturn(team);
         when(teamRepository.save(any(Team.class))).thenReturn(team);
