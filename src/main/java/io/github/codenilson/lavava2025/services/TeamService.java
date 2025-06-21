@@ -1,7 +1,6 @@
 package io.github.codenilson.lavava2025.services;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -47,9 +46,9 @@ public class TeamService {
         teamRepository.delete(team);
     }
 
-    public TeamResponseDTO updateTeamPlayers(UUID teamId, Set<UUID> playersIds, OperationType operation) {
+    public TeamResponseDTO updateTeamPlayers(UUID teamId, List<UUID> playersIds, OperationType operation) {
         var team = findById(teamId);
-        Set<Player> players = playerService.findPlayersByIds(playersIds);
+        List<Player> players = playerService.findPlayersByIds(playersIds);
         switch (operation) {
             case OperationType.ADD:
                 return addPlayersToTeam(team, players);
@@ -61,13 +60,13 @@ public class TeamService {
 
     }
 
-    private TeamResponseDTO addPlayersToTeam(Team team, Set<Player> players) {
+    private TeamResponseDTO addPlayersToTeam(Team team, List<Player> players) {
         team.getPlayers().addAll(players);
         Team updatedTeam = teamRepository.save(team);
         return new TeamResponseDTO(updatedTeam);
     }
 
-    private TeamResponseDTO removePlayersFromTeam(Team team, Set<Player> players) {
+    private TeamResponseDTO removePlayersFromTeam(Team team, List<Player> players) {
         team.getPlayers().removeAll(players);
         Team updatedTeam = teamRepository.save(team);
         return new TeamResponseDTO(updatedTeam);

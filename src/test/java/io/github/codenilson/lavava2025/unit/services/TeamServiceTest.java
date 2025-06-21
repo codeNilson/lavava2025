@@ -6,10 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -54,10 +53,10 @@ public class TeamServiceTest {
         // Given
         var match = new Match();
 
-        Set<UUID> playersIds = Set.of(UUID.randomUUID(), UUID.randomUUID());
+        List<UUID> playersIds = List.of(UUID.randomUUID(), UUID.randomUUID());
         var player1 = new Player("player1", "password1");
         var player2 = new Player("player2", "password2");
-        Set<Player> players = Set.of(player1, player2);
+        List<Player> players = List.of(player1, player2);
 
         var teamCreateDTO = new TeamCreateDTO();
         teamCreateDTO.setMatch(match);
@@ -140,10 +139,10 @@ public class TeamServiceTest {
         UUID teamId = UUID.randomUUID();
         var team = new Team();
         team.setId(teamId);
-        Set<UUID> playersIds = Set.of(UUID.randomUUID(), UUID.randomUUID());
+        List<UUID> playersIds = List.of(UUID.randomUUID(), UUID.randomUUID());
         var player1 = new Player("player1", "password1");
         var player2 = new Player("player2", "password2");
-        Set<Player> players = new HashSet<>();
+        List<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
         team.setPlayers(players);
@@ -170,10 +169,10 @@ public class TeamServiceTest {
         UUID teamId = UUID.randomUUID();
         var team = new Team();
         team.setId(teamId);
-        Set<UUID> playersIds = Set.of(UUID.randomUUID(), UUID.randomUUID());
+        List<UUID> playersIds = List.of(UUID.randomUUID(), UUID.randomUUID());
         var player1 = new Player("player1", "password1");
         var player2 = new Player("player2", "password2");
-        Set<Player> players = new HashSet<>();
+        List<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
         team.setPlayers(players);

@@ -1,6 +1,6 @@
 package io.github.codenilson.lavava2025.entities.dto.team;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import io.github.codenilson.lavava2025.entities.Match;
@@ -13,7 +13,7 @@ public class TeamCreateDTO {
     private Match match;
 
     @NotNull(message = "You must provide the ID's of the players in the team")
-    private Set<UUID> players;
+    private List<UUID> players;
 
     public TeamCreateDTO() {
     }
