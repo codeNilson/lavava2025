@@ -2,7 +2,9 @@ package io.github.codenilson.lavava2025.controllers;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -122,5 +125,104 @@ public class TeamControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].players", hasSize(2)))
                 .andExpect(jsonPath("$[1].players", hasSize(2)));
+    }
+
+    @Test
+    public void testFindTeamById() throws Exception {
+        Team team = teamRepository.findAll().get(0);
+        mockMvc.perform(get("/teams/{id}", team.getId())
+                .with(user(playerDetails)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(team.getId().toString()))
+                .andExpect(jsonPath("$.players", hasSize(2)));
+    }
+
+    @Test
+    public void testFindTeamByIdNotFound() throws Exception {
+        mockMvc.perform(get("/teams/{id}", "00000000-0000-0000-0000-000000000000")
+                .with(user(playerDetails)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message")
+                        .value("It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
+                .andExpect(jsonPath("$.error").value("Resource Not Found"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void testFindAllTeamsUnauthorized() throws Exception {
+        mockMvc.perform(get("/teams"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testFindTeamByIdUnauthorized() throws Exception {
+        Team team = teamRepository.findAll().get(0);
+        mockMvc.perform(get("/teams/{id}", team.getId()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testDeleteTeamById() throws Exception {
+        Team team = teamRepository.findAll().get(0);
+        mockMvc.perform(delete("/teams/{id}", team.getId())
+                .with(user(playerDetails)))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/teams/{id}", team.getId())
+                .with(user(playerDetails)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message")
+                        .value("It was not possible to find the resource with id: " + team.getId()))
+                .andExpect(jsonPath("$.error").value("Resource Not Found"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void testDeleteTeamByIdNotFound() throws Exception {
+        mockMvc.perform(delete("/teams/{id}", "00000000-0000-0000-0000-000000000000")
+                .with(user(playerDetails)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message")
+                        .value("It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
+                .andExpect(jsonPath("$.error").value("Resource Not Found"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void testDeleteTeamByIdUnauthorized() throws Exception {
+        Team team = teamRepository.findAll().get(0);
+        mockMvc.perform(delete("/teams/{id}", team.getId()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testCreateTeam() throws Exception {
+        PlayerCreateDTO newPlayer = new PlayerCreateDTO();
+        newPlayer.setUsername("newPlayer");
+        newPlayer.setPassword("Test@1234");
+        newPlayer.setAgent("Phoenix");
+
+        playerService.save(newPlayer);
+
+        mockMvc.perform(get("/teams")
+                .with(user(playerDetails)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+
+        mockMvc.perform(post("/teams")
+                .with(user(playerDetails))
+                .contentType("application/json")
+                .content("{\"players\": [\"" + playerService.findByUsername("newPlayer").getId() + "\"]}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.players", hasSize(1)))
+                .andExpect(jsonPath("$.players[0].username").value("newPlayer"));
+
+        mockMvc.perform(get("/teams")
+                .with(user(playerDetails)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
     }
 }

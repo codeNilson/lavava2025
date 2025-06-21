@@ -254,9 +254,8 @@ public class PlayerControllerTest {
                 mockMvc.perform(get("/players/{id}", "00000000-0000-0000-0000-000000000000")
                                 .with(user(playerDetails)))
                                 .andExpect(status().isNotFound())
-                                .andExpect(
-                                                jsonPath("$.message").value(
-                                                                "It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
+                                .andExpect(jsonPath("$.message")
+                                                .value("It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
                                 .andExpect(jsonPath("$.error").value("Resource Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));

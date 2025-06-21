@@ -40,7 +40,7 @@ public class Team {
     private UUID id;
 
     @Comment("The match this team belongs to")
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @Getter
     @Setter
     private Match match;

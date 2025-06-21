@@ -22,10 +22,13 @@ public class TeamMapper {
 
         team.setMatch(teamCreateDTO.getMatch());
 
-        List<Player> players = teamCreateDTO.getPlayers().stream()
-                .map(playerService::findByIdAndActiveTrue)
-                .collect(Collectors.toList());
-        team.setPlayers(players);
+        if (teamCreateDTO.getPlayers() != null) {
+            List<Player> players = teamCreateDTO.getPlayers().stream()
+                    .map(playerService::findByIdAndActiveTrue)
+                    .collect(Collectors.toList());
+            team.setPlayers(players);
+        }
+
         return team;
     }
 
