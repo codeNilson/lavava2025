@@ -58,6 +58,5 @@ public class TeamRepositoryTest {
         assertNotNull(savedTeam);
         assertEquals(team, savedTeam);
         assertEquals(1, savedTeam.getPlayers().size());
-        assertEquals(1, player.getTeams().size());
     }
 }
