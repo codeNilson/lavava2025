@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.unit.controllers;
+package io.github.codenilson.lavava2025.controllers;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
