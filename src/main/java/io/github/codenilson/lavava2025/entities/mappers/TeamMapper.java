@@ -1,6 +1,6 @@
 package io.github.codenilson.lavava2025.entities.mappers;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class teamMapper {
+public class TeamMapper {
 
     private final PlayerService playerService;
 
@@ -22,10 +22,13 @@ public class teamMapper {
 
         team.setMatch(teamCreateDTO.getMatch());
 
-        Set<Player> players = teamCreateDTO.getPlayers().stream()
-                .map(playerService::findByIdAndActiveTrue)
-                .collect(Collectors.toSet());
-        team.setPlayers(players);
+        if (!teamCreateDTO.getPlayers().isEmpty()) {
+            List<Player> players = teamCreateDTO.getPlayers().stream()
+                    .map(playerService::findByIdAndActiveTrue)
+                    .collect(Collectors.toList());
+            team.setPlayers(players);
+        }
+
         return team;
     }
 

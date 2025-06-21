@@ -121,7 +121,7 @@ public class PlayerService {
         return playerRepository.existsByUsername(username);
     }
 
-    public Set<Player> findPlayersByIds(Set<UUID> playerIds) {
+    public List<Player> findPlayersByIds(List<UUID> playerIds) {
         return playerRepository.findAllByIdInAndActiveTrue(playerIds);
     }
 

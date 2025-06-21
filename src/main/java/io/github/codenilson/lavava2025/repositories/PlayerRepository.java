@@ -3,7 +3,6 @@ package io.github.codenilson.lavava2025.repositories;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +21,5 @@ public interface PlayerRepository extends JpaRepository<Player, UUID> {
 
     Optional<Player> findByUsernameAndActiveTrue(String username);
 
-    Set<Player> findAllByIdInAndActiveTrue(Collection<UUID> ids);
+    List<Player> findAllByIdInAndActiveTrue(Collection<UUID> ids);
 }

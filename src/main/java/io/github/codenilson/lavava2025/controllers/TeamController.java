@@ -55,7 +55,8 @@ public class TeamController {
     }
 
     @PatchMapping("/{id}/players")
-    public ResponseEntity<TeamResponseDTO> updateTeam(@PathVariable UUID id, @Valid @RequestBody TeamUpdateDTO updateDTO) {
+    public ResponseEntity<TeamResponseDTO> updateTeam(@PathVariable UUID id,
+            @Valid @RequestBody TeamUpdateDTO updateDTO) {
         var team = teamService.updateTeamPlayers(id, updateDTO.getPlayersId(), updateDTO.getOperation());
         return ResponseEntity.ok().body(team);
     }

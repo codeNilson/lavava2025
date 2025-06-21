@@ -29,7 +29,6 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/players").permitAll()
                         .requestMatchers( "/matches/**").permitAll() //temporario
-                        .requestMatchers( "/teams/**").permitAll() //temporario
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
 

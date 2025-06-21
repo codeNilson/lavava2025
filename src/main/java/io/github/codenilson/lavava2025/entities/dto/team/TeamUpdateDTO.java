@@ -1,6 +1,6 @@
 package io.github.codenilson.lavava2025.entities.dto.team;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
@@ -13,7 +13,7 @@ public class TeamUpdateDTO {
     @NotNull
     private OperationType operation;
 
-    private Set<UUID> playersId;
+    private List<UUID> playersId;
 
     public TeamUpdateDTO() {
     }

@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.unit.repositories;
+package io.github.codenilson.lavava2025.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

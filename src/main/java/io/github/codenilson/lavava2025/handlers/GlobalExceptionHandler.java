@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,5 +69,14 @@ public class GlobalExceptionHandler {
         response.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(response);
+    }
+
+    @ExceptionHandler({ HttpMessageNotReadableException.class })
+    public ResponseEntity<?> handleEnumError(HttpMessageNotReadableException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("error", "Invalid Request");
+        return ResponseEntity.badRequest().body(response);
     }
 }
