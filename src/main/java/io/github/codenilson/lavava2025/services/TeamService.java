@@ -71,5 +71,4 @@ public class TeamService {
         Team updatedTeam = teamRepository.save(team);
         return new TeamResponseDTO(updatedTeam);
     }
-
 }

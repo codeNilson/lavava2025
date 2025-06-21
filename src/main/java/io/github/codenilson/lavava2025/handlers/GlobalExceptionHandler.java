@@ -73,6 +73,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ HttpMessageNotReadableException.class })
     public ResponseEntity<?> handleEnumError(HttpMessageNotReadableException ex) {
-        return ResponseEntity.badRequest().body("Invalid request body. Please check your input.");
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("error", "Invalid Request");
+        return ResponseEntity.badRequest().body(response);
     }
 }

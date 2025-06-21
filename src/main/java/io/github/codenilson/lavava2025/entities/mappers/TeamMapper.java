@@ -22,7 +22,7 @@ public class TeamMapper {
 
         team.setMatch(teamCreateDTO.getMatch());
 
-        if (teamCreateDTO.getPlayers() != null) {
+        if (!teamCreateDTO.getPlayers().isEmpty()) {
             List<Player> players = teamCreateDTO.getPlayers().stream()
                     .map(playerService::findByIdAndActiveTrue)
                     .collect(Collectors.toList());
