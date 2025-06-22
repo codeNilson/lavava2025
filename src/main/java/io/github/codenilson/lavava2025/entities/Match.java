@@ -36,6 +36,7 @@ public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
+    @Setter
     private UUID id;
 
     @Getter

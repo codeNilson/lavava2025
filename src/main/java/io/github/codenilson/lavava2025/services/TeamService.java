@@ -1,8 +1,8 @@
 package io.github.codenilson.lavava2025.services;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +11,7 @@ import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
-import io.github.codenilson.lavava2025.entities.mappers.teamMapper;
+import io.github.codenilson.lavava2025.entities.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
 import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
@@ -21,20 +21,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TeamService {
     private final TeamRepository teamRepository;
-    private final teamMapper teamMapper;
+    private final TeamMapper teamMapper;
     private final PlayerService playerService;
 
     @Transactional
     public TeamResponseDTO save(TeamCreateDTO teamCreateDTO) {
         Team team = teamMapper.toEntity(teamCreateDTO);
-        Team savedTeam = teamRepository.save(team);
-        return new TeamResponseDTO(savedTeam);
+        teamRepository.save(team);
+        return new TeamResponseDTO(team);
     }
 
     public List<TeamResponseDTO> findAllTeams() {
         return teamRepository.findAll().stream()
                 .map(TeamResponseDTO::new)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public Team findById(UUID id) {
@@ -46,9 +46,9 @@ public class TeamService {
         teamRepository.delete(team);
     }
 
-    public TeamResponseDTO updateTeamPlayers(UUID teamId, Set<UUID> playersIds, OperationType operation) {
+    public TeamResponseDTO updateTeamPlayers(UUID teamId, List<UUID> playersIds, OperationType operation) {
         var team = findById(teamId);
-        Set<Player> players = playerService.findPlayersByIds(playersIds);
+        List<Player> players = playerService.findPlayersByIds(playersIds);
         switch (operation) {
             case OperationType.ADD:
                 return addPlayersToTeam(team, players);
@@ -60,16 +60,15 @@ public class TeamService {
 
     }
 
-    private TeamResponseDTO addPlayersToTeam(Team team, Set<Player> playerIds) {
-        team.getPlayers().addAll(playerIds);
+    private TeamResponseDTO addPlayersToTeam(Team team, List<Player> players) {
+        team.getPlayers().addAll(players);
         Team updatedTeam = teamRepository.save(team);
         return new TeamResponseDTO(updatedTeam);
     }
 
-    private TeamResponseDTO removePlayersFromTeam(Team team, Set<Player> playerIds) {
-        team.getPlayers().removeAll(playerIds);
+    private TeamResponseDTO removePlayersFromTeam(Team team, List<Player> players) {
+        team.getPlayers().removeAll(players);
         Team updatedTeam = teamRepository.save(team);
         return new TeamResponseDTO(updatedTeam);
     }
-
 }
