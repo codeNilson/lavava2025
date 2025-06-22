@@ -25,8 +25,6 @@ import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.entities.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
-import io.github.codenilson.lavava2025.services.PlayerService;
-import io.github.codenilson.lavava2025.services.TeamService;
 
 public class TeamServiceTest {
 
@@ -51,7 +49,9 @@ public class TeamServiceTest {
     public void saveShouldCreateNewTeam() {
 
         // Given
-        var match = new Match();
+        UUID matchId = UUID.randomUUID();
+        Match match = new Match();
+        match.setId(matchId);
 
         List<UUID> playersIds = List.of(UUID.randomUUID(), UUID.randomUUID());
         var player1 = new Player("player1", "password1");
@@ -59,7 +59,7 @@ public class TeamServiceTest {
         List<Player> players = List.of(player1, player2);
 
         var teamCreateDTO = new TeamCreateDTO();
-        teamCreateDTO.setMatch(match);
+        teamCreateDTO.setMatch(matchId);
         teamCreateDTO.setPlayers(playersIds);
 
         var team = new Team();

@@ -5,9 +5,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
+import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import lombok.RequiredArgsConstructor;
 
@@ -16,11 +18,16 @@ import lombok.RequiredArgsConstructor;
 public class TeamMapper {
 
     private final PlayerService playerService;
+    private final MatchRepository matchRepository;
 
     public Team toEntity(TeamCreateDTO teamCreateDTO) {
         Team team = new Team();
 
-        team.setMatch(teamCreateDTO.getMatch());
+        if (teamCreateDTO.getMatch() != null) {
+            Match match = matchRepository.findById(teamCreateDTO.getMatch())
+                    .orElseThrow(() -> new IllegalArgumentException("Match not found"));
+            team.setMatch(match);
+        }
 
         if (!teamCreateDTO.getPlayers().isEmpty()) {
             List<Player> players = teamCreateDTO.getPlayers().stream()
