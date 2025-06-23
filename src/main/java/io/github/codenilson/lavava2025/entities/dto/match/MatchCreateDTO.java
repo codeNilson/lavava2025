@@ -5,11 +5,12 @@ import org.springframework.beans.BeanUtils;
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class MatchCreateDTO {
-
+    @NotBlank
     private String map;
 
     private Team winner;
