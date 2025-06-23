@@ -16,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 
 @DataJpaTest
 public class PlayerRepositoryTest {

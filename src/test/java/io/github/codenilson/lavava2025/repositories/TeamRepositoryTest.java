@@ -12,8 +12,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
-import io.github.codenilson.lavava2025.repositories.PlayerRepository;
-import io.github.codenilson.lavava2025.repositories.TeamRepository;
 
 @DataJpaTest
 public class TeamRepositoryTest {
