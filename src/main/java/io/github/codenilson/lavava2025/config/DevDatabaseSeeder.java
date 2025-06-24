@@ -10,7 +10,6 @@ import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
-import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
@@ -33,29 +32,18 @@ public class DevDatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        PlayerCreateDTO playerDTO1 = new PlayerCreateDTO();
-        playerDTO1.setUsername("Jogador1");
-        playerDTO1.setPassword("Abc@123456");
-        playerDTO1.setAgent("Reyna");
+        Player player1 = new Player("jogador1", "Abc@123456");
+        player1.setAgent("Reyna");
 
-        PlayerCreateDTO playerDTO2 = new PlayerCreateDTO();
-        playerDTO2.setUsername("Jogador2");
-        playerDTO2.setPassword("Abc@123456");
-        playerDTO2.setAgent("Phoenix");
+        Player player2 = new Player("jogador2", "Abc@123456");
+        player2.setAgent("Phoenix");
 
-        PlayerCreateDTO playerDTO3 = new PlayerCreateDTO();
-        playerDTO3.setUsername("Jogador3");
-        playerDTO3.setPassword("Abc@123456");
-        playerDTO3.setAgent("Sage");
+        Player player3 = new Player("jogador3", "Abc@123456");
+        player3.setAgent("Sage");
 
-        playerServices.save(playerDTO1);
-        playerServices.save(playerDTO2);
-        playerServices.save(playerDTO3);
-
-        // Buscar entidades Player pelo username
-        Player player1 = playerServices.findByUsername("Jogador1");
-        Player player2 = playerServices.findByUsername("Jogador2");
-        Player player3 = playerServices.findByUsername("Jogador3");
+        playerServices.save(player1);
+        playerServices.save(player2);
+        playerServices.save(player3);
 
         playerServices.addRoles(player1.getId(), Set.of(Roles.ADMIN, Roles.PLAYER));
         playerServices.addRoles(player1.getId(), Set.of(Roles.PLAYER));

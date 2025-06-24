@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
@@ -30,19 +29,16 @@ public class PlayerService {
         return activePlayers;
     }
 
-    public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
+    public PlayerResponseDTO save(Player player) {
 
-        if (existByUsername(playerCreateDTO.getUsername())) {
-            throw new UsernameAlreadyExistsException(playerCreateDTO.getUsername());
+        if (existByUsername(player.getUsername())) {
+            throw new UsernameAlreadyExistsException(player.getUsername());
         }
-
-        String encodedPassword = encoder.encode(playerCreateDTO.getPassword());
-        playerCreateDTO.setPassword(encodedPassword);
-
-        Player player = playerMapper.toEntity(playerCreateDTO);
+        player.setPassword(encoder.encode(player.getPassword())); // Encode the password
         player.getRoles().add(Roles.PLAYER); // Ensure PLAYER role is added
-        Player savedPlayer = playerRepository.save(player);
-        return new PlayerResponseDTO(savedPlayer);
+
+        playerRepository.save(player);
+        return new PlayerResponseDTO(player);
     }
 
     public Player findById(UUID id) {

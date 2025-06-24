@@ -23,13 +23,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import io.github.codenilson.lavava2025.authentication.PlayerDetails;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
-import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
-import io.github.codenilson.lavava2025.services.TeamService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -48,9 +46,6 @@ public class TeamControllerTest {
         private PlayerRepository playerRepository;
 
         @Autowired
-        private TeamService teamService;
-
-        @Autowired
         private TeamRepository teamRepository;
 
         @BeforeEach
@@ -58,24 +53,16 @@ public class TeamControllerTest {
 
                 // Create test players
 
-                PlayerCreateDTO player1 = new PlayerCreateDTO();
-                player1.setUsername("player1");
-                player1.setPassword("Test@1234");
+                Player player1 = new Player("player1", "Test@1234");
                 player1.setAgent("Reyna");
 
-                PlayerCreateDTO player2 = new PlayerCreateDTO();
-                player2.setUsername("player2");
-                player2.setPassword("Test@1234");
+                Player player2 = new Player("player2", "Test@1234");
                 player2.setAgent("Deadlock");
 
-                PlayerCreateDTO player3 = new PlayerCreateDTO();
-                player3.setUsername("player3");
-                player3.setPassword("Test@1234");
+                Player player3 = new Player("player3", "Test@1234");
                 player3.setAgent("Gekko");
 
-                PlayerCreateDTO player4 = new PlayerCreateDTO();
-                player4.setUsername("player4");
-                player4.setPassword("Test@1234");
+                Player player4 = new Player("player4", "Test@1234");
                 player4.setAgent("Omen");
 
                 // Save players to the database
@@ -203,7 +190,7 @@ public class TeamControllerTest {
 
         @Test
         public void testCreateTeam() throws Exception {
-                PlayerCreateDTO newPlayer = new PlayerCreateDTO();
+                Player newPlayer = new Player();
                 newPlayer.setUsername("newPlayer");
                 newPlayer.setPassword("Test@1234");
                 newPlayer.setAgent("Phoenix");
