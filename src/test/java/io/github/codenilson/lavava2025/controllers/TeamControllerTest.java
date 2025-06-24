@@ -48,9 +48,6 @@ public class TeamControllerTest {
         private PlayerRepository playerRepository;
 
         @Autowired
-        private TeamService teamService;
-
-        @Autowired
         private TeamRepository teamRepository;
 
         @BeforeEach

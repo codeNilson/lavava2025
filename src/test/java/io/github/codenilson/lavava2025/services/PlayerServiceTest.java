@@ -34,7 +34,6 @@ import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
-import io.github.codenilson.lavava2025.services.PlayerService;
 
 class PlayerServiceTest {
 
