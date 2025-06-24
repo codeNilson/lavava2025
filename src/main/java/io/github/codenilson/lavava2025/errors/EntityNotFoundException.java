@@ -11,7 +11,7 @@ public class EntityNotFoundException extends RuntimeException {
     }
 
     public EntityNotFoundException(String username) {
-        super("Player not found with username: " + username);
+        super("Resource not found with name: " + username);
     }
 
 }

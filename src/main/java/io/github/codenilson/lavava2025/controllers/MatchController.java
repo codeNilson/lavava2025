@@ -1,0 +1,52 @@
+package io.github.codenilson.lavava2025.controllers;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.github.codenilson.lavava2025.entities.Match;
+import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
+import io.github.codenilson.lavava2025.entities.dto.match.MatchResponseDTO;
+import io.github.codenilson.lavava2025.entities.mappers.MatchMapper;
+import io.github.codenilson.lavava2025.services.MatchService;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("matches")
+@RequiredArgsConstructor
+public class MatchController {
+    private final MatchService matchService;
+
+    private final MatchMapper matchMapper;
+
+    @GetMapping
+    public ResponseEntity<List<MatchResponseDTO>> findAllMatches() {
+        List<Match> matches = matchService.findAllMatches();
+        List<MatchResponseDTO> response = matches.stream()
+                .map(MatchResponseDTO::new)
+                .toList();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MatchResponseDTO> findById(@PathVariable UUID id) {
+        Match match = matchService.findById(id);
+        MatchResponseDTO response = new MatchResponseDTO(match);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<MatchResponseDTO> createMatch(@RequestBody MatchCreateDTO matchDTO) {
+        Match match = matchMapper.toEntity(matchDTO);
+        matchService.save(matchDTO);
+        MatchResponseDTO response = new MatchResponseDTO(match);
+        return ResponseEntity.ok(response);
+    }
+}

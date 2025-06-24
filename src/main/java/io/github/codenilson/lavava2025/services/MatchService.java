@@ -1,5 +1,9 @@
 package io.github.codenilson.lavava2025.services;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
@@ -9,10 +13,6 @@ import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.stereotype.Service;
-
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class MatchService {
@@ -21,17 +21,27 @@ public class MatchService {
 
     private final MatchMapper matchMapper;
 
-    public Match findById(UUID id){
-        Match match = matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));;
+    public MatchResponseDTO createMatch(Match match) {
+        matchRepository.save(match);
+        return new MatchResponseDTO(match);
+    }
+
+    public Match findById(UUID id) {
+        Match match = matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        ;
         return match;
     }
 
-    public void delete(Match match){
+    public List<Match> findAllMatches() {
+        return matchRepository.findAll();
+    }
+
+    public void delete(Match match) {
         matchRepository.delete(match);
     }
 
-    public MatchResponseDTO save(MatchCreateDTO matchCreateDto){
-        Match match =  matchMapper.toEntity(matchCreateDto);
+    public MatchResponseDTO save(MatchCreateDTO matchCreateDto) {
+        Match match = matchMapper.toEntity(matchCreateDto);
         Match matchSaved = matchRepository.save(match);
         return new MatchResponseDTO(matchSaved);
     }
