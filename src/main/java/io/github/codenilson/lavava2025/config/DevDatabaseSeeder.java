@@ -2,7 +2,6 @@ package io.github.codenilson.lavava2025.config;
 
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,22 +16,20 @@ import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @Profile("dev")
+@RequiredArgsConstructor
 public class DevDatabaseSeeder implements CommandLineRunner {
 
-    @Autowired
-    private PlayerService playerServices;
+    private final PlayerService playerServices;
 
-    @Autowired
-    private TeamRepository teamRepository;
+    private final TeamRepository teamRepository;
 
-    @Autowired
-    private MatchRepository matchRepository;
+    private final MatchRepository matchRepository;
 
-    @Autowired
-    private PlayerPerfomanceRepository playerPerfomanceRepository;
+    private final PlayerPerfomanceRepository playerPerfomanceRepository;
 
     @Override
     public void run(String... args) throws Exception {
