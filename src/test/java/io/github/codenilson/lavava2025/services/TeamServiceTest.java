@@ -20,7 +20,6 @@ import org.mockito.MockitoAnnotations;
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
-import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.entities.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
@@ -58,20 +57,15 @@ public class TeamServiceTest {
         var player2 = new Player("player2", "password2");
         List<Player> players = List.of(player1, player2);
 
-        var teamCreateDTO = new TeamCreateDTO();
-        teamCreateDTO.setMatch(matchId);
-        teamCreateDTO.setPlayers(playersIds);
-
         var team = new Team();
         team.setMatch(match);
         team.setPlayers(players);
 
         when(playerService.findPlayersByIds(playersIds)).thenReturn(players);
-        when(teamMapper.toEntity(teamCreateDTO)).thenReturn(team);
         when(teamRepository.save(any(Team.class))).thenReturn(team);
 
         // When
-        TeamResponseDTO response = teamService.save(teamCreateDTO);
+        Team response = teamService.save(team);
 
         // Then
         assertNotNull(response);
@@ -80,7 +74,6 @@ public class TeamServiceTest {
         // is available
         assertEquals(players.size(), response.getPlayers().size());
         verify(teamRepository).save(team);
-        verify(teamMapper).toEntity(teamCreateDTO);
     }
 
     @Test
@@ -91,7 +84,7 @@ public class TeamServiceTest {
         when(teamRepository.findAll()).thenReturn(List.of(team1, team2));
 
         // When
-        List<TeamResponseDTO> teams = teamService.findAllTeams();
+        List<Team> teams = teamService.findAllTeams();
 
         // Then
         assertNotNull(teams);

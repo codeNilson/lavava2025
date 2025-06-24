@@ -2,16 +2,13 @@ package io.github.codenilson.lavava2025.services;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
-import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
-import io.github.codenilson.lavava2025.entities.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
 import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
@@ -21,20 +18,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TeamService {
     private final TeamRepository teamRepository;
-    private final TeamMapper teamMapper;
     private final PlayerService playerService;
 
     @Transactional
-    public TeamResponseDTO save(TeamCreateDTO teamCreateDTO) {
-        Team team = teamMapper.toEntity(teamCreateDTO);
+    public Team save(Team team) {
         teamRepository.save(team);
-        return new TeamResponseDTO(team);
+        return team;
     }
 
-    public List<TeamResponseDTO> findAllTeams() {
-        return teamRepository.findAll().stream()
-                .map(TeamResponseDTO::new)
-                .collect(Collectors.toList());
+    public List<Team> findAllTeams() {
+        return teamRepository.findAll();
     }
 
     public Team findById(UUID id) {
@@ -57,7 +50,6 @@ public class TeamService {
             default:
                 throw new IllegalArgumentException("Invalid operation type: " + operation);
         }
-
     }
 
     private TeamResponseDTO addPlayersToTeam(Team team, List<Player> players) {

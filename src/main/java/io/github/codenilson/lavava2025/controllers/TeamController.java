@@ -17,6 +17,7 @@ import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamUpdateDTO;
+import io.github.codenilson.lavava2025.entities.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.services.TeamService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,15 @@ public class TeamController {
 
     private final TeamService teamService;
 
+    private final TeamMapper teamMapper;
+
     @GetMapping
     public ResponseEntity<List<TeamResponseDTO>> findAll() {
-        List<TeamResponseDTO> teams = teamService.findAllTeams();
-        return ResponseEntity.ok(teams);
+        List<Team> teams = teamService.findAllTeams();
+        List<TeamResponseDTO> response = teams.stream()
+                .map(TeamResponseDTO::new)
+                .toList();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
@@ -50,7 +56,9 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<TeamResponseDTO> createTeam(@RequestBody TeamCreateDTO team) {
-        TeamResponseDTO response = teamService.save(team);
+        Team teamEntity = teamMapper.toEntity(team);
+        teamService.save(teamEntity);
+        TeamResponseDTO response = new TeamResponseDTO(teamEntity);
         return ResponseEntity.status(201).body(response);
     }
 

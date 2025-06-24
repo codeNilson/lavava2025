@@ -12,13 +12,12 @@ import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
-import io.github.codenilson.lavava2025.entities.pks.PlayerPerfomancePk;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
-import io.github.codenilson.lavava2025.repositories.TeamRepository;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
+import io.github.codenilson.lavava2025.services.TeamService;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -28,7 +27,7 @@ public class DevDatabaseSeeder implements CommandLineRunner {
 
     private final PlayerService playerServices;
 
-    private final TeamRepository teamRepository;
+    private final TeamService teamService;
 
     private final MatchRepository matchRepository;
 
@@ -86,8 +85,8 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         team2.setMatch(match);
         team2.getPlayers().add(player3);
 
-        teamRepository.save(team1);
-        teamRepository.save(team2);
+        teamService.save(team1);
+        teamService.save(team2);
 
         PlayerPerfomance pf1 = new PlayerPerfomance(player1, team1, match);
         pf1.setKills(10);
