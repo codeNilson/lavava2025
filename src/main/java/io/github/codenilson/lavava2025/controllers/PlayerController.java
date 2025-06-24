@@ -3,7 +3,6 @@ package io.github.codenilson.lavava2025.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +20,7 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.RoleDTO;
+import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +30,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PlayerController {
 
-    @Autowired
     private final PlayerService playerServices;
+
+    private final PlayerMapper playerMapper;
 
     @GetMapping
     public ResponseEntity<List<PlayerResponseDTO>> findAllActivePlayers() {
@@ -44,7 +45,8 @@ public class PlayerController {
 
     @PostMapping
     public ResponseEntity<PlayerResponseDTO> createPlayer(@RequestBody @Valid PlayerCreateDTO player) {
-        PlayerResponseDTO response = playerServices.save(player);
+        Player playerEntity = playerMapper.toEntity(player);
+        PlayerResponseDTO response = playerServices.save(playerEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

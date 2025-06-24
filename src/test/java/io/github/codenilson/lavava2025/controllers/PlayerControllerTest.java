@@ -53,25 +53,14 @@ public class PlayerControllerTest {
 
                 // Create test players
 
-                PlayerCreateDTO player1 = new PlayerCreateDTO();
-                player1.setUsername("player1");
-                player1.setPassword("Test@1234");
+                Player player1 = new Player("player1", "Test@1234");
                 player1.setAgent("Reyna");
-
-                PlayerCreateDTO player2 = new PlayerCreateDTO();
-                player2.setUsername("player2");
-                player2.setPassword("Test@1234");
+                Player player2 = new Player("player2", "Test@1234");
                 player2.setAgent("Deadlock");
-
-                PlayerCreateDTO player3 = new PlayerCreateDTO();
-                player3.setUsername("player3");
-                player3.setPassword("Test@1234");
+                Player player3 = new Player("player3", "Test@1234");
                 player3.setAgent("Gekko");
-
-                PlayerCreateDTO player4 = new PlayerCreateDTO();
-                player4.setUsername("player4");
-                player4.setPassword("Test@1234");
-                player4.setAgent("Gekko");
+                Player player4 = new Player("player4", "Test@1234");
+                player4.setAgent("Killjoy");
 
                 // Save players to the database
                 playerService.save(player1);
