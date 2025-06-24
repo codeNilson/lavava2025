@@ -29,7 +29,7 @@ public class PlayerPerfomance {
 
     @EmbeddedId
     @Getter
-    private PlayerPerfomancePk id;
+    private PlayerPerfomancePk id = new PlayerPerfomancePk();
 
     @ManyToOne
     @MapsId("playerId")
@@ -86,6 +86,9 @@ public class PlayerPerfomance {
         this.player = player;
         this.team = team;
         this.match = match;
+        this.id.setMatchId(match.getId());
+        this.id.setPlayerId(player.getId());
+        this.id.setTeamId(team.getId());
     }
 
     public void setPlayer(Player player) {

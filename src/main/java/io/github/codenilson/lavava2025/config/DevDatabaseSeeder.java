@@ -12,6 +12,7 @@ import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
+import io.github.codenilson.lavava2025.entities.pks.PlayerPerfomancePk;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
@@ -66,10 +67,15 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         playerServices.addRoles(player2.getId(), Set.of(Roles.PLAYER));
         playerServices.addRoles(player3.getId(), Set.of(Roles.PLAYER));
 
-        var map = valorantMapRepository.findByName("Bind")
-                .get();
+        var map = valorantMapRepository.findByName("Ascent").orElseGet(() -> {
+            var newMap = new ValorantMap();
+            newMap.setName("Ascent");
+            return valorantMapRepository.save(newMap);
+        });
         Match match = new Match(map);
         matchRepository.save(match);
+
+        System.out.println("Jogadores criados com sucesso!: " + match.getId());
 
         Team team1 = new Team();
         team1.setMatch(match);
@@ -83,19 +89,13 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         teamRepository.save(team1);
         teamRepository.save(team2);
 
-        PlayerPerfomance pf1 = new PlayerPerfomance();
-        pf1.setPlayer(player1);
-        pf1.setTeam(team1);
-        pf1.setMatch(match);
+        PlayerPerfomance pf1 = new PlayerPerfomance(player1, team1, match);
         pf1.setKills(10);
         pf1.setDeaths(2);
         pf1.setAssists(5);
         pf1.setAgent("Reyna");
 
-        PlayerPerfomance pf2 = new PlayerPerfomance();
-        pf2.setPlayer(player2);
-        pf2.setTeam(team1);
-        pf2.setMatch(match);
+        PlayerPerfomance pf2 = new PlayerPerfomance(player2, team1, match);
         pf2.setKills(8);
         pf2.setDeaths(3);
         pf2.setAssists(4);
