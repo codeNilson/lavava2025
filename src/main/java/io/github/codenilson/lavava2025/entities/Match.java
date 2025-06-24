@@ -1,8 +1,8 @@
 package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.Comment;
@@ -22,6 +22,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -50,7 +51,7 @@ public class Match {
     private Team winner;
 
     @Comment("Most Valuable Player of the match. This references the PlayerPerformance entity, not the Player entity.")
-    @ManyToOne
+    @OneToOne
     @JoinColumns({
             @JoinColumn(name = "mvp_player_id", referencedColumnName = "player_id"),
             @JoinColumn(name = "mvp_team_id", referencedColumnName = "team_id"),
@@ -62,7 +63,7 @@ public class Match {
     private PlayerPerfomance mvp;
 
     @Comment("Ace of the match. This references the PlayerPerformance entity, not the Player entity.")
-    @ManyToOne
+    @OneToOne
     @JoinColumns({
             @JoinColumn(name = "ace_player_id", referencedColumnName = "player_id"),
             @JoinColumn(name = "ace_team_id", referencedColumnName = "team_id"),
@@ -76,7 +77,7 @@ public class Match {
     @Comment("All player's performances in this match.")
     @OneToMany(mappedBy = "match")
     @Getter
-    private Set<PlayerPerfomance> playerPerformances = new HashSet<>();
+    private List<PlayerPerfomance> playerPerformances = new ArrayList<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
