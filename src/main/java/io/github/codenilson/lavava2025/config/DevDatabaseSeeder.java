@@ -10,11 +10,13 @@ import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
+import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
+import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +32,8 @@ public class DevDatabaseSeeder implements CommandLineRunner {
     private final MatchRepository matchRepository;
 
     private final PlayerPerfomanceRepository playerPerfomanceRepository;
+
+    private final ValorantMapRepository valorantMapRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -62,8 +66,9 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         playerServices.addRoles(player2.getId(), Set.of(Roles.PLAYER));
         playerServices.addRoles(player3.getId(), Set.of(Roles.PLAYER));
 
-        Match match = new Match();
-        match.setMap("Dust 2");
+        var map = valorantMapRepository.findByName("Bind")
+                .get();
+        Match match = new Match(map);
         matchRepository.save(match);
 
         Team team1 = new Team();

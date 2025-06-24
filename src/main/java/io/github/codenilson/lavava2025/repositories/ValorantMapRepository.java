@@ -1,6 +1,7 @@
 package io.github.codenilson.lavava2025.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,6 @@ public interface ValorantMapRepository extends JpaRepository<ValorantMap, UUID> 
             new ValorantMap("Pearl"),
             new ValorantMap("Lotus"),
             new ValorantMap("Sunset"));
+
+    Optional<ValorantMap> findByName(String name);
 }

@@ -41,7 +41,8 @@ public class Match {
 
     @Getter
     @Setter
-    private String map; // trocar depois para uma entidade Map
+    @ManyToOne
+    private ValorantMap map;
 
     @ManyToOne
     @JoinColumn(name = "winner_id", referencedColumnName = "id", nullable = true)
@@ -92,11 +93,8 @@ public class Match {
     public Match() {
     }
 
-    public Match(String map, Team winner, PlayerPerfomance mvp, PlayerPerfomance ace) {
+    public Match(ValorantMap map) {
         this.map = map;
-        this.winner = winner;
-        this.mvp = mvp;
-        this.ace = ace;
     }
 
 }

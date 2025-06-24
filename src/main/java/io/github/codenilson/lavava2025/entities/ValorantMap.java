@@ -21,6 +21,9 @@ public class ValorantMap {
     @Column(nullable = false, unique = true)
     private String name;
 
+    public ValorantMap() {
+    }
+
     public ValorantMap(String name) {
         this.name = name;
     }
