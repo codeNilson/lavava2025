@@ -17,7 +17,6 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,7 +25,6 @@ import lombok.ToString;
 @EntityListeners(AuditingEntityListener.class)
 @Comment("Represents the performance of a player in a specific match for a specific team.")
 @ToString
-@EqualsAndHashCode
 public class PlayerPerfomance {
 
     @EmbeddedId
@@ -84,43 +82,47 @@ public class PlayerPerfomance {
     public PlayerPerfomance() {
     }
 
-    public PlayerPerfomance(Player player, Team team, Match match, Integer kills, Integer deaths, Integer assists,
-            String agent) {
-        this.id = new PlayerPerfomancePk(player.getId(), team.getId(), match.getId());
+    public PlayerPerfomance(Player player, Team team, Match match) {
         this.player = player;
         this.team = team;
         this.match = match;
-        this.kills = kills;
-        this.deaths = deaths;
-        this.assists = assists;
-        this.agent = agent;
     }
 
     public void setPlayer(Player player) {
         this.player = player;
-
-        if (id == null) {
-            this.id = new PlayerPerfomancePk();
-        }
-        this.id.setPlayerId(player.getId());
     }
 
     public void setTeam(Team team) {
         this.team = team;
-
-        if (id == null) {
-            this.id = new PlayerPerfomancePk();
-        }
-        this.id.setTeamId(team.getId());
     }
 
     public void setMatch(Match match) {
         this.match = match;
+    }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PlayerPerfomance other = (PlayerPerfomance) obj;
         if (id == null) {
-            this.id = new PlayerPerfomancePk();
-        }
-        this.id.setMatchId(match.getId());
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
 
 }
