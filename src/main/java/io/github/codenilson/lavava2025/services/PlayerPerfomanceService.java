@@ -22,4 +22,10 @@ public class PlayerPerfomanceService {
         return playerPerfomanceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(id));
     }
+
+    public PlayerPerfomance findByPlayerAndMatch(UUID playerId, UUID matchId) {
+        return playerPerfomanceRepository.findByPlayerIdAndMatchId(playerId, matchId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Player performance not found for player ID " + playerId + " and match ID " + matchId));
+    }
 }

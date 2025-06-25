@@ -5,6 +5,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import io.github.codenilson.lavava2025.entities.Match;
+import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
@@ -12,6 +14,7 @@ import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import io.github.codenilson.lavava2025.services.MatchService;
 import io.github.codenilson.lavava2025.services.PlayerPerfomanceService;
+import io.github.codenilson.lavava2025.services.PlayerService;
 import io.github.codenilson.lavava2025.services.TeamService;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class MatchMapper {
 
   private final MatchService matchService;
+  private final PlayerService playerService;
   private final TeamService teamService;
   private final PlayerPerfomanceService playerPerfomanceService;
   private final ValorantMapRepository valorantMapRepository;
@@ -46,12 +50,14 @@ public class MatchMapper {
     }
 
     if (matchUpdateDto.getMvpId() != null) {
-      var mvp = playerPerfomanceService.findById(matchUpdateDto.getMvpId());
+      Player player = playerService.findById(matchUpdateDto.getMvpId());
+      PlayerPerfomance mvp = playerPerfomanceService.findByPlayerAndMatch(player.getId(), match.getId());
       match.setMvp(mvp);
     }
 
     if (matchUpdateDto.getAceId() != null) {
-      var ace = playerPerfomanceService.findById(matchUpdateDto.getAceId());
+      Player player = playerService.findById(matchUpdateDto.getAceId());
+      PlayerPerfomance ace = playerPerfomanceService.findByPlayerAndMatch(player.getId(), match.getId());
       match.setAce(ace);
     }
 
