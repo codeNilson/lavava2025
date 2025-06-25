@@ -13,9 +13,9 @@ import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
-import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerPerfomanceRepository;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
+import io.github.codenilson.lavava2025.services.MatchService;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import io.github.codenilson.lavava2025.services.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class DevDatabaseSeeder implements CommandLineRunner {
 
     private final TeamService teamService;
 
-    private final MatchRepository matchRepository;
+    private final MatchService matchService;
 
     private final PlayerPerfomanceRepository playerPerfomanceRepository;
 
@@ -72,7 +72,7 @@ public class DevDatabaseSeeder implements CommandLineRunner {
             return valorantMapRepository.save(newMap);
         });
         Match match = new Match(map);
-        matchRepository.save(match);
+        matchService.save(match);
 
         System.out.println("Jogadores criados com sucesso!: " + match.getId());
 
@@ -106,7 +106,7 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         match.setMvp(pf1);
         match.setAce(pf2);
         match.setWinner(team1);
-        matchRepository.save(match);
+        matchService.save(match);
 
         System.out.println("Relacionamentos criados com sucesso!");
     }

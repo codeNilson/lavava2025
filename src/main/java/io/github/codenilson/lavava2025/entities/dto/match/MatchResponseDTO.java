@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
+import io.github.codenilson.lavava2025.entities.Team;
+import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.playerperfomance.PlayerPerfomanceResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.valorantmap.ValorantMapResponseDTO;
@@ -34,19 +36,22 @@ public class MatchResponseDTO {
     }
 
     public MatchResponseDTO(Match match) {
-        this.id = match.getId();
-        var team = match.getWinner();
-        this.winner = team != null ? new TeamResponseDTO(team) : null;
+
+        Team team = match.getWinner();
         PlayerPerfomance mvp = match.getMvp();
-        this.map = new ValorantMapResponseDTO(match.getMap());
+        PlayerPerfomance ace = match.getAce();
+        ValorantMap map = match.getMap();
+
+        this.id = match.getId();
+        this.winner = team != null ? new TeamResponseDTO(team) : null;
+        this.map = new ValorantMapResponseDTO(map);
         this.playerPerformances = match.getPlayerPerformances().stream()
                 .map(PlayerPerfomanceResponseDTO::new)
                 .toList();
         this.mvp = mvp != null ? new PlayerPerfomanceResponseDTO(mvp) : null;
-        PlayerPerfomance ace = match.getAce();
         this.ace = ace != null ? new PlayerPerfomanceResponseDTO(ace) : null;
         this.createdAt = match.getCreatedAt();
         this.updatedAt = match.getUpdatedAt();
-        
+
     }
 }
