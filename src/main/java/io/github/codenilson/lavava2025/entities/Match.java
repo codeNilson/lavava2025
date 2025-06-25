@@ -46,6 +46,7 @@ public class Match {
     @Getter
     @Setter
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private ValorantMap map;
 
     @ManyToOne

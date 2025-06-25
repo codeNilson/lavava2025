@@ -39,6 +39,9 @@ public class TeamServiceTest {
     @Mock
     private PlayerService playerService;
 
+    @Mock
+    private PlayerPerfomanceService playerPerfomanceService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -65,7 +68,7 @@ public class TeamServiceTest {
         when(teamRepository.save(any(Team.class))).thenReturn(team);
 
         // When
-        Team response = teamService.save(team);
+        Team response = teamService.createTeam(team);
 
         // Then
         assertNotNull(response);

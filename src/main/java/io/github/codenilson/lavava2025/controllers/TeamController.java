@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
@@ -57,7 +58,7 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<TeamResponseDTO> createTeam(@RequestBody @Valid TeamCreateDTO team) {
         Team teamEntity = teamMapper.toEntity(team);
-        teamService.save(teamEntity);
+        teamService.createTeam(teamEntity);
         TeamResponseDTO response = new TeamResponseDTO(teamEntity);
         return ResponseEntity.status(201).body(response);
     }

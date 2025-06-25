@@ -9,10 +9,10 @@ import lombok.Data;
 @Data
 public class TeamCreateDTO {
     @NotNull(message = "Match cannot be empty")
-    private UUID match;
+    private UUID matchId;
 
     @NotNull(message = "You must provide the ID's of the players in the team")
-    private List<UUID> players;
+    private List<UUID> playersIds;
 
     public TeamCreateDTO() {
     }

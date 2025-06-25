@@ -21,6 +21,7 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.RoleDTO;
+import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,9 @@ public class PlayerController {
     @Autowired
     private final PlayerService playerServices;
 
+    @Autowired
+    private final PlayerMapper playerMapper;
+
     @GetMapping
     public ResponseEntity<List<PlayerResponseDTO>> findAllActivePlayers() {
         List<Player> activePlayers = playerServices.findActivePlayers();
@@ -44,7 +48,8 @@ public class PlayerController {
 
     @PostMapping
     public ResponseEntity<PlayerResponseDTO> createPlayer(@RequestBody @Valid PlayerCreateDTO player) {
-        PlayerResponseDTO response = playerServices.save(player);
+        Player playerEntity = playerMapper.toEntity(player);
+        PlayerResponseDTO response = playerServices.save(playerEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

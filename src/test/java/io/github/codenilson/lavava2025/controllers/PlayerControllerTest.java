@@ -53,22 +53,22 @@ public class PlayerControllerTest {
 
                 // Create test players
 
-                PlayerCreateDTO player1 = new PlayerCreateDTO();
+                Player player1 = new Player();
                 player1.setUsername("player1");
                 player1.setPassword("Test@1234");
                 player1.setAgent("Reyna");
 
-                PlayerCreateDTO player2 = new PlayerCreateDTO();
+                Player player2 = new Player();
                 player2.setUsername("player2");
                 player2.setPassword("Test@1234");
                 player2.setAgent("Deadlock");
 
-                PlayerCreateDTO player3 = new PlayerCreateDTO();
+                Player player3 = new Player();
                 player3.setUsername("player3");
                 player3.setPassword("Test@1234");
                 player3.setAgent("Gekko");
 
-                PlayerCreateDTO player4 = new PlayerCreateDTO();
+                Player player4 = new Player();
                 player4.setUsername("player4");
                 player4.setPassword("Test@1234");
                 player4.setAgent("Gekko");

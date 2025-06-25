@@ -8,10 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
-import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
@@ -22,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PlayerService {
     private final PlayerRepository playerRepository;
-    private final PlayerMapper playerMapper;
     private final PasswordEncoder encoder;
 
     public List<Player> findActivePlayers() {
@@ -30,19 +27,18 @@ public class PlayerService {
         return activePlayers;
     }
 
-    public PlayerResponseDTO save(PlayerCreateDTO playerCreateDTO) {
+    public PlayerResponseDTO save(Player player) {
 
-        if (existByUsername(playerCreateDTO.getUsername())) {
-            throw new UsernameAlreadyExistsException(playerCreateDTO.getUsername());
+        if (existByUsername(player.getUsername())) {
+            throw new UsernameAlreadyExistsException(player.getUsername());
         }
 
-        String encodedPassword = encoder.encode(playerCreateDTO.getPassword());
-        playerCreateDTO.setPassword(encodedPassword);
+        String encodedPassword = encoder.encode(player.getPassword());
+        player.setPassword(encodedPassword);
 
-        Player player = playerMapper.toEntity(playerCreateDTO);
         player.getRoles().add(Roles.PLAYER); // Ensure PLAYER role is added
-        Player savedPlayer = playerRepository.save(player);
-        return new PlayerResponseDTO(savedPlayer);
+        playerRepository.save(player);
+        return new PlayerResponseDTO(player);
     }
 
     public Player findById(UUID id) {

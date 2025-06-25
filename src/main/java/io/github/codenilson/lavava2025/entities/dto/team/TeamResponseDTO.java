@@ -3,6 +3,7 @@ package io.github.codenilson.lavava2025.entities.dto.team;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 
@@ -24,7 +25,7 @@ public class TeamResponseDTO {
         // this.match = team.getMatch();
         this.players = team.getPlayers().stream()
                 .map(PlayerResponseDTO::new)
-                .collect(java.util.stream.Collectors.toSet());
+                .collect(Collectors.toSet());
         this.createdAt = team.getCreatedAt();
         this.updatedAt = team.getUpdatedAt();
     }

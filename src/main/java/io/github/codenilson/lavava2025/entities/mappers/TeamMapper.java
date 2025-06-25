@@ -23,14 +23,14 @@ public class TeamMapper {
     public Team toEntity(TeamCreateDTO teamCreateDTO) {
         Team team = new Team();
 
-        if (teamCreateDTO.getMatch() != null) {
-            Match match = matchRepository.findById(teamCreateDTO.getMatch())
+        if (teamCreateDTO.getMatchId() != null) {
+            Match match = matchRepository.findById(teamCreateDTO.getMatchId())
                     .orElseThrow(() -> new IllegalArgumentException("Match not found"));
             team.setMatch(match);
         }
 
-        if (!teamCreateDTO.getPlayers().isEmpty()) {
-            List<Player> players = teamCreateDTO.getPlayers().stream()
+        if (!teamCreateDTO.getPlayersIds().isEmpty()) {
+            List<Player> players = teamCreateDTO.getPlayersIds().stream()
                     .map(playerService::findByIdAndActiveTrue)
                     .collect(Collectors.toList());
             team.setPlayers(players);

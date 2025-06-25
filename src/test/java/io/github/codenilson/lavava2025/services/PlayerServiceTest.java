@@ -26,7 +26,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
@@ -58,9 +57,9 @@ class PlayerServiceTest {
     @DisplayName("Should create a new player when username does not exist")
     void saveShouldCreateNewPlayer() {
         // Given
-        PlayerCreateDTO createDTO = new PlayerCreateDTO();
-        createDTO.setUsername("newPlayer");
-        createDTO.setPassword("123456");
+        Player player = new Player();
+        player.setUsername("newPlayer");
+        player.setPassword("123456");
 
         Player playerEntity = new Player();
         playerEntity.setId(UUID.randomUUID());
@@ -69,11 +68,10 @@ class PlayerServiceTest {
 
         when(playerRepository.existsByUsername("newPlayer")).thenReturn(false);
         when(encoder.encode("123456")).thenReturn("encodedPassword");
-        when(playerMapper.toEntity(createDTO)).thenReturn(playerEntity);
         when(playerRepository.save(any(Player.class))).thenReturn(playerEntity);
 
         // When
-        PlayerResponseDTO response = playerService.save(createDTO);
+        PlayerResponseDTO response = playerService.save(player);
 
         // Then
         assertNotNull(response);
@@ -83,23 +81,22 @@ class PlayerServiceTest {
         verify(encoder).encode("123456");
         verify(playerRepository).existsByUsername("newPlayer");
         verify(playerRepository).save(any(Player.class));
-        verify(playerMapper).toEntity(createDTO);
     }
 
     @Test
     @DisplayName("Should throw exception when username already exists")
     public void saveShouldRaiseExceptionWhenUsernameExists() {
         // Given
-        PlayerCreateDTO createDTO = new PlayerCreateDTO();
-        createDTO.setUsername("existingplayer");
-        createDTO.setPassword("123456");
+        Player player = new Player();
+        player.setUsername("existingplayer");
+        player.setPassword("123456");
 
         when(playerRepository.existsByUsername("existingplayer")).thenReturn(true);
 
         // When & Then
         assertThrows(
                 UsernameAlreadyExistsException.class,
-                () -> playerService.save(createDTO));
+                () -> playerService.save(player));
         verify(playerRepository).existsByUsername("existingplayer");
         verify(playerRepository, times(0)).save(any(Player.class));
     }

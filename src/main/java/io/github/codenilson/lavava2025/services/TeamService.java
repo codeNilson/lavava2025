@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
@@ -19,10 +20,21 @@ import lombok.RequiredArgsConstructor;
 public class TeamService {
     private final TeamRepository teamRepository;
     private final PlayerService playerService;
+    private final PlayerPerfomanceService playerPerfomanceService;
 
     @Transactional
-    public Team save(Team team) {
+    public Team createTeam(Team team) {
         teamRepository.save(team);
+        List<PlayerPerfomance> playersPerfomances = team.getPlayers().stream()
+                .map(player -> {
+                    PlayerPerfomance perfomance = new PlayerPerfomance();
+                    perfomance.setPlayer(player);
+                    perfomance.setTeam(team);
+                    perfomance.setMatch(team.getMatch());
+                    return perfomance;
+                }).toList();
+        playerPerfomanceService.saveAll(playersPerfomances);
+
         return team;
     }
 

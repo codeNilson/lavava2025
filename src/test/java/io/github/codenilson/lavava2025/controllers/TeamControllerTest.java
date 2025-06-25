@@ -21,13 +21,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import io.github.codenilson.lavava2025.authentication.PlayerDetails;
+import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
-import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
+import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
+import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
+import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
+import io.github.codenilson.lavava2025.services.MatchService;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import io.github.codenilson.lavava2025.services.TeamService;
 
@@ -48,31 +52,50 @@ public class TeamControllerTest {
         private PlayerRepository playerRepository;
 
         @Autowired
+        private ValorantMapRepository valorantMapRepository;
+
+        @Autowired
+        private TeamService teamService;
+
+        @Autowired
         private TeamRepository teamRepository;
+
+        @Autowired
+        private MatchRepository matchRepository;
+
+        @Autowired
+        private MatchService matchService;
 
         @BeforeEach
         public void setUp() {
 
                 // Create test players
 
-                PlayerCreateDTO player1 = new PlayerCreateDTO();
-                player1.setUsername("player1");
-                player1.setPassword("Test@1234");
-                player1.setAgent("Reyna");
+                ValorantMap map1 = new ValorantMap();
+                map1.setName("Map1");
 
-                PlayerCreateDTO player2 = new PlayerCreateDTO();
-                player2.setUsername("player2");
-                player2.setPassword("Test@1234");
+                ValorantMap map2 = new ValorantMap();
+                map2.setName("Map2");
+
+                valorantMapRepository.save(map1);
+                valorantMapRepository.save(map2);
+
+                Match match = new Match(map1);
+                Match match2 = new Match(map2);
+                matchService.save(match);
+                matchService.save(match2);
+
+                Player player1 = new Player("player1", "Test@1234");
+                player1.setAgent("Reyna");
+                player1.getRoles().add(Roles.PLAYER); // Ensure PLAYER role is added
+
+                Player player2 = new Player("player2", "Test@1234");
                 player2.setAgent("Deadlock");
 
-                PlayerCreateDTO player3 = new PlayerCreateDTO();
-                player3.setUsername("player3");
-                player3.setPassword("Test@1234");
+                Player player3 = new Player("player3", "Test@1234");
                 player3.setAgent("Gekko");
 
-                PlayerCreateDTO player4 = new PlayerCreateDTO();
-                player4.setUsername("player4");
-                player4.setPassword("Test@1234");
+                Player player4 = new Player("player4", "Test@1234");
                 player4.setAgent("Omen");
 
                 // Save players to the database
@@ -87,31 +110,30 @@ public class TeamControllerTest {
                 playerUpdateDTO.setActive(false);
                 playerService.updatePlayer(playerService.findByUsername("player4"), playerUpdateDTO);
 
-                // Add ADMIN role to player1
-                Player savedPlayer1 = playerService.findByUsername("player1");
-                savedPlayer1.getRoles().add(Roles.ADMIN);
-                playerRepository.save(savedPlayer1);
-
                 // Create PlayerDetails for the authenticated user
-                this.playerDetails = new PlayerDetails(savedPlayer1);
+                this.playerDetails = new PlayerDetails(player1);
 
                 // Create teams and assign players to them
                 Team team = new Team();
-                team.getPlayers().add(playerService.findByUsername("player1"));
-                team.getPlayers().add(playerService.findByUsername("player2"));
+                team.getPlayers().add(player1);
+                team.getPlayers().add(player2);
+                team.setMatch(match);
 
                 Team team2 = new Team();
-                team2.getPlayers().add(playerService.findByUsername("player3"));
-                team2.getPlayers().add(playerService.findByUsername("player4"));
+                team2.getPlayers().add(player3);
+                team2.getPlayers().add(player4);
+                team2.setMatch(match);
 
                 // Save teams to the database
-                teamRepository.save(team);
-                teamRepository.save(team2);
+                teamService.createTeam(team);
+                teamService.createTeam(team2);
         }
 
         @AfterEach
         public void tearDown() {
                 // Clear the database after each test
+                valorantMapRepository.deleteAll();
+                matchRepository.deleteAll();
                 teamRepository.deleteAll();
                 playerRepository.deleteAll();
         }
@@ -200,12 +222,14 @@ public class TeamControllerTest {
 
         @Test
         public void testCreateTeam() throws Exception {
-                PlayerCreateDTO newPlayer = new PlayerCreateDTO();
+                Player newPlayer = new Player();
                 newPlayer.setUsername("newPlayer");
                 newPlayer.setPassword("Test@1234");
                 newPlayer.setAgent("Phoenix");
 
                 playerService.save(newPlayer);
+
+                Match match = matchService.findAllMatches().get(0);
 
                 mockMvc.perform(get("/teams")
                                 .with(user(playerDetails)))
@@ -215,8 +239,8 @@ public class TeamControllerTest {
                 mockMvc.perform(post("/teams")
                                 .with(user(playerDetails))
                                 .contentType("application/json")
-                                .content("{\"players\": [\"" + playerService.findByUsername("newPlayer").getId()
-                                                + "\"]}"))
+                                .content("{\"playersIds\": [\"" + newPlayer.getId() + "\"], \"matchId\": \""
+                                                + match.getId() + "\"}"))
                                 .andExpect(status().isCreated())
                                 .andExpect(jsonPath("$.players", hasSize(1)))
                                 .andExpect(jsonPath("$.players[0].username").value("newPlayer"));

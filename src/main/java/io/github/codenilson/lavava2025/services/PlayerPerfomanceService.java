@@ -1,5 +1,6 @@
 package io.github.codenilson.lavava2025.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -27,5 +28,9 @@ public class PlayerPerfomanceService {
         return playerPerfomanceRepository.findByPlayerIdAndMatchId(playerId, matchId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Player performance not found for player ID " + playerId + " and match ID " + matchId));
+    }
+
+    public void saveAll(List<PlayerPerfomance> playerPerfomances) {
+        playerPerfomanceRepository.saveAll(playerPerfomances);
     }
 }
