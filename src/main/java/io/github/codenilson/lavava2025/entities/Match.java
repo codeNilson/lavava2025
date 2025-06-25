@@ -60,11 +60,6 @@ public class Match {
 
     @Comment("Most Valuable Player of the match. This references the PlayerPerformance entity, not the Player entity.")
     @OneToOne
-    @JoinColumns({
-            @JoinColumn(name = "mvp_player_id", referencedColumnName = "player_id"),
-            @JoinColumn(name = "mvp_team_id", referencedColumnName = "team_id"),
-            @JoinColumn(name = "mvp_match_id", referencedColumnName = "match_id")
-    })
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @Getter
     @Setter
@@ -72,11 +67,6 @@ public class Match {
 
     @Comment("Ace of the match. This references the PlayerPerformance entity, not the Player entity.")
     @OneToOne
-    @JoinColumns({
-            @JoinColumn(name = "ace_player_id", referencedColumnName = "player_id"),
-            @JoinColumn(name = "ace_team_id", referencedColumnName = "team_id"),
-            @JoinColumn(name = "ace_match_id", referencedColumnName = "match_id")
-    })
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @Getter
     @Setter

@@ -74,8 +74,6 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         Match match = new Match(map);
         matchService.save(match);
 
-        System.out.println("Jogadores criados com sucesso!: " + match.getId());
-
         Team team1 = new Team();
         team1.setMatch(match);
         team1.getPlayers().add(player1);

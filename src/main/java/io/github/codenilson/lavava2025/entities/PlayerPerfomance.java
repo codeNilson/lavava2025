@@ -1,6 +1,7 @@
 package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.OnDelete;
@@ -9,47 +10,52 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import io.github.codenilson.lavava2025.entities.pks.PlayerPerfomancePk;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "player_id", "team_id", "match_id" }) })
 @Comment("Represents the performance of a player in a specific match for a specific team.")
 @ToString
 public class PlayerPerfomance {
 
-    @EmbeddedId
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
-    private PlayerPerfomancePk id = new PlayerPerfomancePk();
+    private UUID id;
 
-    @ManyToOne
-    @MapsId("playerId")
-    @JoinColumn(name = "player_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Getter
+    @Setter
     private Player player;
 
-    @ManyToOne
-    @MapsId("teamId")
-    @JoinColumn(name = "team_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Getter
+    @Setter
     private Team team;
 
-    @ManyToOne
-    @MapsId("matchId")
-    @JoinColumn(name = "match_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Getter
+    @Setter
     private Match match;
 
     @Getter
@@ -85,21 +91,6 @@ public class PlayerPerfomance {
     public PlayerPerfomance(Player player, Team team, Match match) {
         this.player = player;
         this.team = team;
-        this.match = match;
-        this.id.setMatchId(match.getId());
-        this.id.setPlayerId(player.getId());
-        this.id.setTeamId(team.getId());
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public void setMatch(Match match) {
         this.match = match;
     }
 

@@ -286,7 +286,7 @@ public class PlayerControllerTest {
                 mockMvc.perform(get("/players/username/{username}", "nonexistent")
                                 .with(user(playerDetails)))
                                 .andExpect(status().isNotFound())
-                                .andExpect(jsonPath("$.message").value("Player not found with username: nonexistent"))
+                                .andExpect(jsonPath("$.message").value("Resource not found with name: nonexistent"))
                                 .andExpect(jsonPath("$.error").value("Resource Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
@@ -588,7 +588,7 @@ public class PlayerControllerTest {
                 mockMvc.perform(delete("/players/username/{username}", "nonexistent")
                                 .with(user(playerDetails)))
                                 .andExpect(status().isNotFound())
-                                .andExpect(jsonPath("$.message").value("Player not found with username: nonexistent"))
+                                .andExpect(jsonPath("$.message").value("Resource not found with name: nonexistent"))
                                 .andExpect(jsonPath("$.error").value("Resource Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
