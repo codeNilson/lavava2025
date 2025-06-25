@@ -20,6 +20,8 @@ public class MatchResponseDTO {
 
     private TeamResponseDTO winner;
 
+    private TeamResponseDTO loser;
+
     private ValorantMapResponseDTO map;
 
     private List<PlayerPerfomanceResponseDTO> playerPerformances;
@@ -37,13 +39,15 @@ public class MatchResponseDTO {
 
     public MatchResponseDTO(Match match) {
 
-        Team team = match.getWinner();
+        Team winner = match.getWinner();
+        Team loser = match.getLoser();
         PlayerPerfomance mvp = match.getMvp();
         PlayerPerfomance ace = match.getAce();
         ValorantMap map = match.getMap();
 
         this.id = match.getId();
-        this.winner = team != null ? new TeamResponseDTO(team) : null;
+        this.winner = winner != null ? new TeamResponseDTO(winner) : null;
+        this.loser = loser != null ? new TeamResponseDTO(loser) : null;
         this.map = new ValorantMapResponseDTO(map);
         this.playerPerformances = match.getPlayerPerformances().stream()
                 .map(PlayerPerfomanceResponseDTO::new)

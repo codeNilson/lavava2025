@@ -19,7 +19,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -52,11 +51,18 @@ public class Match {
     private ValorantMap map;
 
     @ManyToOne
-    @JoinColumn(name = "winner_id", referencedColumnName = "id", nullable = true)
+    @JoinColumn(name = "winner_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @Getter
     @Setter
     private Team winner;
+
+    @ManyToOne
+    @JoinColumn(name = "loser_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @Getter
+    @Setter
+    private Team loser;
 
     @Comment("Most Valuable Player of the match. This references the PlayerPerformance entity, not the Player entity.")
     @OneToOne

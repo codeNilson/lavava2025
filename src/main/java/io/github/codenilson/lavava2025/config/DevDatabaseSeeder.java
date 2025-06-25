@@ -104,6 +104,7 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         match.setMvp(pf1);
         match.setAce(pf2);
         match.setWinner(team1);
+        match.setLoser(team2);
         matchService.save(match);
 
         System.out.println("Relacionamentos criados com sucesso!");
