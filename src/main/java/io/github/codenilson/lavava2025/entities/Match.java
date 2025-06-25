@@ -30,12 +30,10 @@ import lombok.ToString;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"mvp_player_id", "mvp_team_id", "mvp_match_id"}),
-        @UniqueConstraint(columnNames = {"ace_player_id", "ace_team_id", "ace_match_id"})
-    }
-)
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "mvp_player_id", "mvp_team_id", "mvp_match_id" }),
+        @UniqueConstraint(columnNames = { "ace_player_id", "ace_team_id", "ace_match_id" })
+})
 @ToString(exclude = "playerPerformances")
 public class Match {
 

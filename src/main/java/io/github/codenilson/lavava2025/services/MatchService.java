@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.github.codenilson.lavava2025.entities.Match;
-import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchResponseDTO;
-import io.github.codenilson.lavava2025.entities.mappers.MatchMapper;
 import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +18,10 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
 
-    private final MatchMapper matchMapper;
-
+    @Transactional
     public MatchResponseDTO save(Match match) {
-        matchRepository.save(match);
-        return new MatchResponseDTO(match);
+        Match savedMatch = matchRepository.save(match);
+        return new MatchResponseDTO(savedMatch);
     }
 
     public Match findById(UUID id) {
@@ -39,11 +37,4 @@ public class MatchService {
     public void delete(Match match) {
         matchRepository.delete(match);
     }
-
-    public MatchResponseDTO save(MatchCreateDTO matchCreateDto) {
-        Match match = matchMapper.toEntity(matchCreateDto);
-        Match matchSaved = matchRepository.save(match);
-        return new MatchResponseDTO(matchSaved);
-    }
-
 }

@@ -1,15 +1,12 @@
 package io.github.codenilson.lavava2025.entities.dto.match;
 
-import java.util.UUID;
-
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class MatchCreateDTO {
-    @NotNull
-    private UUID map;
 
+    @NotBlank(message = "Map name is required")
     private String mapName;
 
     public MatchCreateDTO() {

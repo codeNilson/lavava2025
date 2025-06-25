@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchResponseDTO;
+import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.MatchMapper;
 import io.github.codenilson.lavava2025.services.MatchService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -43,10 +46,17 @@ public class MatchController {
     }
 
     @PostMapping
-    public ResponseEntity<MatchResponseDTO> createMatch(@RequestBody MatchCreateDTO matchDTO) {
+    public ResponseEntity<MatchResponseDTO> createMatch(@RequestBody @Valid MatchCreateDTO matchDTO) {
         Match match = matchMapper.toEntity(matchDTO);
-        matchService.save(matchDTO);
+        matchService.save(match);
         MatchResponseDTO response = new MatchResponseDTO(match);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<MatchResponseDTO> updateMatch(@PathVariable UUID id, @RequestBody @Valid MatchUpdateDTO matchDTO) {
+        var match = matchMapper.toEntity(id, matchDTO);
+        MatchResponseDTO response = matchService.save(match);
         return ResponseEntity.ok(response);
     }
 }

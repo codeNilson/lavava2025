@@ -82,7 +82,7 @@ public class PlayerController {
 
     @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
     @PatchMapping("/{id}")
-    public ResponseEntity<PlayerResponseDTO> updatePlayer(@RequestBody PlayerUpdateDTO dto,
+    public ResponseEntity<PlayerResponseDTO> updatePlayer(@RequestBody @Valid PlayerUpdateDTO dto,
             @PathVariable("id") UUID id) {
         PlayerResponseDTO response = playerServices.updatePlayer(id, dto);
         return ResponseEntity.ok(response);

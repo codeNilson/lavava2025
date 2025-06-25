@@ -9,6 +9,8 @@ public class MatchUpdateDTO {
 
     private UUID winnerId;
 
+    private UUID loserId;
+
     private UUID mvpId;
 
     private UUID aceId;

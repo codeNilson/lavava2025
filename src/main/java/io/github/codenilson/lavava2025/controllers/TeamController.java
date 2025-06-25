@@ -55,7 +55,7 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<TeamResponseDTO> createTeam(@RequestBody TeamCreateDTO team) {
+    public ResponseEntity<TeamResponseDTO> createTeam(@RequestBody @Valid TeamCreateDTO team) {
         Team teamEntity = teamMapper.toEntity(team);
         teamService.save(teamEntity);
         TeamResponseDTO response = new TeamResponseDTO(teamEntity);
