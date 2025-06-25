@@ -21,7 +21,7 @@ public class MatchService {
 
     private final MatchMapper matchMapper;
 
-    public MatchResponseDTO createMatch(Match match) {
+    public MatchResponseDTO save(Match match) {
         matchRepository.save(match);
         return new MatchResponseDTO(match);
     }
