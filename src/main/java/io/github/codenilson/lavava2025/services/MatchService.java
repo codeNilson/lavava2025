@@ -37,4 +37,9 @@ public class MatchService {
     public void delete(Match match) {
         matchRepository.delete(match);
     }
+
+    public void deleteById(UUID id) {
+        Match match = findById(id);
+        delete(match);
+    }
 }
