@@ -65,7 +65,8 @@ public class PlayerService {
     }
 
     public void delete(Player player) {
-        playerRepository.delete(player);
+        player.setActive(false);
+        playerRepository.save(player);
     }
 
     public PlayerResponseDTO updatePlayer(UUID id, PlayerUpdateDTO dto) {

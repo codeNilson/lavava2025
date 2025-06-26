@@ -85,6 +85,9 @@ public class PlayerController {
     @GetMapping("username/{username}")
     public ResponseEntity<PlayerResponseDTO> findByUsername(@PathVariable("username") String username) {
         Player player = playerServices.findByUsername(username);
+        if (!player.isActive()) {
+            throw new EntityNotFoundException("Player not found with username: " + username);
+        }
         PlayerResponseDTO response = new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
     }
