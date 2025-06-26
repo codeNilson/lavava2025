@@ -97,18 +97,13 @@ public class TeamControllerTest {
 
                 Player player4 = new Player("player4", "Test@1234");
                 player4.setAgent("Omen");
+                player4.setActive(false); // Set player4 as inactive
 
                 // Save players to the database
                 playerService.save(player1);
                 playerService.save(player2);
                 playerService.save(player3);
                 playerService.save(player4);
-
-                // Set player4 as inactive. This simulates a player that should not be returned
-                // in the active players list.
-                PlayerUpdateDTO playerUpdateDTO = new PlayerUpdateDTO();
-                playerUpdateDTO.setActive(false);
-                playerService.updatePlayer(playerService.findByUsername("player4"), playerUpdateDTO);
 
                 // Create PlayerDetails for the authenticated user
                 this.playerDetails = new PlayerDetails(player1);

@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class PlayerPerformanceResponseDTO {
-    private UUID id;
+    private UUID performanceId;
     private UUID teamId;
     private String username;
     private String agent;
@@ -16,7 +16,7 @@ public class PlayerPerformanceResponseDTO {
     private Integer assists;
 
     public PlayerPerformanceResponseDTO(PlayerPerformance pf) {
-        this.id = pf.getId();
+        this.performanceId = pf.getId();
         this.teamId = pf.getTeam().getId();
         this.username = pf.getPlayer().getUsername();
         this.agent = pf.getAgent();
