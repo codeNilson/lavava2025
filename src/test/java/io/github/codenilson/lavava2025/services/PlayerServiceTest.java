@@ -118,6 +118,25 @@ class PlayerServiceTest {
     }
 
     @Test
+    @DisplayName("Should raise exception if player is not active")
+    public void findByIdShouldRaiseExceptionIfPlayerNotActive() {
+        // Given
+        UUID playerId = UUID.randomUUID();
+        Player player = new Player();
+        player.setId(playerId);
+        player.setActive(false);
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
+
+        // When & Then
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> playerService.findById(playerId));
+
+        verify(playerRepository).findById(playerId);
+    }
+
+    @Test
     @DisplayName("Should find player by username successfully")
     public void findByUsernameShouldReturnPlayer() {
         // Given
