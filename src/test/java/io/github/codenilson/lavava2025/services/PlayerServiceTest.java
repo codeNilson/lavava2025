@@ -176,8 +176,15 @@ class PlayerServiceTest {
         player.setAgent("Jett");
         player.setActive(true);
 
+        Player updatedPlayer = new Player();
+        updatedPlayer.setId(playerId);
+        updatedPlayer.setUsername("existingplayer");
+        updatedPlayer.setPassword("encodedPassword");
+        updatedPlayer.setAgent("Reyna");
+        updatedPlayer.setActive(false);
+
         when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
-        when(encoder.encode("newPassword")).thenReturn("encodedPassword");
+        when(playerMapper.toEntity(player, dto)).thenReturn(updatedPlayer);
 
         // When
         PlayerResponseDTO response = playerService.updatePlayer(playerId, dto);
@@ -191,7 +198,7 @@ class PlayerServiceTest {
 
         verify(playerRepository).findById(playerId);
         verify(playerRepository).save(player);
-        verify(encoder, times(1)).encode("newPassword");
+        verify(playerMapper).toEntity(player, dto);
     }
 
     @Test

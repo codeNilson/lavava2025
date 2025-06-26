@@ -53,7 +53,7 @@ public class Team {
     @Comment("All players performances in this team")
     @OneToMany(mappedBy = "team")
     @Getter
-    private Set<PlayerPerfomance> performances = new HashSet<>();
+    private Set<PlayerPerformance> performances = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

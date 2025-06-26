@@ -40,7 +40,7 @@ public class TeamServiceTest {
     private PlayerService playerService;
 
     @Mock
-    private PlayerPerfomanceService playerPerfomanceService;
+    private PlayerPerformanceService playerPerformanceService;
 
     @BeforeEach
     public void setUp() {

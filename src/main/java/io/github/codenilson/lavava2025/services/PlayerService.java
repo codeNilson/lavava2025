@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
+import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class PlayerService {
     private final PlayerRepository playerRepository;
     private final PasswordEncoder encoder;
+    private final PlayerMapper playerMapper;
 
     public List<Player> findActivePlayers() {
         List<Player> activePlayers = playerRepository.findByActiveTrue();
@@ -80,24 +82,14 @@ public class PlayerService {
     }
 
     private PlayerResponseDTO updatePlayerData(Player player, PlayerUpdateDTO dto) {
-        if (dto.getUsername() != null) {
-            if (playerRepository.existsByUsername(dto.getUsername())) {
-                throw new UsernameAlreadyExistsException(dto.getUsername());
-            }
-            player.setUsername(dto.getUsername());
-        }
         if (dto.getPassword() != null) {
-            player.setPassword(encoder.encode(dto.getPassword()));
+            String encodedPassword = player.getPassword();
+            dto.setPassword(encodedPassword);
         }
-        if (dto.getAgent() != null) {
-            player.setAgent(dto.getAgent());
-        }
-        if (dto.getActive() != null) {
-            player.setActive(dto.getActive());
-        }
+        Player playerEntity = playerMapper.toEntity(player, dto);
 
-        playerRepository.save(player);
-        return new PlayerResponseDTO(player);
+        playerRepository.save(playerEntity);
+        return new PlayerResponseDTO(playerEntity);
     }
 
     public void addRoles(UUID id, Set<Roles> roles) {

@@ -68,7 +68,7 @@ public class Player {
     @Comment("Set of performances of the player in matches")
     @OneToMany(mappedBy = "player")
     @Getter
-    private Set<PlayerPerfomance> performances = new HashSet<>();
+    private Set<PlayerPerformance> performances = new HashSet<>();
 
     @Comment("Indicates if the player is active. Do not delete players, just set them inactive.")
     @Getter

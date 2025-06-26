@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
+import io.github.codenilson.lavava2025.entities.PlayerPerformance;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
 import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import io.github.codenilson.lavava2025.services.MatchService;
-import io.github.codenilson.lavava2025.services.PlayerPerfomanceService;
+import io.github.codenilson.lavava2025.services.PlayerPerformanceService;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import io.github.codenilson.lavava2025.services.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class MatchMapper {
   private final MatchService matchService;
   private final PlayerService playerService;
   private final TeamService teamService;
-  private final PlayerPerfomanceService playerPerfomanceService;
+  private final PlayerPerformanceService playerPerformanceService;
   private final ValorantMapRepository valorantMapRepository;
 
   public Match toEntity(MatchCreateDTO matchCreateDto) {
@@ -51,13 +51,13 @@ public class MatchMapper {
 
     if (matchUpdateDto.getMvpId() != null) {
       Player player = playerService.findById(matchUpdateDto.getMvpId());
-      PlayerPerfomance mvp = playerPerfomanceService.findByPlayerAndMatch(player.getId(), match.getId());
+      PlayerPerformance mvp = playerPerformanceService.findByPlayerAndMatch(player.getId(), match.getId());
       match.setMvp(mvp);
     }
 
     if (matchUpdateDto.getAceId() != null) {
       Player player = playerService.findById(matchUpdateDto.getAceId());
-      PlayerPerfomance ace = playerPerfomanceService.findByPlayerAndMatch(player.getId(), match.getId());
+      PlayerPerformance ace = playerPerformanceService.findByPlayerAndMatch(player.getId(), match.getId());
       match.setAce(ace);
     }
 

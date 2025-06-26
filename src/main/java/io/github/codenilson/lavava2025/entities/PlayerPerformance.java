@@ -30,7 +30,7 @@ import lombok.ToString;
         @UniqueConstraint(columnNames = { "player_id", "team_id", "match_id" }) })
 @Comment("Represents the performance of a player in a specific match for a specific team.")
 @ToString
-public class PlayerPerfomance {
+public class PlayerPerformance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -85,10 +85,10 @@ public class PlayerPerfomance {
     @Getter
     private LocalDateTime updatedAt;
 
-    public PlayerPerfomance() {
+    public PlayerPerformance() {
     }
 
-    public PlayerPerfomance(Player player, Team team, Match match) {
+    public PlayerPerformance(Player player, Team team, Match match) {
         this.player = player;
         this.team = team;
         this.match = match;
@@ -110,7 +110,7 @@ public class PlayerPerfomance {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        PlayerPerfomance other = (PlayerPerfomance) obj;
+        PlayerPerformance other = (PlayerPerformance) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

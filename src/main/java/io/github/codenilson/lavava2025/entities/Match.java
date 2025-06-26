@@ -68,19 +68,19 @@ public class Match {
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @Getter
     @Setter
-    private PlayerPerfomance mvp;
+    private PlayerPerformance mvp;
 
     @Comment("Ace of the match. This references the PlayerPerformance entity, not the Player entity.")
     @OneToOne
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @Getter
     @Setter
-    private PlayerPerfomance ace;
+    private PlayerPerformance ace;
 
     @Comment("All player's performances in this match.")
     @OneToMany(mappedBy = "match")
     @Getter
-    private List<PlayerPerfomance> playerPerformances = new ArrayList<>();
+    private List<PlayerPerformance> playerPerformances = new ArrayList<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

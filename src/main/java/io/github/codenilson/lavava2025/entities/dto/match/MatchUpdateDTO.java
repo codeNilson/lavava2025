@@ -13,10 +13,10 @@ public class MatchUpdateDTO {
     // team
     private UUID loserId;
 
-    // playerPerfomance
+    // playerPerformance
     private UUID mvpId;
 
-    // playerPerfomance
+    // playerPerformance
     private UUID aceId;
 
     public MatchUpdateDTO() {

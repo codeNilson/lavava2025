@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.codenilson.lavava2025.entities.Match;
-import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
+import io.github.codenilson.lavava2025.entities.PlayerPerformance;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
-import io.github.codenilson.lavava2025.entities.dto.playerperfomance.PlayerPerfomanceResponseDTO;
+import io.github.codenilson.lavava2025.entities.dto.playerperformance.PlayerPerformanceResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.valorantmap.ValorantMapResponseDTO;
 import lombok.Data;
@@ -24,11 +24,11 @@ public class MatchResponseDTO {
 
     private ValorantMapResponseDTO map;
 
-    private List<PlayerPerfomanceResponseDTO> playerPerformances;
+    private List<PlayerPerformanceResponseDTO> playerPerformances;
 
-    private PlayerPerfomanceResponseDTO mvp;
+    private PlayerPerformanceResponseDTO mvp;
 
-    private PlayerPerfomanceResponseDTO ace;
+    private PlayerPerformanceResponseDTO ace;
 
     private LocalDateTime createdAt;
 
@@ -41,8 +41,8 @@ public class MatchResponseDTO {
 
         Team winner = match.getWinner();
         Team loser = match.getLoser();
-        PlayerPerfomance mvp = match.getMvp();
-        PlayerPerfomance ace = match.getAce();
+        PlayerPerformance mvp = match.getMvp();
+        PlayerPerformance ace = match.getAce();
         ValorantMap map = match.getMap();
 
         this.id = match.getId();
@@ -50,10 +50,10 @@ public class MatchResponseDTO {
         this.loser = loser != null ? new TeamResponseDTO(loser) : null;
         this.map = new ValorantMapResponseDTO(map);
         this.playerPerformances = match.getPlayerPerformances().stream()
-                .map(PlayerPerfomanceResponseDTO::new)
+                .map(PlayerPerformanceResponseDTO::new)
                 .toList();
-        this.mvp = mvp != null ? new PlayerPerfomanceResponseDTO(mvp) : null;
-        this.ace = ace != null ? new PlayerPerfomanceResponseDTO(ace) : null;
+        this.mvp = mvp != null ? new PlayerPerformanceResponseDTO(mvp) : null;
+        this.ace = ace != null ? new PlayerPerformanceResponseDTO(ace) : null;
         this.createdAt = match.getCreatedAt();
         this.updatedAt = match.getUpdatedAt();
 

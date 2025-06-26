@@ -75,24 +75,7 @@ public class DevDatabaseSeeder implements CommandLineRunner {
 
         teamService.createTeam(team1);
         teamService.createTeam(team2);
-
-        // PlayerPerfomance pf1 = new PlayerPerfomance(player1, team1, match);
-        // pf1.setKills(10);
-        // pf1.setDeaths(2);
-        // pf1.setAssists(5);
-        // pf1.setAgent("Reyna");
-
-        // PlayerPerfomance pf2 = new PlayerPerfomance(player2, team1, match);
-        // pf2.setKills(8);
-        // pf2.setDeaths(3);
-        // pf2.setAssists(4);
-        // pf2.setAgent("Phoenix");
-
-        // playerPerfomanceRepository.save(pf1);
-        // playerPerfomanceRepository.save(pf2);
-
-        // match.setMvp(pf1);
-        // match.setAce(pf2);
+        
         match.setWinner(team1);
         match.setLoser(team2);
         matchService.save(match);

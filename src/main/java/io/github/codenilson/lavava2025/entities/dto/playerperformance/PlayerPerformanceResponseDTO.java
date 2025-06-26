@@ -1,12 +1,12 @@
-package io.github.codenilson.lavava2025.entities.dto.playerperfomance;
+package io.github.codenilson.lavava2025.entities.dto.playerperformance;
 
 import java.util.UUID;
 
-import io.github.codenilson.lavava2025.entities.PlayerPerfomance;
+import io.github.codenilson.lavava2025.entities.PlayerPerformance;
 import lombok.Data;
 
 @Data
-public class PlayerPerfomanceResponseDTO {
+public class PlayerPerformanceResponseDTO {
     private UUID id;
     private UUID teamId;
     private String username;
@@ -15,7 +15,7 @@ public class PlayerPerfomanceResponseDTO {
     private Integer deaths;
     private Integer assists;
 
-    public PlayerPerfomanceResponseDTO(PlayerPerfomance pf) {
+    public PlayerPerformanceResponseDTO(PlayerPerformance pf) {
         this.id = pf.getId();
         this.teamId = pf.getTeam().getId();
         this.username = pf.getPlayer().getUsername();
