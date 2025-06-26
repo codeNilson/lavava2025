@@ -35,6 +35,7 @@ public class PlayerPerformance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
+    @Setter
     private UUID id;
 
     @ManyToOne(optional = false)
