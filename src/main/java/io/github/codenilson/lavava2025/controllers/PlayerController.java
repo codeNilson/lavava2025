@@ -23,6 +23,7 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.RoleDTO;
 import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.services.PlayerService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -73,6 +74,9 @@ public class PlayerController {
     public ResponseEntity<PlayerResponseDTO> findById(@PathVariable("id") UUID id) {
 
         Player player = playerServices.findById(id);
+        if (!player.isActive()) {
+            throw new EntityNotFoundException("Player not found with id: " + id);
+        }
         PlayerResponseDTO response = new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
 

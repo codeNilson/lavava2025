@@ -30,9 +30,9 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
-import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 class PlayerServiceTest {
 
@@ -106,27 +106,8 @@ class PlayerServiceTest {
     public void findByIdShouldRaiseErrorIfPlayerNotFound() {
         // Given
         when(playerRepository.findById(any(UUID.class)))
-                .thenReturn(java.util.Optional.empty());
+                .thenReturn(Optional.empty());
         UUID playerId = UUID.randomUUID();
-
-        // When & Then
-        assertThrows(
-                EntityNotFoundException.class,
-                () -> playerService.findById(playerId));
-
-        verify(playerRepository).findById(playerId);
-    }
-
-    @Test
-    @DisplayName("Should raise exception if player is not active")
-    public void findByIdShouldRaiseExceptionIfPlayerNotActive() {
-        // Given
-        UUID playerId = UUID.randomUUID();
-        Player player = new Player();
-        player.setId(playerId);
-        player.setActive(false);
-
-        when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
 
         // When & Then
         assertThrows(
@@ -202,7 +183,7 @@ class PlayerServiceTest {
         updatedPlayer.setAgent("Reyna");
         updatedPlayer.setActive(false);
 
-        when(playerRepository.findById(playerId)).thenReturn(Optional.of(player));
+        when(playerRepository.findByIdAndActiveTrue(playerId)).thenReturn(Optional.of(player));
         when(playerMapper.toEntity(player, dto)).thenReturn(updatedPlayer);
 
         // When
@@ -215,7 +196,7 @@ class PlayerServiceTest {
         assertTrue(response.getAgent().equals("Reyna"));
         assertTrue(!response.isActive());
 
-        verify(playerRepository).findById(playerId);
+        verify(playerRepository).findByIdAndActiveTrue(playerId);
         verify(playerRepository).save(player);
         verify(playerMapper).toEntity(player, dto);
     }
@@ -228,14 +209,14 @@ class PlayerServiceTest {
         PlayerUpdateDTO dto = new PlayerUpdateDTO();
         dto.setPassword("newPassword");
 
-        when(playerRepository.findById(playerId)).thenReturn(Optional.empty());
+        when(playerRepository.findByIdAndActiveTrue(playerId)).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(
                 EntityNotFoundException.class,
                 () -> playerService.updatePlayer(playerId, dto));
 
-        verify(playerRepository).findById(playerId);
+        verify(playerRepository).findByIdAndActiveTrue(playerId);
     }
 
     @Test

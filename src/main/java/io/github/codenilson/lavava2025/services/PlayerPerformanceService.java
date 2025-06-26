@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import io.github.codenilson.lavava2025.entities.PlayerPerformance;
-import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.PlayerPerformanceRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,7 +21,7 @@ public class PlayerPerformanceService {
 
     public PlayerPerformance findById(UUID id) {
         return playerPerformanceRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(id));
+                .orElseThrow(() -> new EntityNotFoundException("Player performance not found with id: " + id));
     }
 
     public PlayerPerformance findByPlayerAndMatch(UUID playerId, UUID matchId) {

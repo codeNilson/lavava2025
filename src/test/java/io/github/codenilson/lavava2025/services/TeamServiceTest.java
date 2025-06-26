@@ -123,7 +123,7 @@ public class TeamServiceTest {
         try {
             teamService.findById(teamId);
         } catch (Exception e) {
-            assertEquals("It was not possible to find the resource with id: " + teamId, e.getMessage());
+            assertEquals("Team not found with id: " + teamId, e.getMessage());
         }
         verify(teamRepository).findById(teamId);
     }

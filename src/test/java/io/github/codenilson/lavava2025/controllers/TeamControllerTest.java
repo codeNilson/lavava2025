@@ -164,7 +164,7 @@ public class TeamControllerTest {
                                 .with(user(playerDetails)))
                                 .andExpect(status().isNotFound())
                                 .andExpect(jsonPath("$.message")
-                                                .value("It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
+                                                .value("Team not found with id: 00000000-0000-0000-0000-000000000000"))
                                 .andExpect(jsonPath("$.error").value("Resource Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
@@ -194,8 +194,7 @@ public class TeamControllerTest {
                                 .with(user(playerDetails)))
                                 .andExpect(status().isNotFound())
                                 .andExpect(jsonPath("$.message")
-                                                .value("It was not possible to find the resource with id: "
-                                                                + team.getId()))
+                                                .value("Team not found with id: " + team.getId()))
                                 .andExpect(jsonPath("$.error").value("Resource Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
@@ -207,7 +206,7 @@ public class TeamControllerTest {
                                 .with(user(playerDetails)))
                                 .andExpect(status().isNotFound())
                                 .andExpect(jsonPath("$.message")
-                                                .value("It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
+                                                .value("Team not found with id: 00000000-0000-0000-0000-000000000000"))
                                 .andExpect(jsonPath("$.error").value("Resource Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
@@ -289,7 +288,7 @@ public class TeamControllerTest {
                                 .content("{\"playersId\": [], \"operation\": \"ADD\"}"))
                                 .andExpect(status().isNotFound())
                                 .andExpect(jsonPath("$.message")
-                                                .value("It was not possible to find the resource with id: 00000000-0000-0000-0000-000000000000"))
+                                                .value("Team not found with id: 00000000-0000-0000-0000-000000000000"))
                                 .andExpect(jsonPath("$.error").value("Resource Not Found"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));

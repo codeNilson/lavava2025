@@ -11,8 +11,8 @@ import io.github.codenilson.lavava2025.entities.PlayerPerformance;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
-import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,7 +44,7 @@ public class TeamService {
 
     public Team findById(UUID id) {
         return teamRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(id));
+                .orElseThrow(() -> new EntityNotFoundException("Team not found with id: " + id));
     }
 
     public void delete(Team team) {

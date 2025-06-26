@@ -10,12 +10,12 @@ import io.github.codenilson.lavava2025.entities.PlayerPerformance;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
-import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import io.github.codenilson.lavava2025.services.MatchService;
 import io.github.codenilson.lavava2025.services.PlayerPerformanceService;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import io.github.codenilson.lavava2025.services.TeamService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -31,7 +31,7 @@ public class MatchMapper {
   public Match toEntity(MatchCreateDTO matchCreateDto) {
     Match match = new Match();
     ValorantMap map = valorantMapRepository.findByName(matchCreateDto.getMapName())
-        .orElseThrow(() -> new EntityNotFoundException(matchCreateDto.getMapName()));
+        .orElseThrow(() -> new EntityNotFoundException("Map not found with name: " + matchCreateDto.getMapName()));
     match.setMap(map);
     return match;
   }

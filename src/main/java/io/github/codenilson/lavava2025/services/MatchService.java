@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchResponseDTO;
-import io.github.codenilson.lavava2025.errors.EntityNotFoundException;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,7 +25,7 @@ public class MatchService {
     }
 
     public Match findById(UUID id) {
-        Match match = matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id));
+        Match match = matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Match not found with id: " + id));
         ;
         return match;
     }
