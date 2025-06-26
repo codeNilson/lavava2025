@@ -11,7 +11,6 @@ import io.github.codenilson.lavava2025.entities.ValorantMap;
 
 @Repository
 public interface ValorantMapRepository extends JpaRepository<ValorantMap, UUID> {
-    // Lista estática de mapas padrão
     public static final List<ValorantMap> VALORANT_MAPS = List.of(
             new ValorantMap("Ascent"),
             new ValorantMap("Bind"),

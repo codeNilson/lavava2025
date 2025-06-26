@@ -76,7 +76,6 @@ public class PlayerService {
         return updatePlayerData(player, dto);
     }
 
-    // adicionar testes para isso
     public PlayerResponseDTO updatePlayer(Player player, PlayerUpdateDTO dto) {
         return updatePlayerData(player, dto);
     }

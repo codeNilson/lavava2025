@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class TeamResponseDTO {
     private UUID id;
-    // private Match match; // Uncomment when MatchResponseDTO is available
+    private UUID matchId;
     private Set<PlayerResponseDTO> players;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -22,7 +22,9 @@ public class TeamResponseDTO {
     public TeamResponseDTO(Team team) {
         BeanUtils.copyProperties(team, this);
         this.id = team.getId();
-        // this.match = team.getMatch();
+        if (team.getMatch() != null) {
+            this.matchId = team.getMatch().getId();
+        }
         this.players = team.getPlayers().stream()
                 .map(PlayerResponseDTO::new)
                 .collect(Collectors.toSet());

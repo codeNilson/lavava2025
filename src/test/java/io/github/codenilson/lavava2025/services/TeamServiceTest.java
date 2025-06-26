@@ -73,8 +73,7 @@ public class TeamServiceTest {
         // Then
         assertNotNull(response);
         assertEquals(team.getId(), response.getId());
-        // assertEquals(match, response.getMatch()); // Uncomment when MatchResponseDTO
-        // is available
+        assertEquals(match.getId(), response.getMatch().getId());
         assertEquals(players.size(), response.getPlayers().size());
         verify(teamRepository).save(team);
     }
