@@ -11,4 +11,8 @@ public class MatchCreateDTO {
 
     public MatchCreateDTO() {
     }
+
+    public MatchCreateDTO(String mapName) {
+        this.mapName = mapName;
+    }
 }

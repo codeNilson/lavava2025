@@ -1,12 +1,11 @@
 package io.github.codenilson.lavava2025.entities.mappers;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
-import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
+import io.github.codenilson.lavava2025.errors.exceptions.UsernameAlreadyExistsException;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 public class PlayerMapper {
 
     private final PlayerRepository playerRepository;
-    private final PasswordEncoder encoder;
 
     public Player toEntity(PlayerCreateDTO playerCreateDTO) {
         Player player = new Player();

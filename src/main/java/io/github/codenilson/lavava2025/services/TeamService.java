@@ -75,4 +75,8 @@ public class TeamService {
         Team updatedTeam = teamRepository.save(team);
         return new TeamResponseDTO(updatedTeam);
     }
+
+    public List<Team> findByMatch(UUID matchId) {
+        return teamRepository.findByMatchId(matchId);
+    }
 }

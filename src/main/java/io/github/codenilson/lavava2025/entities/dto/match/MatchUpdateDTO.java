@@ -19,6 +19,9 @@ public class MatchUpdateDTO {
     // playerPerformance
     private UUID aceId;
 
+    // map
+    private String mapName;
+
     public MatchUpdateDTO() {
     }
 }

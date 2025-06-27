@@ -3,6 +3,7 @@ package io.github.codenilson.lavava2025.controllers;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,14 +13,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.codenilson.lavava2025.authentication.PlayerDetails;
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
+import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.MatchMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
@@ -36,6 +41,9 @@ import io.github.codenilson.lavava2025.services.TeamService;
 public class MatchControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private MatchService matchService;
@@ -141,5 +149,68 @@ public class MatchControllerTest {
                 .andExpect(jsonPath("$[*].playerPerformances[*]", hasSize(4)))
                 .andExpect(jsonPath("$[*].playerPerformances[*].username", containsInAnyOrder(
                         "player1", "player2", "player3", "player4")));
+    }
+
+    @Test
+    void testFindMatchById() throws Exception {
+        Match match1 = matchRepository.findAll().get(0);
+
+        mockMvc.perform(get("/matches/" + match1.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(match1.getId().toString()))
+                .andExpect(jsonPath("$.map.name").value("Map1"))
+                .andExpect(jsonPath("$.playerPerformances[*].username", containsInAnyOrder(
+                        "player1", "player2")));
+    }
+
+    @Test
+    void testFindMatchByIdNotFound() throws Exception {
+        mockMvc.perform(get("/matches/00000000-0000-0000-0000-000000000000"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Resource Not Found"))
+                .andExpect(
+                        jsonPath("$.message").value("Match not found with id: 00000000-0000-0000-0000-000000000000"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    void testCreateMatch() throws Exception {
+        MatchCreateDTO match = new MatchCreateDTO("Map1");
+
+        mockMvc.perform(post("/matches") // use POST se for criação
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(match)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.map.name").value("Map1"))
+                .andExpect(jsonPath("$.playerPerformances[*].username", hasSize(0)));
+    }
+
+    @Test
+    void testCreateMatchWithInvalidMap() throws Exception {
+        MatchCreateDTO match = new MatchCreateDTO(""); // Empty map name
+
+        mockMvc.perform(post("/matches")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(match)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Validation Error"))
+                .andExpect(jsonPath("$.errors.mapName").value("Map name is required"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @Test
+    void testCreateMatchWithNonExistentMap() throws Exception {
+        MatchCreateDTO match = new MatchCreateDTO("NonExistintMap"); // Map that does not exist
+
+        mockMvc.perform(post("/matches")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(match)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Resource Not Found"))
+                .andExpect(jsonPath("$.message").value("Map not found with name: NonExistintMap"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
     }
 }

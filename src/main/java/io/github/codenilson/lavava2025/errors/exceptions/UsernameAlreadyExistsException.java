@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.errors;
+package io.github.codenilson.lavava2025.errors.exceptions;
 
 public class UsernameAlreadyExistsException extends RuntimeException {
 

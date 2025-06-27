@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.handlers;
+package io.github.codenilson.lavava2025.errors.handlers;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import io.github.codenilson.lavava2025.errors.UsernameAlreadyExistsException;
+import io.github.codenilson.lavava2025.errors.exceptions.UsernameAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestControllerAdvice

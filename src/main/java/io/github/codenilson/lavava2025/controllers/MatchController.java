@@ -51,7 +51,7 @@ public class MatchController {
         Match match = matchMapper.toEntity(matchDTO);
         matchService.save(match);
         MatchResponseDTO response = new MatchResponseDTO(match);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(201).body(response);
     }
 
     @PatchMapping("/{id}")
