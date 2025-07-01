@@ -2,6 +2,7 @@ package io.github.codenilson.lavava2025.controllers;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -141,7 +142,8 @@ public class MatchControllerTest {
     @Test
     void testFindAllMatches() throws Exception {
 
-        mockMvc.perform(get("/matches"))
+        mockMvc.perform(get("/matches")
+                .with(user(playerDetails)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].map.name").value("Map1"))
@@ -155,7 +157,8 @@ public class MatchControllerTest {
     void testFindMatchById() throws Exception {
         Match match1 = matchRepository.findAll().get(0);
 
-        mockMvc.perform(get("/matches/" + match1.getId()))
+        mockMvc.perform(get("/matches/" + match1.getId())
+                .with(user(playerDetails)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(match1.getId().toString()))
                 .andExpect(jsonPath("$.map.name").value("Map1"))
@@ -165,7 +168,8 @@ public class MatchControllerTest {
 
     @Test
     void testFindMatchByIdNotFound() throws Exception {
-        mockMvc.perform(get("/matches/00000000-0000-0000-0000-000000000000"))
+        mockMvc.perform(get("/matches/00000000-0000-0000-0000-000000000000")
+                .with(user(playerDetails)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("Resource Not Found"))
                 .andExpect(
@@ -180,7 +184,8 @@ public class MatchControllerTest {
 
         mockMvc.perform(post("/matches") // use POST se for criação
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(match)))
+                .content(objectMapper.writeValueAsString(match))
+                .with(user(playerDetails)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.map.name").value("Map1"))
                 .andExpect(jsonPath("$.playerPerformances[*].username", hasSize(0)));
@@ -192,7 +197,8 @@ public class MatchControllerTest {
 
         mockMvc.perform(post("/matches")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(match)))
+                .content(objectMapper.writeValueAsString(match))
+                .with(user(playerDetails)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Validation Error"))
                 .andExpect(jsonPath("$.errors.mapName").value("Map name is required"))
@@ -206,11 +212,13 @@ public class MatchControllerTest {
 
         mockMvc.perform(post("/matches")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(match)))
+                .content(objectMapper.writeValueAsString(match))
+                .with(user(playerDetails)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("Resource Not Found"))
                 .andExpect(jsonPath("$.message").value("Map not found with name: NonExistintMap"))
                 .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
     }
+
 }

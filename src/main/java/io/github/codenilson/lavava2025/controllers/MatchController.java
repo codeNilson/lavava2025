@@ -57,9 +57,9 @@ public class MatchController {
     @PatchMapping("/{id}")
     public ResponseEntity<MatchResponseDTO> updateMatch(@PathVariable UUID id,
             @RequestBody @Valid MatchUpdateDTO matchDTO) {
-        var match = matchMapper.toEntity(id, matchDTO);
-        MatchResponseDTO response = matchService.save(match);
-        return ResponseEntity.ok(response);
+        Match match = matchMapper.updateMatch(id, matchDTO);
+        matchService.save(match);
+        return ResponseEntity.ok(new MatchResponseDTO(match));
     }
 
     @DeleteMapping("/{id}")

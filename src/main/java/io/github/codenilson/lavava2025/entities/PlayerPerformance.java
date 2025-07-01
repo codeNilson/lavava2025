@@ -29,7 +29,7 @@ import lombok.ToString;
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = { "player_id", "team_id", "match_id" }) })
 @Comment("Represents the performance of a player in a specific match for a specific team.")
-@ToString
+@ToString(exclude = { "player", "team", "match" })
 public class PlayerPerformance {
 
     @Id

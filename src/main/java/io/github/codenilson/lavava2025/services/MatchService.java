@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.codenilson.lavava2025.entities.Match;
-import io.github.codenilson.lavava2025.entities.dto.match.MatchResponseDTO;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +18,14 @@ public class MatchService {
     private final MatchRepository matchRepository;
 
     @Transactional
-    public MatchResponseDTO save(Match match) {
+    public Match save(Match match) {
         Match savedMatch = matchRepository.save(match);
-        return new MatchResponseDTO(savedMatch);
+        return savedMatch;
     }
 
     public Match findById(UUID id) {
-        Match match = matchRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Match not found with id: " + id));
-        ;
+        Match match = matchRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Match not found with id: " + id));
         return match;
     }
 

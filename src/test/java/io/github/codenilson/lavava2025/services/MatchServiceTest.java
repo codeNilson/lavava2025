@@ -59,12 +59,12 @@ public class MatchServiceTest {
         when(matchRepository.save(match)).thenReturn(savedMatch);
 
         // When
-        MatchResponseDTO result = matchService.save(match);
+        Match result = matchService.save(match);
 
         // Then
         assertNotNull(result);
         assertEquals(matchId, result.getId());
-        assertEquals(result.getMap(), mapResponse);
+        assertEquals(result.getMap().getName(), mapResponse.getName());
 
         verify(matchRepository).save(match);
     }

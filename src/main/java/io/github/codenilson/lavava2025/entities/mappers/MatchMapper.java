@@ -36,31 +36,36 @@ public class MatchMapper {
     return match;
   }
 
-  public Match toEntity(UUID id, MatchUpdateDTO matchUpdateDto) {
-    Match match = matchService.findById(id);
+  public Match updateMatch(UUID id, MatchUpdateDTO matchUpdateDto) {
+    Match savedMatch = matchService.findById(id);
 
     if (matchUpdateDto.getWinnerId() != null) {
       var winner = teamService.findById(matchUpdateDto.getWinnerId());
-      match.setWinner(winner);
+      savedMatch.setWinner(winner);
     }
 
     if (matchUpdateDto.getLoserId() != null) {
       var loser = teamService.findById(matchUpdateDto.getLoserId());
-      match.setLoser(loser);
+      savedMatch.setLoser(loser);
     }
 
     if (matchUpdateDto.getMvpId() != null) {
       Player player = playerService.findById(matchUpdateDto.getMvpId());
-      PlayerPerformance mvp = playerPerformanceService.findByPlayerAndMatch(player.getId(), match.getId());
-      match.setMvp(mvp);
+      PlayerPerformance mvp = playerPerformanceService.findByPlayerAndMatch(player.getId(), savedMatch.getId());
+      savedMatch.setMvp(mvp);
     }
 
     if (matchUpdateDto.getAceId() != null) {
       Player player = playerService.findById(matchUpdateDto.getAceId());
-      PlayerPerformance ace = playerPerformanceService.findByPlayerAndMatch(player.getId(), match.getId());
-      match.setAce(ace);
+      PlayerPerformance ace = playerPerformanceService.findByPlayerAndMatch(player.getId(), savedMatch.getId());
+      savedMatch.setAce(ace);
     }
 
-    return match;
+    if (matchUpdateDto.getMapName() != null) {
+      ValorantMap map = valorantMapRepository.findByName(matchUpdateDto.getMapName())
+          .orElseThrow(() -> new EntityNotFoundException("Map not found with name: " + matchUpdateDto.getMapName()));
+      savedMatch.setMap(map);
+    }
+    return savedMatch;
   }
 }
