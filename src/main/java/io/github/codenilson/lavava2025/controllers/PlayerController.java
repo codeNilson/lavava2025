@@ -50,7 +50,8 @@ public class PlayerController {
     @PostMapping
     public ResponseEntity<PlayerResponseDTO> createPlayer(@RequestBody @Valid PlayerCreateDTO player) {
         Player playerEntity = playerMapper.toEntity(player);
-        PlayerResponseDTO response = playerServices.save(playerEntity);
+        Player savedPlayer = playerServices.save(playerEntity);
+        PlayerResponseDTO response = new PlayerResponseDTO(savedPlayer);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

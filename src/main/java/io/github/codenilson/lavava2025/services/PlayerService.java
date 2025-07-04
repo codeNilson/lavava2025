@@ -29,7 +29,7 @@ public class PlayerService {
         return activePlayers;
     }
 
-    public PlayerResponseDTO save(Player player) {
+    public Player save(Player player) {
 
         if (existByUsername(player.getUsername())) {
             throw new UsernameAlreadyExistsException(player.getUsername());
@@ -39,8 +39,7 @@ public class PlayerService {
         player.setPassword(encodedPassword);
 
         player.getRoles().add(Roles.PLAYER); // Ensure PLAYER role is added
-        playerRepository.save(player);
-        return new PlayerResponseDTO(player);
+        return playerRepository.save(player);
     }
 
     public Player findById(UUID id) {

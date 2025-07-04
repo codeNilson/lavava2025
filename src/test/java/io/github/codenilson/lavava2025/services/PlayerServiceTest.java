@@ -65,17 +65,18 @@ class PlayerServiceTest {
         playerEntity.setId(UUID.randomUUID());
         playerEntity.setUsername("newPlayer");
         playerEntity.setPassword("encodedPassword");
+        playerEntity.getRoles().add(Roles.PLAYER);
 
         when(playerRepository.existsByUsername("newPlayer")).thenReturn(false);
         when(encoder.encode("123456")).thenReturn("encodedPassword");
         when(playerRepository.save(any(Player.class))).thenReturn(playerEntity);
 
         // When
-        PlayerResponseDTO response = playerService.save(player);
+        Player response = playerService.save(player);
 
         // Then
         assertNotNull(response);
-        assertInstanceOf(PlayerResponseDTO.class, response);
+        assertInstanceOf(Player.class, response);
         assertTrue(response.getRoles().contains(Roles.PLAYER));
 
         verify(encoder).encode("123456");
