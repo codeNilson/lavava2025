@@ -150,4 +150,15 @@ public class PlayerCreateDTOTest {
         assertTrue(violations.stream()
                 .anyMatch(v -> v.getMessage().contains("Password must be between 8 and 20 characters")));
     }
+
+    @Test
+    void testAgentCanBeNull() {
+        PlayerCreateDTO dto = new PlayerCreateDTO();
+        dto.setUsername("ValidUser");
+        dto.setPassword("Valid@123");
+        dto.setAgent(null);
+
+        Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+    }
 }

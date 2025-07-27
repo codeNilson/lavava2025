@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.config;
+package io.github.codenilson.lavava2025.config.seeders;
 
 import java.util.Set;
 

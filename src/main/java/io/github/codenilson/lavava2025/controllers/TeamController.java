@@ -17,7 +17,7 @@ import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamUpdateDTO;
-import io.github.codenilson.lavava2025.entities.mappers.TeamMapper;
+import io.github.codenilson.lavava2025.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.services.TeamService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

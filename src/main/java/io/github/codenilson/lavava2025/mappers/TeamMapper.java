@@ -1,4 +1,4 @@
-package io.github.codenilson.lavava2025.entities.mappers;
+package io.github.codenilson.lavava2025.mappers;
 
 import java.util.List;
 import java.util.stream.Collectors;

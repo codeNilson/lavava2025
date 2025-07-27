@@ -21,8 +21,8 @@ import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.dto.team.TeamResponseDTO;
-import io.github.codenilson.lavava2025.entities.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
+import io.github.codenilson.lavava2025.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
 
 public class TeamServiceTest {

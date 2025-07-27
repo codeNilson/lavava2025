@@ -1,8 +1,9 @@
-package io.github.codenilson.lavava2025.config;
+package io.github.codenilson.lavava2025.config.seeders;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
+import io.github.codenilson.lavava2025.config.ValorantMapsProperties;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import lombok.RequiredArgsConstructor;

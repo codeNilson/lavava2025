@@ -21,7 +21,7 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.RoleDTO;
-import io.github.codenilson.lavava2025.entities.mappers.PlayerMapper;
+import io.github.codenilson.lavava2025.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

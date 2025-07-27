@@ -17,7 +17,7 @@ import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
-import io.github.codenilson.lavava2025.entities.mappers.MatchMapper;
+import io.github.codenilson.lavava2025.mappers.MatchMapper;
 import io.github.codenilson.lavava2025.services.MatchService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
