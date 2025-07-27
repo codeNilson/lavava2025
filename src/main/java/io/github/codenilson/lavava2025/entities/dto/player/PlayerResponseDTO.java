@@ -18,8 +18,6 @@ public class PlayerResponseDTO {
 
     private String username;
 
-    private String agent;
-
     private boolean active;
 
     private Set<Roles> roles = new HashSet<>();

@@ -171,7 +171,6 @@ public class PlayerRepositoryTest {
         Player player = new Player();
         player.setUsername(null);
         player.setPassword("example01");
-        player.setAgent("agent1");
 
         assertThrows(DataIntegrityViolationException.class, () -> {
             playerRepository.saveAndFlush(player);
@@ -201,7 +200,6 @@ public class PlayerRepositoryTest {
         Player player = new Player();
         player.setUsername("testUser");
         player.setPassword(null);
-        player.setAgent("agent1");
 
         assertThrows(DataIntegrityViolationException.class, () -> {
             playerRepository.saveAndFlush(player);

@@ -86,17 +86,13 @@ public class TeamControllerTest {
                 matchService.save(match2);
 
                 Player player1 = new Player("player1", "Test@1234");
-                player1.setAgent("Reyna");
                 player1.getRoles().add(Roles.PLAYER); // Ensure PLAYER role is added
 
                 Player player2 = new Player("player2", "Test@1234");
-                player2.setAgent("Deadlock");
 
                 Player player3 = new Player("player3", "Test@1234");
-                player3.setAgent("Gekko");
 
                 Player player4 = new Player("player4", "Test@1234");
-                player4.setAgent("Omen");
                 player4.setActive(false); // Set player4 as inactive
 
                 // Save players to the database
@@ -219,7 +215,6 @@ public class TeamControllerTest {
                 Player newPlayer = new Player();
                 newPlayer.setUsername("newPlayer");
                 newPlayer.setPassword("Test@1234");
-                newPlayer.setAgent("Phoenix");
 
                 playerService.save(newPlayer);
 

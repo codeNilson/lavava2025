@@ -1,6 +1,6 @@
 package io.github.codenilson.lavava2025.mappers;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -30,9 +30,9 @@ public class TeamMapper {
         }
 
         if (!teamCreateDTO.getPlayersIds().isEmpty()) {
-            List<Player> players = teamCreateDTO.getPlayersIds().stream()
+            Set<Player> players = teamCreateDTO.getPlayersIds().stream()
                     .map(playerService::findByIdAndActiveTrue)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
             team.setPlayers(players);
         }
 

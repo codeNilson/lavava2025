@@ -126,7 +126,6 @@ class PlayerServiceTest {
         Player player = new Player();
         player.setId(UUID.randomUUID());
         player.setUsername(username);
-        player.setAgent("Jett");
         player.setActive(true);
 
         when(playerRepository.findByUsername(username))
@@ -138,7 +137,6 @@ class PlayerServiceTest {
         // Then
         assertNotNull(foundPlayer);
         assertEquals(username, foundPlayer.getUsername());
-        assertEquals("Jett", foundPlayer.getAgent());
         assertTrue(foundPlayer.isActive());
 
         verify(playerRepository).findByUsername(username);
@@ -167,21 +165,18 @@ class PlayerServiceTest {
         UUID playerId = UUID.randomUUID();
         PlayerUpdateDTO dto = new PlayerUpdateDTO();
         dto.setPassword("newPassword");
-        dto.setAgent("Reyna");
         dto.setActive(false);
 
         Player player = new Player();
         player.setId(playerId);
         player.setUsername("existingplayer");
         player.setPassword("encodedPassword");
-        player.setAgent("Jett");
         player.setActive(true);
 
         Player updatedPlayer = new Player();
         updatedPlayer.setId(playerId);
         updatedPlayer.setUsername("existingplayer");
         updatedPlayer.setPassword("encodedPassword");
-        updatedPlayer.setAgent("Reyna");
         updatedPlayer.setActive(false);
 
         when(playerRepository.findByIdAndActiveTrue(playerId)).thenReturn(Optional.of(player));
@@ -194,7 +189,6 @@ class PlayerServiceTest {
         assertNotNull(response);
         assertInstanceOf(PlayerResponseDTO.class, response);
         assertEquals(response.getUsername(), player.getUsername());
-        assertTrue(response.getAgent().equals("Reyna"));
         assertTrue(!response.isActive());
 
         verify(playerRepository).findByIdAndActiveTrue(playerId);

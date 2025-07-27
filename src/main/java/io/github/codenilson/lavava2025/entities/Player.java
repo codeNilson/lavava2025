@@ -49,11 +49,6 @@ public class Player {
     @Setter
     private String password;
 
-    @Comment("Favorite agent of the player, e.g., Jett, Reyna, etc.")
-    @Getter
-    @Setter
-    private String agent;
-
     @Comment("Set of roles assigned to the player, e.g., ADMIN, PLAYER, etc.")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable

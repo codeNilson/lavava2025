@@ -19,7 +19,6 @@ public class PlayerMapper {
         Player player = new Player();
         player.setUsername(playerCreateDTO.getUsername());
         player.setPassword(playerCreateDTO.getPassword());
-        player.setAgent(playerCreateDTO.getAgent());
         return player;
     }
 
@@ -32,9 +31,6 @@ public class PlayerMapper {
         }
         if (playerUpdateDTO.getPassword() != null) {
             player.setPassword(playerUpdateDTO.getPassword());
-        }
-        if (playerUpdateDTO.getAgent() != null) {
-            player.setAgent(playerUpdateDTO.getAgent());
         }
         if (playerUpdateDTO.getActive() != null) {
             player.setActive(playerUpdateDTO.getActive());

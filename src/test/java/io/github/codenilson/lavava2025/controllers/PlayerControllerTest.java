@@ -56,22 +56,18 @@ public class PlayerControllerTest {
                 Player player1 = new Player();
                 player1.setUsername("player1");
                 player1.setPassword("Test@1234");
-                player1.setAgent("Reyna");
 
                 Player player2 = new Player();
                 player2.setUsername("player2");
                 player2.setPassword("Test@1234");
-                player2.setAgent("Deadlock");
 
                 Player player3 = new Player();
                 player3.setUsername("player3");
                 player3.setPassword("Test@1234");
-                player3.setAgent("Gekko");
 
                 Player player4 = new Player();
                 player4.setUsername("player4");
                 player4.setPassword("Test@1234");
-                player4.setAgent("Gekko");
 
                 // Save players to the database
                 playerService.save(player1);
@@ -110,7 +106,6 @@ public class PlayerControllerTest {
                                 .andExpect(jsonPath("$[*].id").exists())
                                 .andExpect(jsonPath("$[*].username",
                                                 containsInAnyOrder("player1", "player2", "player3")))
-                                .andExpect(jsonPath("$[*].agent", containsInAnyOrder("Reyna", "Deadlock", "Gekko")))
                                 .andExpect(jsonPath("$[*].active", containsInAnyOrder(true, true, true)))
                                 .andExpect(jsonPath("$[*].roles").isArray())
                                 .andExpect(jsonPath("$[0].roles", containsInAnyOrder("PLAYER", "ADMIN")))
@@ -130,7 +125,6 @@ public class PlayerControllerTest {
                 PlayerCreateDTO newPlayer = new PlayerCreateDTO();
                 newPlayer.setUsername("newPlayer");
                 newPlayer.setPassword("New@1234");
-                newPlayer.setAgent("Phoenix");
 
                 mockMvc.perform(post("/players")
                                 .with(user(playerDetails))
@@ -138,7 +132,6 @@ public class PlayerControllerTest {
                                 .content(new ObjectMapper().writeValueAsString(newPlayer)))
                                 .andExpect(status().isCreated())
                                 .andExpect(jsonPath("$.username").value("newPlayer"))
-                                .andExpect(jsonPath("$.agent").value("Phoenix"))
                                 .andExpect(jsonPath("$.active").value(true))
                                 .andExpect(jsonPath("$.createdAt").exists())
                                 .andExpect(jsonPath("$.updatedAt").exists())
@@ -151,7 +144,6 @@ public class PlayerControllerTest {
                 PlayerCreateDTO existingPlayer = new PlayerCreateDTO();
                 existingPlayer.setUsername("player1");
                 existingPlayer.setPassword("New@1234");
-                existingPlayer.setAgent("Phoenix");
 
                 mockMvc.perform(post("/players")
                                 .with(user(playerDetails))
@@ -169,7 +161,6 @@ public class PlayerControllerTest {
                 PlayerCreateDTO invalidPlayer = new PlayerCreateDTO();
                 invalidPlayer.setUsername("invalidPlayer");
                 invalidPlayer.setPassword("Abc@1");
-                invalidPlayer.setAgent("Phoenix");
 
                 mockMvc.perform(post("/players")
                                 .with(user(playerDetails))
@@ -188,7 +179,6 @@ public class PlayerControllerTest {
                 PlayerCreateDTO invalidPlayer = new PlayerCreateDTO();
                 invalidPlayer.setUsername("ab");
                 invalidPlayer.setPassword("New@1234");
-                invalidPlayer.setAgent("Phoenix");
 
                 mockMvc.perform(post("/players")
                                 .with(user(playerDetails))
@@ -207,7 +197,6 @@ public class PlayerControllerTest {
                 PlayerCreateDTO invalidPlayer = new PlayerCreateDTO();
                 invalidPlayer.setUsername("invalidPlayer");
                 invalidPlayer.setPassword("New123456");
-                invalidPlayer.setAgent("Phoenix");
 
                 mockMvc.perform(post("/players")
                                 .with(user(playerDetails))
@@ -226,7 +215,6 @@ public class PlayerControllerTest {
                 PlayerCreateDTO newPlayer = new PlayerCreateDTO();
                 newPlayer.setUsername("newPlayer");
                 newPlayer.setPassword("New@1234");
-                newPlayer.setAgent("Phoenix");
 
                 mockMvc.perform(post("/players")
                                 .contentType("application/json")
@@ -243,7 +231,6 @@ public class PlayerControllerTest {
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.id").value(player.getId().toString()))
                                 .andExpect(jsonPath("$.username").value("player1"))
-                                .andExpect(jsonPath("$.agent").value("Reyna"))
                                 .andExpect(jsonPath("$.active").value(true))
                                 .andExpect(jsonPath("$.roles", containsInAnyOrder("PLAYER", "ADMIN")))
                                 .andExpect(jsonPath("$.password").doesNotExist());
@@ -275,7 +262,6 @@ public class PlayerControllerTest {
                                 .with(user(playerDetails)))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.username").value("player1"))
-                                .andExpect(jsonPath("$.agent").value("Reyna"))
                                 .andExpect(jsonPath("$.active").value(true))
                                 .andExpect(jsonPath("$.roles", containsInAnyOrder("PLAYER", "ADMIN")))
                                 .andExpect(jsonPath("$.password").doesNotExist());
@@ -302,7 +288,6 @@ public class PlayerControllerTest {
         public void testUpdatePlayer() throws Exception {
                 Player player = playerService.findByUsername("player1");
                 PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
-                updateDTO.setAgent("Phoenix");
                 updateDTO.setActive(false);
 
                 // Simulate an authenticated user with ADMIN role
@@ -313,7 +298,6 @@ public class PlayerControllerTest {
                                 .content(new ObjectMapper().writeValueAsString(updateDTO)))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.username").value("player1"))
-                                .andExpect(jsonPath("$.agent").value("Phoenix"))
                                 .andExpect(jsonPath("$.active").value(false))
                                 .andExpect(jsonPath("$.roles", containsInAnyOrder("PLAYER", "ADMIN")))
                                 .andExpect(jsonPath("$.password").doesNotExist());
@@ -324,7 +308,6 @@ public class PlayerControllerTest {
                 Player player = playerService.findByUsername("player2");
 
                 PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
-                updateDTO.setAgent("Phoenix");
                 updateDTO.setActive(false);
 
                 PlayerDetails playerDetails = new PlayerDetails(player);
@@ -337,7 +320,6 @@ public class PlayerControllerTest {
                                 .content(new ObjectMapper().writeValueAsString(updateDTO)))
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.username").value("player2"))
-                                .andExpect(jsonPath("$.agent").value("Phoenix"))
                                 .andExpect(jsonPath("$.active").value(false))
                                 .andExpect(jsonPath("$.roles", containsInAnyOrder("PLAYER")))
                                 .andExpect(jsonPath("$.password").doesNotExist());
@@ -350,7 +332,6 @@ public class PlayerControllerTest {
                 Player player3 = playerService.findByUsername("player3");
 
                 PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
-                updateDTO.setAgent("Phoenix");
                 updateDTO.setActive(false);
 
                 PlayerDetails playerDetails = new PlayerDetails(player3);
@@ -371,7 +352,6 @@ public class PlayerControllerTest {
         @Test
         public void testUpdatePlayer_PlayerNotFound() throws Exception {
                 PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
-                updateDTO.setAgent("Phoenix");
                 updateDTO.setActive(false);
 
                 mockMvc.perform(patch("/players/{id}", "00000000-0000-0000-0000-000000000000")
@@ -391,7 +371,6 @@ public class PlayerControllerTest {
         public void testUpdatePlayer_Unauthenticated() throws Exception {
                 Player player = playerService.findByUsername("player1");
                 PlayerUpdateDTO updateDTO = new PlayerUpdateDTO();
-                updateDTO.setAgent("Phoenix");
                 updateDTO.setActive(false);
 
                 mockMvc.perform(patch("/players/{id}", player.getId())

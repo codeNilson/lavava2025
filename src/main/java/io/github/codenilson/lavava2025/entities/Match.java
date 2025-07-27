@@ -1,8 +1,8 @@
 package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.Comment;
@@ -80,7 +80,7 @@ public class Match {
     @Comment("All player's performances in this match.")
     @OneToMany(mappedBy = "match")
     @Getter
-    private List<PlayerPerformance> playerPerformances = new ArrayList<>();
+    private Set<PlayerPerformance> playerPerformances = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

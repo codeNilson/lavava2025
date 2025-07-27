@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -62,7 +63,7 @@ public class TeamServiceTest {
 
         var team = new Team();
         team.setMatch(match);
-        team.setPlayers(players);
+        team.setPlayers(new HashSet<>(players));
 
         when(playerService.findPlayersByIds(playersIds)).thenReturn(players);
         when(teamRepository.save(any(Team.class))).thenReturn(team);
@@ -140,7 +141,7 @@ public class TeamServiceTest {
         List<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
-        team.setPlayers(players);
+        team.setPlayers(new HashSet<>(players));
 
         when(teamRepository.findById(teamId)).thenReturn(Optional.of(team));
         when(playerService.findPlayersByIds(playersIds)).thenReturn(players);
@@ -170,7 +171,7 @@ public class TeamServiceTest {
         List<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
-        team.setPlayers(players);
+        team.setPlayers(new HashSet<>(players));
 
         when(teamRepository.findById(teamId)).thenReturn(Optional.of(team));
         when(playerService.findPlayersByIds(playersIds)).thenReturn(players);

@@ -1,9 +1,7 @@
 package io.github.codenilson.lavava2025.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -48,7 +46,7 @@ public class Team {
     @ManyToMany
     @Getter
     @Setter
-    private List<Player> players = new ArrayList<>();
+    private Set<Player> players = new HashSet<>();
 
     @Comment("All players performances in this team")
     @OneToMany(mappedBy = "team")

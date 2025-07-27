@@ -3,6 +3,7 @@ package io.github.codenilson.lavava2025.repositories;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class TeamRepositoryTest {
         var team = new Team();
         var match = new Match();
         team.setMatch(match);
-        team.setPlayers(players);
+        team.setPlayers(new HashSet<>(players));
 
         var savedTeam = teamRepository.save(team);
 

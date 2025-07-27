@@ -9,8 +9,6 @@ public class PlayerUpdateDTO {
 
     private String password;
 
-    private String agent;
-
     private Boolean active;
 
     public PlayerUpdateDTO() {

@@ -71,7 +71,7 @@ public class PlayerPerformance {
     @Setter
     private Integer assists;
 
-    // criar entidade depois
+    @Comment("Agent used by the player in this specific match performance")
     @Getter
     @Setter
     private String agent;

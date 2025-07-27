@@ -28,7 +28,6 @@ public class PlayerUpdateDTOTest {
         PlayerUpdateDTO dto = new PlayerUpdateDTO();
         dto.setUsername("UpdatedUser");
         dto.setPassword("NewValid@123");
-        dto.setAgent("Sage");
         dto.setActive(true);
 
         Set<ConstraintViolation<PlayerUpdateDTO>> violations = validator.validate(dto);
@@ -46,7 +45,6 @@ public class PlayerUpdateDTOTest {
     @Test
     void testPartialUpdate() {
         PlayerUpdateDTO dto = new PlayerUpdateDTO();
-        dto.setAgent("Reyna");
         dto.setActive(false);
 
         Set<ConstraintViolation<PlayerUpdateDTO>> violations = validator.validate(dto);
@@ -63,12 +61,10 @@ public class PlayerUpdateDTOTest {
 
         dto.setUsername(username);
         dto.setPassword(password);
-        dto.setAgent(agent);
         dto.setActive(active);
 
         assertEquals(username, dto.getUsername());
         assertEquals(password, dto.getPassword());
-        assertEquals(agent, dto.getAgent());
         assertEquals(active, dto.getActive());
     }
 
@@ -78,7 +74,6 @@ public class PlayerUpdateDTOTest {
         
         assertNull(dto.getUsername());
         assertNull(dto.getPassword());
-        assertNull(dto.getAgent());
         assertNull(dto.getActive());
     }
 
@@ -87,7 +82,6 @@ public class PlayerUpdateDTOTest {
         PlayerUpdateDTO dto = new PlayerUpdateDTO();
         dto.setUsername("");
         dto.setPassword("");
-        dto.setAgent("");
 
         Set<ConstraintViolation<PlayerUpdateDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());

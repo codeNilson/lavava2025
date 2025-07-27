@@ -35,17 +35,14 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         Player player1 = new Player();
         player1.setUsername("Jogador1");
         player1.setPassword("Abc@123456");
-        player1.setAgent("Reyna");
 
         Player player2 = new Player();
         player2.setUsername("Jogador2");
         player2.setPassword("Abc@123456");
-        player2.setAgent("Phoenix");
 
         Player player3 = new Player();
         player3.setUsername("Jogador3");
         player3.setPassword("Abc@123456");
-        player3.setAgent("Sage");
 
         playerService.save(player1);
         playerService.save(player2);
