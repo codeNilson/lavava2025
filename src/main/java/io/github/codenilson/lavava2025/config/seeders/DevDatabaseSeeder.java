@@ -8,11 +8,13 @@ import org.springframework.context.annotation.Profile;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.PlayerRanking;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import io.github.codenilson.lavava2025.services.MatchService;
+import io.github.codenilson.lavava2025.services.PlayerRankingService;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import io.github.codenilson.lavava2025.services.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,8 @@ public class DevDatabaseSeeder implements CommandLineRunner {
     private final TeamService teamService;
 
     private final MatchService matchService;
+
+    private final PlayerRankingService playerRankingService;
 
     private final ValorantMapRepository valorantMapRepository;
 
@@ -76,6 +80,65 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         match.setLoser(team2);
         matchService.save(match);
 
+        // Create additional matches for ranking data
+        createAdditionalMatches(player1, player2, player3);
+
         System.out.println("Relacionamentos criados com sucesso!");
+        System.out.println("Sistema de ranking configurado!");
+    }
+
+    /**
+     * Creates additional matches to populate ranking data
+     */
+    private void createAdditionalMatches(Player player1, Player player2, Player player3) {
+        var map = valorantMapRepository.findByName("Bind").orElseGet(() -> {
+            var newMap = new ValorantMap();
+            newMap.setName("Bind");
+            return valorantMapRepository.save(newMap);
+        });
+
+        // Match 2: player1 vs player2 (player1 wins)
+        Match match2 = new Match(map);
+        matchService.save(match2);
+
+        Team team3 = new Team();
+        team3.setMatch(match2);
+        team3.getPlayers().add(player1);
+
+        Team team4 = new Team();
+        team4.setMatch(match2);
+        team4.getPlayers().add(player2);
+
+        teamService.createTeam(team3);
+        teamService.createTeam(team4);
+
+        match2.setWinner(team3);
+        match2.setLoser(team4);
+        matchService.save(match2);
+
+        // Match 3: player2 vs player3 (player2 wins)
+        var mapHaven = valorantMapRepository.findByName("Haven").orElseGet(() -> {
+            var newMap = new ValorantMap();
+            newMap.setName("Haven");
+            return valorantMapRepository.save(newMap);
+        });
+
+        Match match3 = new Match(mapHaven);
+        matchService.save(match3);
+
+        Team team5 = new Team();
+        team5.setMatch(match3);
+        team5.getPlayers().add(player2);
+
+        Team team6 = new Team();
+        team6.setMatch(match3);
+        team6.getPlayers().add(player3);
+
+        teamService.createTeam(team5);
+        teamService.createTeam(team6);
+
+        match3.setWinner(team5);
+        match3.setLoser(team6);
+        matchService.save(match3);
     }
 }
