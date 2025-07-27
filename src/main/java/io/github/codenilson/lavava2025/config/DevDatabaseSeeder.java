@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DevDatabaseSeeder implements CommandLineRunner {
 
-    private final PlayerService playerServices;
+    private final PlayerService playerService;
 
     private final TeamService teamService;
 
@@ -47,14 +47,13 @@ public class DevDatabaseSeeder implements CommandLineRunner {
         player3.setPassword("Abc@123456");
         player3.setAgent("Sage");
 
-        playerServices.save(player1);
-        playerServices.save(player2);
-        playerServices.save(player3);
+        playerService.save(player1);
+        playerService.save(player2);
+        playerService.save(player3);
 
-        playerServices.addRoles(player1.getId(), Set.of(Roles.ADMIN, Roles.PLAYER));
-        playerServices.addRoles(player1.getId(), Set.of(Roles.PLAYER));
-        playerServices.addRoles(player2.getId(), Set.of(Roles.PLAYER));
-        playerServices.addRoles(player3.getId(), Set.of(Roles.PLAYER));
+        playerService.addRoles(player1.getId(), Set.of(Roles.ADMIN, Roles.PLAYER));
+        playerService.addRoles(player2.getId(), Set.of(Roles.PLAYER));
+        playerService.addRoles(player3.getId(), Set.of(Roles.PLAYER));
 
         var map = valorantMapRepository.findByName("Ascent").orElseGet(() -> {
             var newMap = new ValorantMap();

@@ -28,6 +28,10 @@ public class PlayerResponseDTO {
 
     private LocalDateTime updatedAt;
 
+    private LocalDateTime inactivatedAt;
+
+    private String inactivationReason;
+
     public PlayerResponseDTO(Player player) {
         BeanUtils.copyProperties(player, this);
     }

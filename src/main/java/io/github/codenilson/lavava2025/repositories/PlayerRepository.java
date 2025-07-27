@@ -17,6 +17,8 @@ public interface PlayerRepository extends JpaRepository<Player, UUID> {
 
     List<Player> findByActiveTrue();
 
+    List<Player> findByActiveFalse();
+
     Optional<Player> findByIdAndActiveTrue(UUID id);
 
     Optional<Player> findByUsernameAndActiveTrue(String username);

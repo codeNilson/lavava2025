@@ -75,6 +75,18 @@ public class Player {
     @Setter
     private boolean active = true;
 
+    @Comment("Date and time when the player was inactivated. Null if player is active.")
+    @Column
+    @Getter
+    @Setter
+    private LocalDateTime inactivatedAt;
+
+    @Comment("Reason for player inactivation. Null if player is active.")
+    @Column(length = 500)
+    @Getter
+    @Setter
+    private String inactivationReason;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     @Getter

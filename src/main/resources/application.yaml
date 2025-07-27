@@ -3,3 +3,19 @@ spring:
     name: lavava2025
   profiles:
     active: dev
+
+# Configuração personalizada dos mapas do Valorant
+valorant:
+  maps:
+    defaults:
+      - "Ascent"
+      - "Bind"
+      - "Haven"
+      - "Split"
+      - "Icebox"
+      - "Breeze"
+      - "Fracture"
+      - "Pearl"
+      - "Lotus"
+      - "Sunset"
+    auto-seed: false

@@ -3,7 +3,9 @@ package io.github.codenilson.lavava2025.controllers;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,6 +28,7 @@ import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
+import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
 import io.github.codenilson.lavava2025.entities.mappers.MatchMapper;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
@@ -219,6 +222,29 @@ public class MatchControllerTest {
                 .andExpect(jsonPath("$.message").value("Map not found with name: NonExistintMap"))
                 .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    void testUpdateMatch() throws Exception {
+        Match match1 = matchRepository.findAll().get(0);
+        MatchUpdateDTO updateDTO = new MatchUpdateDTO();
+        // Deixa os campos vazios para teste básico
+        
+        mockMvc.perform(patch("/matches/" + match1.getId())
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(updateDTO))
+                .with(user(playerDetails)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(match1.getId().toString()));
+    }
+
+    @Test
+    void testDeleteMatch() throws Exception {
+        Match match1 = matchRepository.findAll().get(0);
+        
+        mockMvc.perform(delete("/matches/" + match1.getId())
+                .with(user(playerDetails)))
+                .andExpect(status().isNoContent());
     }
 
 }

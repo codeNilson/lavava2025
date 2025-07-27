@@ -619,4 +619,25 @@ public class PlayerControllerTest {
                                 .andExpect(jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()));
         }
 
+        @Test
+        public void testFindByIdAdmin() throws Exception {
+                Player player = playerService.findByUsername("player4"); // Player inativo
+
+                mockMvc.perform(get("/players/admin/{id}", player.getId())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.id").value(player.getId().toString()))
+                                .andExpect(jsonPath("$.username").value("player4"))
+                                .andExpect(jsonPath("$.active").value(false));
+        }
+
+        @Test
+        public void testFindByUsernameAdmin() throws Exception {
+                mockMvc.perform(get("/players/admin/username/{username}", "player4")
+                                .with(user(playerDetails)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.username").value("player4"))
+                                .andExpect(jsonPath("$.active").value(false));
+        }
+
 }

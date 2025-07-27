@@ -1,5 +1,6 @@
 package io.github.codenilson.lavava2025.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -25,13 +26,12 @@ public class PlayerService {
     private final PlayerMapper playerMapper;
 
     public List<Player> findActivePlayers() {
-        List<Player> activePlayers = playerRepository.findByActiveTrue();
-        return activePlayers;
+        return playerRepository.findByActiveTrue();
     }
 
     public Player save(Player player) {
 
-        if (existByUsername(player.getUsername())) {
+        if (existsByUsername(player.getUsername())) {
             throw new UsernameAlreadyExistsException(player.getUsername());
         }
 
@@ -64,8 +64,7 @@ public class PlayerService {
     }
 
     public void delete(Player player) {
-        player.setActive(false);
-        playerRepository.save(player);
+        deactivatePlayerWithReason(player, "Deleted by user");
     }
 
     public PlayerResponseDTO updatePlayer(UUID id, PlayerUpdateDTO dto) {
@@ -80,8 +79,7 @@ public class PlayerService {
 
     private PlayerResponseDTO updatePlayerData(Player player, PlayerUpdateDTO dto) {
         if (dto.getPassword() != null) {
-            String encodedPassword = player.getPassword();
-            dto.setPassword(encodedPassword);
+            dto.setPassword(encoder.encode(dto.getPassword()));
         }
         Player playerEntity = playerMapper.toEntity(player, dto);
 
@@ -102,12 +100,47 @@ public class PlayerService {
         playerRepository.save(player);
     }
 
-    public boolean existByUsername(String username) {
+    public boolean existsByUsername(String username) {
         return playerRepository.existsByUsername(username);
     }
 
     public List<Player> findPlayersByIds(List<UUID> playerIds) {
         return playerRepository.findAllByIdInAndActiveTrue(playerIds);
+    }
+
+    // ========== ADMIN METHODS FOR MANAGING ALL PLAYERS ==========
+
+    public List<Player> findAllPlayers() {
+        return playerRepository.findAll();
+    }
+
+    public List<Player> findInactivePlayers() {
+        return playerRepository.findByActiveFalse();
+    }
+
+    public PlayerResponseDTO activatePlayer(UUID id) {
+        Player player = findById(id);
+        player.setActive(true);
+        player.setInactivatedAt(null);
+        player.setInactivationReason(null);
+        playerRepository.save(player);
+        return new PlayerResponseDTO(player);
+    }
+
+    public void deactivatePlayer(UUID id) {
+        deactivatePlayer(id, "Deactivated by admin");
+    }
+
+    public void deactivatePlayer(UUID id, String reason) {
+        Player player = findById(id);
+        deactivatePlayerWithReason(player, reason);
+    }
+
+    private void deactivatePlayerWithReason(Player player, String reason) {
+        player.setActive(false);
+        player.setInactivatedAt(LocalDateTime.now());
+        player.setInactivationReason(reason);
+        playerRepository.save(player);
     }
 
 }
