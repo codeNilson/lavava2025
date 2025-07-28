@@ -1,7 +1,10 @@
 package io.github.codenilson.lavava2025.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -12,10 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableMethodSecurity
+@Profile({"dev", "test"})
 public class SecurityConfig {
 
     @Bean
@@ -28,7 +31,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedMethod("*");
+        config.addAllowedMethod("get, post, put, delete, options");
         config.addAllowedHeader("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
