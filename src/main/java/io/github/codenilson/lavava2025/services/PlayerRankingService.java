@@ -47,7 +47,7 @@ public class PlayerRankingService {
         PlayerRanking ranking = getOrCreatePlayerRanking(player, season);
         
         if (isWin) {
-            ranking.recordMatch(true); // já adiciona 3 pontos internamente
+            ranking.recordMatch(true);
         } else {
             ranking.recordMatch(false);
         }

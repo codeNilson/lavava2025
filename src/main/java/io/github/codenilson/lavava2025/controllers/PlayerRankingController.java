@@ -25,7 +25,7 @@ import io.github.codenilson.lavava2025.services.PlayerRankingService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/rankings")
+@RequestMapping("rankings")
 public class PlayerRankingController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class PlayerRankingController {
     @GetMapping("/leaderboard")
     public ResponseEntity<Page<PlayerRankingResponseDTO>> getCurrentSeasonLeaderboard(
             @PageableDefault(size = 10, sort = "totalPoints") Pageable pageable) {
-        
+
         Page<PlayerRankingResponseDTO> leaderboard = playerRankingService.getCurrentSeasonLeaderboard(pageable);
         return ResponseEntity.ok(leaderboard);
     }
@@ -49,7 +49,7 @@ public class PlayerRankingController {
     public ResponseEntity<Page<PlayerRankingResponseDTO>> getSeasonLeaderboard(
             @PathVariable String season,
             @PageableDefault(size = 10, sort = "totalPoints") Pageable pageable) {
-        
+
         Page<PlayerRankingResponseDTO> leaderboard = playerRankingService.getSeasonLeaderboard(season, pageable);
         return ResponseEntity.ok(leaderboard);
     }
@@ -60,7 +60,7 @@ public class PlayerRankingController {
     @GetMapping("/top")
     public ResponseEntity<List<PlayerRankingResponseDTO>> getTopPlayers(
             @RequestParam(defaultValue = "10") int limit) {
-        
+
         List<PlayerRankingResponseDTO> topPlayers = playerRankingService.getTopPlayers(limit);
         return ResponseEntity.ok(topPlayers);
     }
@@ -72,7 +72,7 @@ public class PlayerRankingController {
     public ResponseEntity<List<PlayerRankingResponseDTO>> getTopPlayersBySeason(
             @PathVariable String season,
             @RequestParam(defaultValue = "10") int limit) {
-        
+
         List<PlayerRankingResponseDTO> topPlayers = playerRankingService.getTopPlayersBySeason(season, limit);
         return ResponseEntity.ok(topPlayers);
     }
@@ -84,7 +84,7 @@ public class PlayerRankingController {
     public ResponseEntity<PlayerRankingResponseDTO> getPlayerRanking(@PathVariable UUID playerId) {
         Optional<PlayerRankingResponseDTO> ranking = playerRankingService.getPlayerRanking(playerId);
         return ranking.map(ResponseEntity::ok)
-                     .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 
     /**
@@ -94,22 +94,10 @@ public class PlayerRankingController {
     public ResponseEntity<PlayerRankingResponseDTO> getPlayerRankingBySeason(
             @PathVariable UUID playerId,
             @PathVariable String season) {
-        
+
         Optional<PlayerRankingResponseDTO> ranking = playerRankingService.getPlayerRanking(playerId, season);
         return ranking.map(ResponseEntity::ok)
-                     .orElse(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Get player position in ranking for a season
-     */
-    @GetMapping("/player/{playerId}/position")
-    public ResponseEntity<Long> getPlayerPosition(
-            @PathVariable UUID playerId,
-            @RequestParam(defaultValue = "2025") String season) {
-        
-        Long position = playerRankingService.getPlayerPosition(playerId, season);
-        return position != null ? ResponseEntity.ok(position) : ResponseEntity.notFound().build();
+                .orElse(ResponseEntity.notFound().build());
     }
 
     /**
@@ -129,15 +117,15 @@ public class PlayerRankingController {
     public ResponseEntity<PlayerRankingResponseDTO> addBonusPoints(
             @PathVariable UUID playerId,
             @Valid @RequestBody RankingUpdateRequestDTO request) {
-        
+
         String season = request.getSeason() != null ? request.getSeason() : "2025";
         int points = request.getPoints() != null ? request.getPoints() : 0;
-        
+
         playerRankingService.addBonusPoints(playerId, points, season);
         Optional<PlayerRankingResponseDTO> updatedRanking = playerRankingService.getPlayerRanking(playerId, season);
-        
+
         return updatedRanking.map(ResponseEntity::ok)
-                            .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 
     /**
@@ -158,14 +146,14 @@ public class PlayerRankingController {
     public ResponseEntity<PlayerRankingResponseDTO> updatePlayerRanking(
             @PathVariable UUID playerId,
             @Valid @RequestBody RankingUpdateRequestDTO request) {
-        
+
         String season = request.getSeason() != null ? request.getSeason() : "2025";
         boolean isWin = request.getIsWin() != null ? request.getIsWin() : false;
-        
+
         playerRankingService.updatePlayerRanking(playerId, isWin, season);
         Optional<PlayerRankingResponseDTO> updatedRanking = playerRankingService.getPlayerRanking(playerId, season);
-        
+
         return updatedRanking.map(ResponseEntity::ok)
-                            .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 }

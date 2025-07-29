@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.entities.dto.player.DeactivationRequestDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
@@ -107,7 +106,7 @@ public class PlayerController {
     }
 
     // ========== ADMIN ENDPOINTS FOR MANAGING INACTIVE PLAYERS ==========
-    
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<PlayerResponseDTO>> findAllPlayers() {
@@ -131,7 +130,7 @@ public class PlayerController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/{id}")
     public ResponseEntity<PlayerResponseDTO> findByIdAdmin(@PathVariable("id") UUID id) {
-        Player player = playerService.findById(id);  // Busca independente do status
+        Player player = playerService.findById(id);
         PlayerResponseDTO response = new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
     }
@@ -139,7 +138,7 @@ public class PlayerController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/username/{username}")
     public ResponseEntity<PlayerResponseDTO> findByUsernameAdmin(@PathVariable("username") String username) {
-        Player player = playerService.findByUsername(username);  // Busca independente do status
+        Player player = playerService.findByUsername(username); // Busca independente do status
         PlayerResponseDTO response = new PlayerResponseDTO(player);
         return ResponseEntity.ok(response);
     }
@@ -153,15 +152,7 @@ public class PlayerController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivatePlayer(@PathVariable("id") UUID id,
-            @RequestBody @Valid DeactivationRequestDTO request) {
-        playerService.deactivatePlayer(id, request.getReason());
-        return ResponseEntity.noContent().build();
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivatePlayerSimple(@PathVariable("id") UUID id) {
+    public ResponseEntity<Void> deactivatePlayer(@PathVariable("id") UUID id) {
         playerService.deactivatePlayer(id);
         return ResponseEntity.noContent().build();
     }
