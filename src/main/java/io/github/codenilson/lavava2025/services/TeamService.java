@@ -24,18 +24,18 @@ public class TeamService {
 
     @Transactional
     public Team createTeam(Team team) {
-        teamRepository.save(team);
-        List<PlayerPerformance> playersPerformances = team.getPlayers().stream()
+        Team savedTeam = teamRepository.save(team);
+        List<PlayerPerformance> playersPerformances = savedTeam.getPlayers().stream()
                 .map(player -> {
                     PlayerPerformance performance = new PlayerPerformance();
                     performance.setPlayer(player);
-                    performance.setTeam(team);
-                    performance.setMatch(team.getMatch());
+                    performance.setTeam(savedTeam);
+                    performance.setMatch(savedTeam.getMatch());
                     return performance;
                 }).toList();
         playerPerformanceService.saveAll(playersPerformances);
 
-        return team;
+        return savedTeam;
     }
 
     public List<Team> findAllTeams() {

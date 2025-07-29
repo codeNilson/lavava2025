@@ -17,12 +17,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import io.github.codenilson.lavava2025.entities.Player;
@@ -34,6 +34,7 @@ import io.github.codenilson.lavava2025.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 
+@ExtendWith(MockitoExtension.class)
 class PlayerServiceTest {
 
     @InjectMocks
@@ -47,11 +48,6 @@ class PlayerServiceTest {
 
     @Mock
     private PasswordEncoder encoder;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     @DisplayName("Should create a new player when username does not exist")
@@ -386,5 +382,12 @@ class PlayerServiceTest {
         // Given
         String username = "nonexistentPlayer";
         when(playerRepository.findByUsernameAndActiveTrue(username)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(
+                EntityNotFoundException.class,
+                () -> playerService.findByUsernameAndActiveTrue(username));
+
+        verify(playerRepository).findByUsernameAndActiveTrue(username);
     }
 }

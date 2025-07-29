@@ -61,7 +61,7 @@ class PlayerRankingServiceTest {
         testRanking.setTotalPoints(6);
         testRanking.setMatchesWon(2);
         testRanking.setMatchesPlayed(3);
-        testRanking.setWinRate(0.67); // 2/3 arredondado para 2 casas decimais
+        testRanking.setWinRate(0.67); // Como decimal, não percentual
     }
 
     @Test
@@ -148,7 +148,9 @@ class PlayerRankingServiceTest {
         Page<PlayerRanking> page = new PageImpl<>(rankings, pageable, 1);
         
         when(playerRankingRepository.findBySeasonOrderByTotalPointsDesc("2025", pageable)).thenReturn(page);
-        when(playerRankingRepository.findPlayerPosition("2025", 6, 66.67, 2)).thenReturn(1L);
+        when(playerRepository.findById(playerId)).thenReturn(Optional.of(testPlayer));
+        when(playerRankingRepository.findByPlayerAndSeason(testPlayer, "2025")).thenReturn(Optional.of(testRanking));
+        when(playerRankingRepository.findPlayerPosition("2025", 6, 0.67, 2)).thenReturn(1L);
 
         // When
         Page<PlayerRankingResponseDTO> result = playerRankingService.getCurrentSeasonLeaderboard(pageable);
@@ -169,7 +171,7 @@ class PlayerRankingServiceTest {
         // Given
         when(playerRepository.findById(playerId)).thenReturn(Optional.of(testPlayer));
         when(playerRankingRepository.findByPlayerAndSeason(testPlayer, "2025")).thenReturn(Optional.of(testRanking));
-        when(playerRankingRepository.findPlayerPosition("2025", 6, 66.67, 2)).thenReturn(1L);
+        when(playerRankingRepository.findPlayerPosition("2025", 6, 0.67, 2)).thenReturn(1L);
 
         // When
         Optional<PlayerRankingResponseDTO> result = playerRankingService.getPlayerRanking(playerId);

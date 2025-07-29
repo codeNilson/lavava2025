@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
@@ -22,17 +22,13 @@ import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.repositories.PlayerPerformanceRepository;
 import jakarta.persistence.EntityNotFoundException;
 
+@ExtendWith(MockitoExtension.class)
 public class PlayerPerformanceServiceTest {
     @InjectMocks
     private PlayerPerformanceService playerPerformanceService;
 
     @Mock
     private PlayerPerformanceRepository playerPerformanceRepository;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testSaveShouldSavePlayerPerformance() {

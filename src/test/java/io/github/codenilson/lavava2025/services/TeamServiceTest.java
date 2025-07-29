@@ -14,9 +14,11 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
@@ -26,6 +28,7 @@ import io.github.codenilson.lavava2025.entities.valueobjects.OperationType;
 import io.github.codenilson.lavava2025.mappers.TeamMapper;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
 
+@ExtendWith(MockitoExtension.class)
 public class TeamServiceTest {
 
     @InjectMocks
@@ -43,40 +46,96 @@ public class TeamServiceTest {
     @Mock
     private PlayerPerformanceService playerPerformanceService;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
-    public void saveShouldCreateNewTeam() {
-
+    public void createTeamShouldSaveAndReturnTeam() {
         // Given
         UUID matchId = UUID.randomUUID();
+        UUID teamId = UUID.randomUUID();
+        
         Match match = new Match();
         match.setId(matchId);
 
-        List<UUID> playersIds = List.of(UUID.randomUUID(), UUID.randomUUID());
-        var player1 = new Player("player1", "password1");
-        var player2 = new Player("player2", "password2");
-        List<Player> players = List.of(player1, player2);
+        Player player1 = new Player("player1", "password1");
+        player1.setId(UUID.randomUUID());
+        Player player2 = new Player("player2", "password2");
+        player2.setId(UUID.randomUUID());
 
-        var team = new Team();
-        team.setMatch(match);
-        team.setPlayers(new HashSet<>(players));
+        Team inputTeam = new Team();
+        inputTeam.setMatch(match);
+        inputTeam.setPlayers(new HashSet<>(List.of(player1, player2)));
 
-        when(playerService.findPlayersByIds(playersIds)).thenReturn(players);
-        when(teamRepository.save(any(Team.class))).thenReturn(team);
+        Team savedTeam = new Team();
+        savedTeam.setId(teamId);
+        savedTeam.setMatch(match);
+        savedTeam.setPlayers(new HashSet<>(List.of(player1, player2)));
+
+        when(teamRepository.save(inputTeam)).thenReturn(savedTeam);
 
         // When
-        Team response = teamService.createTeam(team);
+        Team result = teamService.createTeam(inputTeam);
 
         // Then
-        assertNotNull(response);
-        assertEquals(team.getId(), response.getId());
-        assertEquals(match.getId(), response.getMatch().getId());
-        assertEquals(players.size(), response.getPlayers().size());
-        verify(teamRepository).save(team);
+        assertNotNull(result);
+        assertEquals(teamId, result.getId());
+        assertEquals(matchId, result.getMatch().getId());
+        assertEquals(2, result.getPlayers().size());
+        
+        // Verify interactions
+        verify(teamRepository).save(inputTeam);
+    }
+
+    @Test
+    public void createTeamShouldThrowExceptionWhenRepositoryFails() {
+        // Given
+        Match match = new Match();
+        match.setId(UUID.randomUUID());
+
+        Team inputTeam = new Team();
+        inputTeam.setMatch(match);
+        inputTeam.setPlayers(new HashSet<>());
+
+        when(teamRepository.save(inputTeam)).thenThrow(new RuntimeException("Database error"));
+
+        // When & Then
+        try {
+            teamService.createTeam(inputTeam);
+        } catch (RuntimeException e) {
+            assertEquals("Database error", e.getMessage());
+        }
+        
+        verify(teamRepository).save(inputTeam);
+    }
+
+    @Test
+    public void createTeamShouldHandleEmptyPlayersList() {
+        // Given
+        UUID matchId = UUID.randomUUID();
+        UUID teamId = UUID.randomUUID();
+        
+        Match match = new Match();
+        match.setId(matchId);
+
+        Team inputTeam = new Team();
+        inputTeam.setMatch(match);
+        inputTeam.setPlayers(new HashSet<>());
+
+        Team savedTeam = new Team();
+        savedTeam.setId(teamId);
+        savedTeam.setMatch(match);
+        savedTeam.setPlayers(new HashSet<>());
+
+        when(teamRepository.save(inputTeam)).thenReturn(savedTeam);
+
+        // When
+        Team result = teamService.createTeam(inputTeam);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(teamId, result.getId());
+        assertEquals(matchId, result.getMatch().getId());
+        assertEquals(0, result.getPlayers().size());
+        
+        verify(teamRepository).save(inputTeam);
     }
 
     @Test
