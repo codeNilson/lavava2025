@@ -7,7 +7,9 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,17 @@ import io.github.codenilson.lavava2025.repositories.PlayerRankingRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Serviço responsável pela gestão do sistema de ranking dos jogadores.
+ * 
+ * Este serviço gerencia todas as operações relacionadas ao ranking dos jogadores,
+ * incluindo atualizações após partidas, cálculo de posições, gestão de temporadas
+ * e operações administrativas sobre os rankings.
+ * 
+ * @author lavava2025
+ * @version 1.0
+ * @since 2025
+ */
 @Service
 @Transactional
 public class PlayerRankingService {
@@ -31,14 +44,25 @@ public class PlayerRankingService {
     private static final String CURRENT_SEASON = "2025";
 
     /**
-     * Atualiza o ranking de um jogador após uma partida
+     * Atualiza o ranking de um jogador após uma partida na temporada atual.
+     * 
+     * @param playerId ID do jogador
+     * @param isWin indica se o jogador ganhou a partida
+     * @return o ranking atualizado do jogador
+     * @throws EntityNotFoundException se o jogador não for encontrado
      */
     public PlayerRanking updatePlayerRanking(UUID playerId, boolean isWin) {
         return updatePlayerRanking(playerId, isWin, CURRENT_SEASON);
     }
 
     /**
-     * Atualiza o ranking de um jogador para uma temporada específica
+     * Atualiza o ranking de um jogador após uma partida em uma temporada específica.
+     * 
+     * @param playerId ID do jogador
+     * @param isWin indica se o jogador ganhou a partida
+     * @param season temporada para atualizar o ranking
+     * @return o ranking atualizado do jogador
+     * @throws EntityNotFoundException se o jogador não for encontrado
      */
     public PlayerRanking updatePlayerRanking(UUID playerId, boolean isWin, String season) {
         Player player = playerRepository.findById(playerId)
@@ -58,14 +82,21 @@ public class PlayerRankingService {
     }
 
     /**
-     * Atualiza rankings para todos os jogadores de um time vencedor
+     * Atualiza rankings para todos os jogadores de um time na temporada atual.
+     * 
+     * @param playerIds lista de IDs dos jogadores do time
+     * @param isWin indica se o time ganhou a partida
      */
     public void updateTeamRankings(List<UUID> playerIds, boolean isWin) {
         updateTeamRankings(playerIds, isWin, CURRENT_SEASON);
     }
 
     /**
-     * Atualiza rankings para todos os jogadores de um time em uma temporada específica
+     * Atualiza rankings para todos os jogadores de um time em uma temporada específica.
+     * 
+     * @param playerIds lista de IDs dos jogadores do time
+     * @param isWin indica se o time ganhou a partida
+     * @param season temporada para atualizar os rankings
      */
     public void updateTeamRankings(List<UUID> playerIds, boolean isWin, String season) {
         for (UUID playerId : playerIds) {
@@ -74,14 +105,25 @@ public class PlayerRankingService {
     }
 
     /**
-     * Adiciona pontos extras a um jogador (MVP, Ace, etc.)
+     * Adiciona pontos extras a um jogador na temporada atual (MVP, Ace, etc.).
+     * 
+     * @param playerId ID do jogador
+     * @param bonusPoints quantidade de pontos extras a adicionar
+     * @return o ranking atualizado do jogador
+     * @throws EntityNotFoundException se o jogador não for encontrado
      */
     public PlayerRanking addBonusPoints(UUID playerId, int bonusPoints) {
         return addBonusPoints(playerId, bonusPoints, CURRENT_SEASON);
     }
 
     /**
-     * Adiciona pontos extras a um jogador em uma temporada específica
+     * Adiciona pontos extras a um jogador em uma temporada específica.
+     * 
+     * @param playerId ID do jogador
+     * @param bonusPoints quantidade de pontos extras a adicionar
+     * @param season temporada para adicionar os pontos
+     * @return o ranking atualizado do jogador
+     * @throws EntityNotFoundException se o jogador não for encontrado
      */
     public PlayerRanking addBonusPoints(UUID playerId, int bonusPoints, String season) {
         Player player = playerRepository.findById(playerId)
@@ -95,7 +137,12 @@ public class PlayerRankingService {
     }
 
     /**
-     * Busca ou cria um ranking para um jogador em uma temporada
+     * Busca ou cria um ranking para um jogador em uma temporada específica.
+     * Se o ranking já existir, retorna o existente. Caso contrário, cria um novo.
+     * 
+     * @param player o jogador
+     * @param season a temporada
+     * @return o ranking do jogador na temporada
      */
     private PlayerRanking getOrCreatePlayerRanking(Player player, String season) {
         Optional<PlayerRanking> existingRanking = playerRankingRepository
@@ -118,7 +165,10 @@ public class PlayerRankingService {
     }
 
     /**
-     * Busca o leaderboard da temporada atual
+     * Busca o leaderboard da temporada atual com paginação.
+     * 
+     * @param pageable configuração de paginação e ordenação
+     * @return página com os rankings da temporada atual
      */
     @Transactional(readOnly = true)
     public Page<PlayerRankingResponseDTO> getCurrentSeasonLeaderboard(Pageable pageable) {
@@ -126,11 +176,16 @@ public class PlayerRankingService {
     }
 
     /**
-     * Busca o leaderboard de uma temporada específica
+     * Busca o leaderboard de uma temporada específica com paginação.
+     * 
+     * @param season a temporada desejada
+     * @param pageable configuração de paginação e ordenação
+     * @return página com os rankings da temporada
      */
     @Transactional(readOnly = true)
     public Page<PlayerRankingResponseDTO> getSeasonLeaderboard(String season, Pageable pageable) {
-        Page<PlayerRanking> rankings = playerRankingRepository.findBySeasonOrderByTotalPointsDesc(season, pageable);
+        Pageable unsortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.unsorted());
+        Page<PlayerRanking> rankings = playerRankingRepository.findBySeasonOrderByTotalPointsDesc(season, unsortedPageable);
         return rankings.map(ranking -> {
             Long position = getPlayerPosition(ranking.getPlayer().getId(), season);
             return new PlayerRankingResponseDTO(ranking, position);
@@ -138,7 +193,10 @@ public class PlayerRankingService {
     }
 
     /**
-     * Busca o top N jogadores da temporada atual
+     * Busca os top N jogadores da temporada atual.
+     * 
+     * @param limit quantidade máxima de jogadores a retornar
+     * @return lista com os melhores jogadores da temporada atual
      */
     @Transactional(readOnly = true)
     public List<PlayerRankingResponseDTO> getTopPlayers(int limit) {
@@ -146,7 +204,11 @@ public class PlayerRankingService {
     }
 
     /**
-     * Busca o top N jogadores de uma temporada específica
+     * Busca os top N jogadores de uma temporada específica.
+     * 
+     * @param season a temporada desejada
+     * @param limit quantidade máxima de jogadores a retornar
+     * @return lista com os melhores jogadores da temporada
      */
     @Transactional(readOnly = true)
     public List<PlayerRankingResponseDTO> getTopPlayersBySeason(String season, int limit) {
@@ -161,7 +223,10 @@ public class PlayerRankingService {
     }
 
     /**
-     * Busca o ranking de um jogador específico na temporada atual
+     * Busca o ranking de um jogador específico na temporada atual.
+     * 
+     * @param playerId ID do jogador
+     * @return Optional contendo o ranking se encontrado, vazio caso contrário
      */
     @Transactional(readOnly = true)
     public Optional<PlayerRankingResponseDTO> getPlayerRanking(UUID playerId) {
@@ -169,7 +234,12 @@ public class PlayerRankingService {
     }
 
     /**
-     * Busca o ranking de um jogador específico em uma temporada
+     * Busca o ranking de um jogador específico em uma temporada.
+     * 
+     * @param playerId ID do jogador
+     * @param season temporada desejada
+     * @return Optional contendo o ranking se encontrado, vazio caso contrário
+     * @throws EntityNotFoundException se o jogador não for encontrado
      */
     @Transactional(readOnly = true)
     public Optional<PlayerRankingResponseDTO> getPlayerRanking(UUID playerId, String season) {
@@ -187,7 +257,12 @@ public class PlayerRankingService {
     }
 
     /**
-     * Busca a posição de um jogador no ranking da temporada
+     * Busca a posição de um jogador no ranking de uma temporada.
+     * A posição é calculada baseada nos pontos totais, taxa de vitória e partidas ganhas.
+     * 
+     * @param playerId ID do jogador
+     * @param season temporada para verificar a posição
+     * @return a posição do jogador no ranking, ou null se não encontrado
      */
     @Transactional(readOnly = true)
     public Long getPlayerPosition(UUID playerId, String season) {
@@ -206,7 +281,9 @@ public class PlayerRankingService {
     }
 
     /**
-     * Busca todas as temporadas disponíveis
+     * Busca todas as temporadas disponíveis no sistema.
+     * 
+     * @return lista com todas as temporadas que possuem dados de ranking
      */
     @Transactional(readOnly = true)
     public List<String> getAvailableSeasons() {
@@ -214,7 +291,11 @@ public class PlayerRankingService {
     }
 
     /**
-     * Redefine todos os rankings de uma temporada (uso administrativo)
+     * Redefine todos os rankings de uma temporada específica.
+     * Esta operação remove todos os dados de ranking da temporada.
+     * Utilizada para fins administrativos ou reset de temporada.
+     * 
+     * @param season temporada a ser resetada
      */
     public void resetSeasonRankings(String season) {
         List<PlayerRanking> seasonRankings = playerRankingRepository.findBySeasonOrderByTotalPointsDesc(season);
@@ -222,7 +303,10 @@ public class PlayerRankingService {
     }
 
     /**
-     * Recalcula todos os rankings baseado nas performances das partidas
+     * Recalcula todos os rankings baseado nas performances das partidas existentes.
+     * Esta operação é útil para migração de dados ou correção de inconsistências.
+     * 
+     * @implNote Este método ainda não foi implementado e está marcado como TODO
      */
     public void recalculateAllRankings() {
         // TODO: Implementar recálculo baseado nas partidas existentes

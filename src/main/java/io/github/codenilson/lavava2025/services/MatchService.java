@@ -14,6 +14,15 @@ import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Service class responsible for managing match operations and business logic.
+ * Handles match CRUD operations and automatically updates player rankings
+ * when matches are saved or modified.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Service
 @RequiredArgsConstructor
 public class MatchService {

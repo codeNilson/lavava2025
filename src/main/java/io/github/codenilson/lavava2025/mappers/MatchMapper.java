@@ -18,6 +18,15 @@ import io.github.codenilson.lavava2025.services.TeamService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Mapper component responsible for converting between Match entities and DTOs.
+ * Handles complex mapping operations including map validation, match updates,
+ * and MVP/ACE player assignments with proper entity validation.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Component
 @RequiredArgsConstructor
 public class MatchMapper {

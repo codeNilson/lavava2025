@@ -22,9 +22,26 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.RoleDTO;
 import io.github.codenilson.lavava2025.mappers.PlayerMapper;
 import io.github.codenilson.lavava2025.services.PlayerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * REST controller responsible for managing player operations.
+ * Provides endpoints for creating, reading, updating, and deleting players,
+ * as well as managing player roles and activation status.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
+@Tag(name = "Players", description = "API for managing players and their accounts")
 @RestController
 @RequestMapping("players")
 @RequiredArgsConstructor
@@ -34,6 +51,14 @@ public class PlayerController {
 
     private final PlayerMapper playerMapper;
 
+    @Operation(
+        summary = "Get all active players",
+        description = "Retrieves a list of all active players in the system"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Active players retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerResponseDTO.class)))
+    })
     @GetMapping
     public ResponseEntity<List<PlayerResponseDTO>> findAllActivePlayers() {
         List<Player> activePlayers = playerService.findActivePlayers();
@@ -43,8 +68,19 @@ public class PlayerController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+        summary = "Create new player",
+        description = "Creates a new player account in the system"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Player created successfully",
+            content = @Content(schema = @Schema(implementation = PlayerResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid player data provided"),
+        @ApiResponse(responseCode = "409", description = "Username already exists")
+    })
     @PostMapping
-    public ResponseEntity<PlayerResponseDTO> createPlayer(@RequestBody @Valid PlayerCreateDTO player) {
+    public ResponseEntity<PlayerResponseDTO> createPlayer(
+            @Parameter(description = "Player creation data") @RequestBody @Valid PlayerCreateDTO player) {
         Player playerEntity = playerMapper.toEntity(player);
         Player savedPlayer = playerService.save(playerEntity);
         PlayerResponseDTO response = new PlayerResponseDTO(savedPlayer);

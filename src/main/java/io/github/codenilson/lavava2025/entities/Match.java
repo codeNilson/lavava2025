@@ -28,6 +28,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Entity representing a Valorant match between two teams.
+ * Tracks match details including teams, map, score, MVP, ACE player,
+ * and individual player performances within the match.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(uniqueConstraints = {

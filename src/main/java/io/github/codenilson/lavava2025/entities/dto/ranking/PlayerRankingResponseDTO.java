@@ -8,6 +8,15 @@ import org.springframework.beans.BeanUtils;
 import io.github.codenilson.lavava2025.entities.PlayerRanking;
 import lombok.Data;
 
+/**
+ * Data Transfer Object for player ranking responses.
+ * Contains comprehensive ranking information including player details,
+ * statistics, and performance metrics for API responses.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Data
 public class PlayerRankingResponseDTO {
 

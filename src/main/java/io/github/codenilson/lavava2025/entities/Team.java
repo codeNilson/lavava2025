@@ -25,6 +25,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Entity representing a team in a Valorant match.
+ * Teams are match-specific entities that contain players and their performances
+ * for a particular match. Each team has a score and is linked to a specific match.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @ToString

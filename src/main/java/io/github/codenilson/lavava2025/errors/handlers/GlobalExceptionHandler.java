@@ -17,6 +17,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import io.github.codenilson.lavava2025.errors.exceptions.UsernameAlreadyExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Global exception handler for the Lavava2025 application.
+ * Provides centralized error handling for all REST controllers,
+ * formatting exceptions into consistent JSON responses with appropriate HTTP status codes.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

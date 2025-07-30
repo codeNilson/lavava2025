@@ -18,6 +18,17 @@ import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Serviço responsável pela gestão de jogadores.
+ * 
+ * Este serviço gerencia todas as operações relacionadas aos jogadores,
+ * incluindo criação, autenticação, atualização de dados, gestão de roles
+ * e operações de ativação/desativação de contas.
+ * 
+ * @author lavava2025
+ * @version 1.0
+ * @since 2025
+ */
 @Service
 @RequiredArgsConstructor
 public class PlayerService {
@@ -25,10 +36,23 @@ public class PlayerService {
     private final PasswordEncoder encoder;
     private final PlayerMapper playerMapper;
 
+    /**
+     * Busca todos os jogadores ativos no sistema.
+     * 
+     * @return lista de jogadores ativos
+     */
     public List<Player> findActivePlayers() {
         return playerRepository.findByActiveTrue();
     }
 
+    /**
+     * Salva um novo jogador no sistema.
+     * A senha será criptografada e o role PLAYER será adicionado automaticamente.
+     * 
+     * @param player o jogador a ser salvo
+     * @return o jogador salvo
+     * @throws UsernameAlreadyExistsException se o username já existir
+     */
     public Player save(Player player) {
 
         if (existsByUsername(player.getUsername())) {
@@ -42,41 +66,96 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
+    /**
+     * Busca um jogador pelo ID (incluindo inativos).
+     * 
+     * @param id ID do jogador
+     * @return o jogador encontrado
+     * @throws EntityNotFoundException se o jogador não for encontrado
+     */
     public Player findById(UUID id) {
         Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
         return player;
     }
 
+    /**
+     * Busca um jogador ativo pelo ID.
+     * 
+     * @param id ID do jogador
+     * @return o jogador ativo encontrado
+     * @throws EntityNotFoundException se o jogador não for encontrado ou estiver inativo
+     */
     public Player findByIdAndActiveTrue(UUID id) {
         return playerRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + id));
     }
 
+    /**
+     * Busca um jogador pelo username (incluindo inativos).
+     * 
+     * @param username username do jogador
+     * @return o jogador encontrado
+     * @throws EntityNotFoundException se o jogador não for encontrado
+     */
     public Player findByUsername(String username) {
         return playerRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with username: " + username));
     }
 
+    /**
+     * Busca um jogador ativo pelo username.
+     * 
+     * @param username username do jogador
+     * @return o jogador ativo encontrado
+     * @throws EntityNotFoundException se o jogador não for encontrado ou estiver inativo
+     */
     public Player findByUsernameAndActiveTrue(String username) {
         return playerRepository.findByUsernameAndActiveTrue(username)
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with username: " + username));
     }
 
+    /**
+     * Remove um jogador do sistema (desativa com motivo "Deleted by user").
+     * 
+     * @param player o jogador a ser removido
+     */
     public void delete(Player player) {
         deactivatePlayerWithReason(player, "Deleted by user");
     }
 
+    /**
+     * Atualiza os dados de um jogador ativo.
+     * 
+     * @param id ID do jogador
+     * @param dto dados de atualização
+     * @return DTO com os dados atualizados do jogador
+     */
     public PlayerResponseDTO updatePlayer(UUID id, PlayerUpdateDTO dto) {
         Player player = findByIdAndActiveTrue(id);
 
         return updatePlayerData(player, dto);
     }
 
+    /**
+     * Atualiza os dados de um jogador.
+     * 
+     * @param player o jogador a ser atualizado
+     * @param dto dados de atualização
+     * @return DTO com os dados atualizados do jogador
+     */
     public PlayerResponseDTO updatePlayer(Player player, PlayerUpdateDTO dto) {
         return updatePlayerData(player, dto);
     }
 
+    /**
+     * Método interno para atualizar dados do jogador.
+     * Se uma nova senha for fornecida, ela será criptografada.
+     * 
+     * @param player o jogador a ser atualizado
+     * @param dto dados de atualização
+     * @return DTO com os dados atualizados do jogador
+     */
     private PlayerResponseDTO updatePlayerData(Player player, PlayerUpdateDTO dto) {
         if (dto.getPassword() != null) {
             dto.setPassword(encoder.encode(dto.getPassword()));
@@ -87,12 +166,25 @@ public class PlayerService {
         return new PlayerResponseDTO(playerEntity);
     }
 
+    /**
+     * Adiciona roles a um jogador.
+     * 
+     * @param id ID do jogador
+     * @param roles conjunto de roles a serem adicionadas
+     */
     public void addRoles(UUID id, Set<Roles> roles) {
         Player player = findById(id);
         player.getRoles().addAll(roles);
         playerRepository.save(player);
     }
 
+    /**
+     * Remove roles de um jogador.
+     * O role PLAYER não pode ser removido para manter a integridade do sistema.
+     * 
+     * @param id ID do jogador
+     * @param roles conjunto de roles a serem removidas
+     */
     public void removeRoles(UUID id, Set<Roles> roles) {
         Player player = findById(id);
         roles.removeIf(role -> role.equals(Roles.PLAYER)); // Prevent removing PLAYER role
@@ -100,24 +192,56 @@ public class PlayerService {
         playerRepository.save(player);
     }
 
+    /**
+     * Verifica se existe um jogador com o username especificado.
+     * 
+     * @param username username a ser verificado
+     * @return true se existir, false caso contrário
+     */
     public boolean existsByUsername(String username) {
         return playerRepository.existsByUsername(username);
     }
 
+    /**
+     * Busca jogadores ativos pelos IDs fornecidos.
+     * 
+     * @param playerIds lista de IDs dos jogadores
+     * @return lista de jogadores ativos encontrados
+     */
     public List<Player> findPlayersByIds(List<UUID> playerIds) {
         return playerRepository.findAllByIdInAndActiveTrue(playerIds);
     }
 
     // ========== ADMIN METHODS FOR MANAGING ALL PLAYERS ==========
 
+    /**
+     * Busca todos os jogadores do sistema (incluindo inativos).
+     * Método restrito para administradores.
+     * 
+     * @return lista de todos os jogadores
+     */
     public List<Player> findAllPlayers() {
         return playerRepository.findAll();
     }
 
+    /**
+     * Busca todos os jogadores inativos.
+     * Método restrito para administradores.
+     * 
+     * @return lista de jogadores inativos
+     */
     public List<Player> findInactivePlayers() {
         return playerRepository.findByActiveFalse();
     }
 
+    /**
+     * Ativa um jogador inativo.
+     * Remove a data e motivo de inativação.
+     * Método restrito para administradores.
+     * 
+     * @param id ID do jogador a ser ativado
+     * @return DTO com os dados do jogador ativado
+     */
     public PlayerResponseDTO activatePlayer(UUID id) {
         Player player = findById(id);
         player.setActive(true);
@@ -127,15 +251,35 @@ public class PlayerService {
         return new PlayerResponseDTO(player);
     }
 
+    /**
+     * Desativa um jogador com motivo padrão "Deactivated by admin".
+     * Método restrito para administradores.
+     * 
+     * @param id ID do jogador a ser desativado
+     */
     public void deactivatePlayer(UUID id) {
         deactivatePlayer(id, "Deactivated by admin");
     }
 
+    /**
+     * Desativa um jogador com motivo específico.
+     * Método restrito para administradores.
+     * 
+     * @param id ID do jogador a ser desativado
+     * @param reason motivo da desativação
+     */
     public void deactivatePlayer(UUID id, String reason) {
         Player player = findById(id);
         deactivatePlayerWithReason(player, reason);
     }
 
+    /**
+     * Método interno para desativar um jogador com motivo.
+     * Define o status como inativo, data de inativação e motivo.
+     * 
+     * @param player o jogador a ser desativado
+     * @param reason motivo da desativação
+     */
     private void deactivatePlayerWithReason(Player player, String reason) {
         player.setActive(false);
         player.setInactivatedAt(LocalDateTime.now());

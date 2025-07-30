@@ -16,6 +16,15 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * Security configuration class for the Lavava2025 application.
+ * Configures authentication, authorization, CORS settings, and password encoding
+ * for development and test environments.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Configuration
 @EnableMethodSecurity
 @Profile({"dev", "test"})

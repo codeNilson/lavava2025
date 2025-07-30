@@ -14,6 +14,15 @@ import org.springframework.stereotype.Repository;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.PlayerRanking;
 
+/**
+ * Repository interface for PlayerRanking entity operations.
+ * Provides data access methods for player rankings including
+ * season-specific queries, top rankings, and player statistics.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Repository
 public interface PlayerRankingRepository extends JpaRepository<PlayerRanking, UUID> {
 

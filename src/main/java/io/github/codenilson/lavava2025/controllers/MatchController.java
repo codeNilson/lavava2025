@@ -19,9 +19,25 @@ import io.github.codenilson.lavava2025.entities.dto.match.MatchResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
 import io.github.codenilson.lavava2025.mappers.MatchMapper;
 import io.github.codenilson.lavava2025.services.MatchService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * REST controller responsible for managing match operations.
+ * Provides endpoints for creating, reading, updating, and deleting matches.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
+@Tag(name = "Matches", description = "API for managing Valorant matches")
 @RestController
 @RequestMapping("matches")
 @RequiredArgsConstructor
@@ -30,6 +46,19 @@ public class MatchController {
 
     private final MatchMapper matchMapper;
 
+    /**
+     * Retrieves all matches in the system.
+     * 
+     * @return ResponseEntity containing a list of all matches as DTOs
+     */
+    @Operation(
+        summary = "Get all matches",
+        description = "Retrieves a list of all matches in the system"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Matches retrieved successfully",
+            content = @Content(schema = @Schema(implementation = MatchResponseDTO.class)))
+    })
     @GetMapping
     public ResponseEntity<List<MatchResponseDTO>> findAllMatches() {
         List<Match> matches = matchService.findAllMatches();
@@ -39,31 +68,96 @@ public class MatchController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves a specific match by its unique identifier.
+     * 
+     * @param id the unique identifier of the match
+     * @return ResponseEntity containing the match data as DTO
+     */
+    @Operation(
+        summary = "Get match by ID",
+        description = "Retrieves a specific match by its unique identifier"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Match found and retrieved successfully",
+            content = @Content(schema = @Schema(implementation = MatchResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Match not found")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<MatchResponseDTO> findById(@PathVariable UUID id) {
+    public ResponseEntity<MatchResponseDTO> findById(
+            @Parameter(description = "Match unique identifier") @PathVariable UUID id) {
         Match match = matchService.findById(id);
         MatchResponseDTO response = new MatchResponseDTO(match);
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Creates a new match in the system.
+     * 
+     * @param matchDTO the data transfer object containing match information
+     * @return ResponseEntity with status 201 and the created match as DTO
+     */
+    @Operation(
+        summary = "Create new match",
+        description = "Creates a new match in the system"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Match created successfully",
+            content = @Content(schema = @Schema(implementation = MatchResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid match data provided")
+    })
     @PostMapping
-    public ResponseEntity<MatchResponseDTO> createMatch(@RequestBody @Valid MatchCreateDTO matchDTO) {
+    public ResponseEntity<MatchResponseDTO> createMatch(
+            @Parameter(description = "Match creation data") @RequestBody @Valid MatchCreateDTO matchDTO) {
         Match match = matchMapper.toEntity(matchDTO);
         matchService.save(match);
         MatchResponseDTO response = new MatchResponseDTO(match);
         return ResponseEntity.status(201).body(response);
     }
 
+    /**
+     * Updates an existing match with new information.
+     * 
+     * @param id the unique identifier of the match to update
+     * @param matchDTO the data transfer object containing updated match information
+     * @return ResponseEntity containing the updated match as DTO
+     */
+    @Operation(
+        summary = "Update existing match",
+        description = "Updates an existing match with new information"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Match updated successfully",
+            content = @Content(schema = @Schema(implementation = MatchResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid match data provided"),
+        @ApiResponse(responseCode = "404", description = "Match not found")
+    })
     @PatchMapping("/{id}")
-    public ResponseEntity<MatchResponseDTO> updateMatch(@PathVariable UUID id,
-            @RequestBody @Valid MatchUpdateDTO matchDTO) {
+    public ResponseEntity<MatchResponseDTO> updateMatch(
+            @Parameter(description = "Match unique identifier") @PathVariable UUID id,
+            @Parameter(description = "Match update data") @RequestBody @Valid MatchUpdateDTO matchDTO) {
         Match match = matchMapper.updateMatch(id, matchDTO);
         matchService.save(match);
         return ResponseEntity.ok(new MatchResponseDTO(match));
     }
 
+    /**
+     * Deletes a match from the system.
+     * 
+     * @param id the unique identifier of the match to delete
+     * @return ResponseEntity with status 204 (No Content)
+     */
+    @Operation(
+        summary = "Delete match",
+        description = "Deletes a match from the system"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Match deleted successfully"),
+        @ApiResponse(responseCode = "404", description = "Match not found")
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMatch(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteMatch(
+            @Parameter(description = "Match unique identifier") @PathVariable UUID id) {
         matchService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

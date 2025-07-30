@@ -30,7 +30,6 @@ import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
-import io.github.codenilson.lavava2025.mappers.MatchMapper;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
@@ -51,9 +50,6 @@ public class MatchControllerTest {
 
     @Autowired
     private MatchService matchService;
-
-    @Autowired
-    private MatchMapper matchMapper;
 
     @Autowired
     private PlayerService playerService;

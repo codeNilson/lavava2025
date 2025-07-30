@@ -22,8 +22,27 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.codenilson.lavava2025.entities.dto.ranking.PlayerRankingResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.ranking.RankingUpdateRequestDTO;
 import io.github.codenilson.lavava2025.services.PlayerRankingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+/**
+ * Controller REST para gestão do sistema de ranking dos jogadores.
+ * 
+ * Este controller fornece endpoints para consulta de leaderboards,
+ * rankings individuais, operações administrativas sobre rankings
+ * e gestão de temporadas.
+ * 
+ * @author lavava2025
+ * @version 1.0
+ * @since 2025
+ */
+@Tag(name = "Player Rankings", description = "API for managing player rankings and leaderboards")
 @RestController
 @RequestMapping("rankings")
 public class PlayerRankingController {
@@ -34,9 +53,18 @@ public class PlayerRankingController {
     /**
      * Get current season leaderboard with pagination
      */
+    @Operation(
+        summary = "Get current season leaderboard",
+        description = "Returns the ranking of players from the current season with pagination support"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Leaderboard retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class)))
+    })
     @GetMapping("/leaderboard")
     public ResponseEntity<Page<PlayerRankingResponseDTO>> getCurrentSeasonLeaderboard(
-            @PageableDefault(size = 10, sort = "totalPoints") Pageable pageable) {
+            @Parameter(description = "Pagination parameters") 
+            @PageableDefault(size = 10) Pageable pageable) {
 
         Page<PlayerRankingResponseDTO> leaderboard = playerRankingService.getCurrentSeasonLeaderboard(pageable);
         return ResponseEntity.ok(leaderboard);
@@ -45,10 +73,15 @@ public class PlayerRankingController {
     /**
      * Get leaderboard for a specific season with pagination
      */
+    @Operation(
+        summary = "Get leaderboard for specific season",
+        description = "Returns the ranking of players from a specific season with pagination support"
+    )
     @GetMapping("/leaderboard/{season}")
     public ResponseEntity<Page<PlayerRankingResponseDTO>> getSeasonLeaderboard(
-            @PathVariable String season,
-            @PageableDefault(size = 10, sort = "totalPoints") Pageable pageable) {
+            @Parameter(description = "Season name") @PathVariable String season,
+            @Parameter(description = "Pagination parameters") 
+            @PageableDefault(size = 10) Pageable pageable) {
 
         Page<PlayerRankingResponseDTO> leaderboard = playerRankingService.getSeasonLeaderboard(season, pageable);
         return ResponseEntity.ok(leaderboard);
@@ -57,8 +90,17 @@ public class PlayerRankingController {
     /**
      * Get top N players from current season
      */
+    @Operation(
+        summary = "Get top players from current season",
+        description = "Returns the top N players from the current season ordered by points"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Top players retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class)))
+    })
     @GetMapping("/top")
     public ResponseEntity<List<PlayerRankingResponseDTO>> getTopPlayers(
+            @Parameter(description = "Maximum number of players to return", example = "10")
             @RequestParam(defaultValue = "10") int limit) {
 
         List<PlayerRankingResponseDTO> topPlayers = playerRankingService.getTopPlayers(limit);
@@ -68,9 +110,18 @@ public class PlayerRankingController {
     /**
      * Get top N players from a specific season
      */
+    @Operation(
+        summary = "Get top players from specific season",
+        description = "Returns the top N players from a specific season ordered by points"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Top players retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class)))
+    })
     @GetMapping("/top/{season}")
     public ResponseEntity<List<PlayerRankingResponseDTO>> getTopPlayersBySeason(
-            @PathVariable String season,
+            @Parameter(description = "Season name") @PathVariable String season,
+            @Parameter(description = "Maximum number of players to return", example = "10")
             @RequestParam(defaultValue = "10") int limit) {
 
         List<PlayerRankingResponseDTO> topPlayers = playerRankingService.getTopPlayersBySeason(season, limit);
@@ -80,8 +131,18 @@ public class PlayerRankingController {
     /**
      * Get ranking for a specific player in current season
      */
+    @Operation(
+        summary = "Get player ranking in current season",
+        description = "Returns the ranking and statistics of a specific player in the current season"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player ranking retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Player not found or no ranking in current season")
+    })
     @GetMapping("/player/{playerId}")
-    public ResponseEntity<PlayerRankingResponseDTO> getPlayerRanking(@PathVariable UUID playerId) {
+    public ResponseEntity<PlayerRankingResponseDTO> getPlayerRanking(
+            @Parameter(description = "Player unique identifier") @PathVariable UUID playerId) {
         Optional<PlayerRankingResponseDTO> ranking = playerRankingService.getPlayerRanking(playerId);
         return ranking.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -90,10 +151,19 @@ public class PlayerRankingController {
     /**
      * Get ranking for a specific player in a specific season
      */
+    @Operation(
+        summary = "Get player ranking in specific season",
+        description = "Returns the ranking and statistics of a specific player in a specific season"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player ranking retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Player not found or no ranking in specified season")
+    })
     @GetMapping("/player/{playerId}/season/{season}")
     public ResponseEntity<PlayerRankingResponseDTO> getPlayerRankingBySeason(
-            @PathVariable UUID playerId,
-            @PathVariable String season) {
+            @Parameter(description = "Player unique identifier") @PathVariable UUID playerId,
+            @Parameter(description = "Season name") @PathVariable String season) {
 
         Optional<PlayerRankingResponseDTO> ranking = playerRankingService.getPlayerRanking(playerId, season);
         return ranking.map(ResponseEntity::ok)
@@ -103,6 +173,13 @@ public class PlayerRankingController {
     /**
      * Get all available seasons with ranking data
      */
+    @Operation(
+        summary = "Get all available seasons",
+        description = "Returns a list of all seasons that have ranking data"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Available seasons retrieved successfully")
+    })
     @GetMapping("/seasons")
     public ResponseEntity<List<String>> getAvailableSeasons() {
         List<String> seasons = playerRankingService.getAvailableSeasons();
@@ -112,10 +189,21 @@ public class PlayerRankingController {
     /**
      * Add bonus points to a player (MVP, Ace, etc.) - Admin only
      */
+    @Operation(
+        summary = "Add bonus points to player (Admin only)",
+        description = "Allows adding extra points to a player for special performance (MVP, Ace, etc.)"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Bonus points added successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Access denied - admins only"),
+        @ApiResponse(responseCode = "404", description = "Player not found")
+    })
     @PostMapping("/player/{playerId}/bonus")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PlayerRankingResponseDTO> addBonusPoints(
-            @PathVariable UUID playerId,
+            @Parameter(description = "Player unique identifier") @PathVariable UUID playerId,
+            @Parameter(description = "Ranking update request data")
             @Valid @RequestBody RankingUpdateRequestDTO request) {
 
         String season = request.getSeason() != null ? request.getSeason() : "2025";
@@ -131,9 +219,18 @@ public class PlayerRankingController {
     /**
      * Reset all rankings for a specific season - Admin only
      */
+    @Operation(
+        summary = "Reset season rankings (Admin only)",
+        description = "Resets all player rankings for a specific season"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Season rankings reset successfully"),
+        @ApiResponse(responseCode = "403", description = "Access denied - admins only")
+    })
     @DeleteMapping("/season/{season}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> resetSeasonRankings(@PathVariable String season) {
+    public ResponseEntity<Void> resetSeasonRankings(
+            @Parameter(description = "Season name") @PathVariable String season) {
         playerRankingService.resetSeasonRankings(season);
         return ResponseEntity.ok().build();
     }
@@ -141,10 +238,21 @@ public class PlayerRankingController {
     /**
      * Manually update player ranking after a match - Admin only
      */
+    @Operation(
+        summary = "Manually update player ranking (Admin only)",
+        description = "Manually updates a player's ranking after a match result"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player ranking updated successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Access denied - admins only"),
+        @ApiResponse(responseCode = "404", description = "Player not found")
+    })
     @PostMapping("/player/{playerId}/update")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PlayerRankingResponseDTO> updatePlayerRanking(
-            @PathVariable UUID playerId,
+            @Parameter(description = "Player unique identifier") @PathVariable UUID playerId,
+            @Parameter(description = "Ranking update request data")
             @Valid @RequestBody RankingUpdateRequestDTO request) {
 
         String season = request.getSeason() != null ? request.getSeason() : "2025";

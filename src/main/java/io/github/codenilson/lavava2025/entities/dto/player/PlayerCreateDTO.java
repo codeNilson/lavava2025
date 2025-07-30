@@ -5,6 +5,15 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+/**
+ * Data Transfer Object for creating new players.
+ * Contains the required information to register a new player in the system,
+ * including username and password with validation constraints.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Data
 public class PlayerCreateDTO {
 

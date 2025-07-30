@@ -26,6 +26,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Entity representing a player in the Valorant tournament system.
+ * Contains player information including authentication details, profile data,
+ * team memberships, performance records, and security roles.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @ToString

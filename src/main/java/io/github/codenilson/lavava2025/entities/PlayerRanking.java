@@ -22,6 +22,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Entity representing a player's ranking in a specific season.
+ * This entity tracks points, match statistics, and win rates for players
+ * within a particular season. Each player can have only one ranking per season.
+ * 
+ * @author codenilson
+ * @version 1.0
+ * @since 2025-01-01
+ */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "player_rankings", uniqueConstraints = {
@@ -89,9 +98,18 @@ public class PlayerRanking {
     @Getter
     private LocalDateTime updatedAt;
 
+    /**
+     * Default constructor for JPA.
+     */
     public PlayerRanking() {
     }
 
+    /**
+     * Creates a new PlayerRanking for a specific player and season.
+     * 
+     * @param player the player associated with this ranking
+     * @param season the season identifier for this ranking
+     */
     public PlayerRanking(Player player, String season) {
         this.player = player;
         this.season = season;
@@ -99,7 +117,8 @@ public class PlayerRanking {
     }
 
     /**
-     * Adds points to the player's total score
+     * Adds points to the player's total score and updates the last updated timestamp.
+     * 
      * @param points Points to add (typically 3 for a win)
      */
     public void addPoints(int points) {
@@ -108,7 +127,9 @@ public class PlayerRanking {
     }
 
     /**
-     * Records a match result for this player
+     * Records a match result for this player, updating statistics and points.
+     * For wins, adds 3 points to the total score.
+     * 
      * @param won Whether the player won the match
      */
     public void recordMatch(boolean won) {
@@ -122,8 +143,9 @@ public class PlayerRanking {
     }
 
     /**
-     * Updates the win rate based on current statistics
-     * Rounds to 2 decimal places (e.g., 0.6666... becomes 0.67)
+     * Updates the win rate based on current statistics.
+     * Calculates the percentage of matches won and rounds to 2 decimal places.
+     * If no matches have been played, win rate is set to 0.0.
      */
     private void updateWinRate() {
         if (this.matchesPlayed > 0) {
