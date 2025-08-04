@@ -160,16 +160,14 @@ public class PlayerControllerTest {
         public void testCreatePlayer_InvalidPassword() throws Exception {
                 PlayerCreateDTO invalidPlayer = new PlayerCreateDTO();
                 invalidPlayer.setUsername("invalidPlayer");
-                invalidPlayer.setPassword("Abc@1");
+                invalidPlayer.setPassword("Abc@1"); // Invalid password (too short)
 
                 mockMvc.perform(post("/players")
                                 .with(user(playerDetails))
                                 .contentType("application/json")
                                 .content(new ObjectMapper().writeValueAsString(invalidPlayer)))
                                 .andExpect(status().isBadRequest())
-                                .andExpect(jsonPath("$.error").value("Validation Error"))
-                                .andExpect(jsonPath("$.errors.password")
-                                                .value("Password must be between 8 and 20 characters"))
+                                .andExpect(jsonPath("$.message").value("Password must be between 8 and 20 characters"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));
         }
@@ -196,15 +194,14 @@ public class PlayerControllerTest {
         public void testCreatePlayer_PasswordWithoutSpecialCharacter() throws Exception {
                 PlayerCreateDTO invalidPlayer = new PlayerCreateDTO();
                 invalidPlayer.setUsername("invalidPlayer");
-                invalidPlayer.setPassword("New123456");
+                invalidPlayer.setPassword("New123456"); // Invalid password (no special character)
 
                 mockMvc.perform(post("/players")
                                 .with(user(playerDetails))
                                 .contentType("application/json")
                                 .content(new ObjectMapper().writeValueAsString(invalidPlayer)))
                                 .andExpect(status().isBadRequest())
-                                .andExpect(jsonPath("$.error").value("Validation Error"))
-                                .andExpect(jsonPath("$.errors.password").value(
+                                .andExpect(jsonPath("$.message").value(
                                                 "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));

@@ -69,6 +69,17 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("error", "Invalid Argument");
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<Object> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
         Map<String, Object> response = new HashMap<>();

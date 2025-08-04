@@ -55,7 +55,7 @@ class PlayerServiceTest {
         // Given
         Player player = new Player();
         player.setUsername("newPlayer");
-        player.setPassword("123456");
+        player.setPassword("Valid@123"); // Use valid password format
 
         Player playerEntity = new Player();
         playerEntity.setId(UUID.randomUUID());
@@ -64,7 +64,7 @@ class PlayerServiceTest {
         playerEntity.getRoles().add(Roles.PLAYER);
 
         when(playerRepository.existsByUsername("newPlayer")).thenReturn(false);
-        when(encoder.encode("123456")).thenReturn("encodedPassword");
+        when(encoder.encode("Valid@123")).thenReturn("encodedPassword");
         when(playerRepository.save(any(Player.class))).thenReturn(playerEntity);
 
         // When
@@ -75,7 +75,7 @@ class PlayerServiceTest {
         assertInstanceOf(Player.class, response);
         assertTrue(response.getRoles().contains(Roles.PLAYER));
 
-        verify(encoder).encode("123456");
+        verify(encoder).encode("Valid@123");
         verify(playerRepository).existsByUsername("newPlayer");
         verify(playerRepository).save(any(Player.class));
     }
@@ -160,7 +160,7 @@ class PlayerServiceTest {
         // Given
         UUID playerId = UUID.randomUUID();
         PlayerUpdateDTO dto = new PlayerUpdateDTO();
-        dto.setPassword("newPassword");
+        dto.setPassword("NewPass@123"); // Use valid password format
         dto.setActive(false);
 
         Player player = new Player();

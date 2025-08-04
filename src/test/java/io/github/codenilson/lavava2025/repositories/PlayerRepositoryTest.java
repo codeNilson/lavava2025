@@ -3,6 +3,7 @@ package io.github.codenilson.lavava2025.repositories;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -195,15 +196,16 @@ public class PlayerRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should not allow null password")
-    public void testPlayerPasswordShouldNotBeNull() {
+    @DisplayName("Should allow null password")
+    public void testPlayerPasswordCanBeNull() {
         Player player = new Player();
-        player.setUsername("testUser");
+        player.setUsername("testUserNullPassword");
         player.setPassword(null);
 
-        assertThrows(DataIntegrityViolationException.class, () -> {
-            playerRepository.saveAndFlush(player);
-        });
+        // Should not throw exception since password is now optional
+        Player saved = playerRepository.saveAndFlush(player);
+        assertNotNull(saved);
+        assertNull(saved.getPassword());
     }
 
     @Test

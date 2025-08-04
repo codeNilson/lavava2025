@@ -52,11 +52,16 @@ public class Player {
     @Setter
     private String username;
 
-    @Comment("Password of the player, should be hashed before saving.")
-    @Column(nullable = false)
+    @Comment("Password of the player, optional field that can be set later.")
+    @Column(nullable = true)
     @Getter
     @Setter
     private String password;
+
+    @Column(nullable = true)
+    @Getter
+    @Setter
+    private String discordId;
 
     @Comment("Set of roles assigned to the player, e.g., ADMIN, PLAYER, etc.")
     @ElementCollection(fetch = FetchType.EAGER)
@@ -104,6 +109,10 @@ public class Player {
     public Player() {
     }
 
+    public Player(String username) {
+        this.username = username;
+    }
+
     public Player(String username, String password) {
         this.username = username;
         this.password = password;
@@ -140,7 +149,4 @@ public class Player {
         return true;
     }
 
-    
-
-    
 }

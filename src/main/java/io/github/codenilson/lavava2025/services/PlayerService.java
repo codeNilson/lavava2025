@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,8 +60,12 @@ public class PlayerService {
             throw new UsernameAlreadyExistsException(player.getUsername());
         }
 
-        String encodedPassword = encoder.encode(player.getPassword());
-        player.setPassword(encodedPassword);
+        // Validate and encode password only if it's provided
+        if (player.getPassword() != null && !player.getPassword().trim().isEmpty()) {
+            validatePassword(player.getPassword());
+            String encodedPassword = encoder.encode(player.getPassword());
+            player.setPassword(encodedPassword);
+        }
 
         player.getRoles().add(Roles.PLAYER); // Ensure PLAYER role is added
         return playerRepository.save(player);
@@ -157,7 +162,8 @@ public class PlayerService {
      * @return DTO com os dados atualizados do jogador
      */
     private PlayerResponseDTO updatePlayerData(Player player, PlayerUpdateDTO dto) {
-        if (dto.getPassword() != null) {
+        if (dto.getPassword() != null && !dto.getPassword().trim().isEmpty()) {
+            validatePassword(dto.getPassword());
             dto.setPassword(encoder.encode(dto.getPassword()));
         }
         Player playerEntity = playerMapper.toEntity(player, dto);
@@ -285,6 +291,27 @@ public class PlayerService {
         player.setInactivatedAt(LocalDateTime.now());
         player.setInactivationReason(reason);
         playerRepository.save(player);
+    }
+
+    /**
+     * Valida a senha de acordo com os critérios de segurança.
+     * 
+     * @param password a senha a ser validada
+     * @throws IllegalArgumentException se a senha não atender aos critérios
+     */
+    private void validatePassword(String password) {
+        if (password == null || password.trim().isEmpty()) {
+            return; // Password is optional
+        }
+        
+        if (password.length() < 8 || password.length() > 20) {
+            throw new IllegalArgumentException("Password must be between 8 and 20 characters");
+        }
+        
+        Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$");
+        if (!pattern.matcher(password).matches()) {
+            throw new IllegalArgumentException("Password must have at least one uppercase letter, one lowercase letter, one number, and one special character");
+        }
     }
 
 }

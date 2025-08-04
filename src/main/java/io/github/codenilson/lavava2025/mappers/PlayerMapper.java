@@ -11,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Mapper component responsible for converting between Player entities and DTOs.
- * Handles the transformation of data transfer objects to entities and vice versa,
+ * Handles the transformation of data transfer objects to entities and vice
+ * versa,
  * including validation for duplicate usernames during updates.
  * 
  * @author codenilson
@@ -28,6 +29,7 @@ public class PlayerMapper {
         Player player = new Player();
         player.setUsername(playerCreateDTO.getUsername());
         player.setPassword(playerCreateDTO.getPassword());
+        player.setDiscordId(playerCreateDTO.getDiscordId());
         return player;
     }
 

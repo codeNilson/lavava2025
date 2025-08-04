@@ -1,5 +1,6 @@
 package io.github.codenilson.lavava2025.dto.players;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
@@ -73,81 +74,80 @@ public class PlayerCreateDTOTest {
         dto.setPassword("");
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
-        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("Password is required")));
+        // Password is now optional, so blank password should be valid
+        assertFalse(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
     void testPasswordTooShort() {
+        // Since password validation is now handled at service layer, 
+        // DTO validation should not fail for password format
         PlayerCreateDTO dto = new PlayerCreateDTO();
         dto.setUsername("ValidUser");
         dto.setPassword("A@1a");
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
-        assertTrue(violations.stream()
-                .anyMatch(v -> v.getMessage().contains("Password must be between 8 and 20 characters")));
+        assertFalse(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
     void testPasswordMissingUppercase() {
+        // Since password validation is now handled at service layer, 
+        // DTO validation should not fail for password format
         PlayerCreateDTO dto = new PlayerCreateDTO();
         dto.setUsername("ValidUser");
         dto.setPassword("valid@123");
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
-        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains(
-                "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character")));
+        assertFalse(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
     void testPasswordMissingLowercase() {
+        // Since password validation is now handled at service layer, 
+        // DTO validation should not fail for password format
         PlayerCreateDTO dto = new PlayerCreateDTO();
         dto.setUsername("ValidUser");
         dto.setPassword("VALID@123");
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
-        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains(
-                "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character")));
+        assertFalse(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
     void testPasswordMissingNumber() {
+        // Since password validation is now handled at service layer, 
+        // DTO validation should not fail for password format
         PlayerCreateDTO dto = new PlayerCreateDTO();
         dto.setUsername("ValidUser");
         dto.setPassword("Valid@abc");
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
-        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains(
-                "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character")));
+        assertFalse(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
     void testPasswordMissingSpecialCharacter() {
+        // Since password validation is now handled at service layer, 
+        // DTO validation should not fail for password format
         PlayerCreateDTO dto = new PlayerCreateDTO();
         dto.setUsername("ValidUser");
         dto.setPassword("Valid1234");
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
-        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains(
-                "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character")));
+        assertFalse(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
     void testPasswordTooLong() {
+        // Since password validation is now handled at service layer, 
+        // DTO validation should not fail for password format
         PlayerCreateDTO dto = new PlayerCreateDTO();
         dto.setUsername("ValidUser");
         dto.setPassword("Valid@12345678901234567890");
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
-
-        assertTrue(violations.stream()
-                .anyMatch(v -> v.getMessage().contains("Password must be between 8 and 20 characters")));
+        assertFalse(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("password")));
     }
 
     @Test
