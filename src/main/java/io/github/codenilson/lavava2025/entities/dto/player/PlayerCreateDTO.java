@@ -20,7 +20,7 @@ public class PlayerCreateDTO {
     @Size(max = 15, min = 4, message = "Username must be between 4 and 15 characters")
     private String username;
 
-    private String discordId;
+    private Long discordId;
 
     private String password;
 

@@ -18,6 +18,8 @@ public class PlayerResponseDTO {
 
     private String username;
 
+    private Long discordId;
+
     private boolean active;
 
     private Set<Roles> roles = new HashSet<>();
