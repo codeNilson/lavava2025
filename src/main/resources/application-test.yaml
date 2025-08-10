@@ -8,10 +8,17 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: "update"
+      ddl-auto: "create-drop"
+    defer-datasource-initialization: true
     properties:
       hibernate:
         format_sql: true
+        hbm2ddl:
+          import_files_sql_extractor: "org.hibernate.tool.schema.internal.script.MultiLineSqlScriptExtractor"
+  
+  sql:
+    init:
+      mode: "always"
 
   h2:
     console:

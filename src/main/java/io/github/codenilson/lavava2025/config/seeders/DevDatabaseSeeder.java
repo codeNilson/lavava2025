@@ -1,5 +1,7 @@
 package io.github.codenilson.lavava2025.config.seeders;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -8,13 +10,11 @@ import org.springframework.context.annotation.Profile;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.entities.PlayerRanking;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import io.github.codenilson.lavava2025.services.MatchService;
-import io.github.codenilson.lavava2025.services.PlayerRankingService;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import io.github.codenilson.lavava2025.services.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -30,31 +30,29 @@ public class DevDatabaseSeeder implements CommandLineRunner {
 
     private final MatchService matchService;
 
-    private final PlayerRankingService playerRankingService;
-
     private final ValorantMapRepository valorantMapRepository;
 
     @Override
     public void run(String... args) throws Exception {
-        Player player1 = new Player();
-        player1.setUsername("Jogador1");
-        player1.setPassword("Abc@123456");
+        // Create 10 players keeping the username/password pattern
+        List<Player> players = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            Player p = new Player();
+            p.setUsername("Jogador" + i);
+            p.setPassword("Abc@123456");
+            playerService.save(p);
+            players.add(p);
+        }
 
-        Player player2 = new Player();
-        player2.setUsername("Jogador2");
-        player2.setPassword("Abc@123456");
-
-        Player player3 = new Player();
-        player3.setUsername("Jogador3");
-        player3.setPassword("Abc@123456");
-
-        playerService.save(player1);
-        playerService.save(player2);
-        playerService.save(player3);
+        // Assign roles: first player is ADMIN + PLAYER, others are PLAYER
+        Player player1 = players.get(0);
+        Player player2 = players.get(1);
+        Player player3 = players.get(2);
 
         playerService.addRoles(player1.getId(), Set.of(Roles.ADMIN, Roles.PLAYER));
-        playerService.addRoles(player2.getId(), Set.of(Roles.PLAYER));
-        playerService.addRoles(player3.getId(), Set.of(Roles.PLAYER));
+        for (int i = 1; i < players.size(); i++) {
+            playerService.addRoles(players.get(i).getId(), Set.of(Roles.PLAYER));
+        }
 
         var map = valorantMapRepository.findByName("Ascent").orElseGet(() -> {
             var newMap = new ValorantMap();
@@ -75,12 +73,12 @@ public class DevDatabaseSeeder implements CommandLineRunner {
 
         teamService.createTeam(team1);
         teamService.createTeam(team2);
-        
+
         match.setWinner(team1);
         match.setLoser(team2);
         matchService.save(match);
 
-        // Create additional matches for ranking data
+        // Create additional matches for ranking data (using first three players)
         createAdditionalMatches(player1, player2, player3);
 
         System.out.println("Relacionamentos criados com sucesso!");
