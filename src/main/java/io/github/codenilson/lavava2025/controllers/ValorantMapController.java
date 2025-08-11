@@ -10,7 +10,6 @@ import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.services.ValorantMapService;
 import lombok.RequiredArgsConstructor;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,20 +39,15 @@ public class ValorantMapController {
      * @param name Name of the map to search for
      * @return The corresponding map, if found
      */
-    @Operation(
-        summary = "Get map by name",
-        description = "Returns a Valorant map by its exact name."
-    )
+    @Operation(summary = "Get map by name", description = "Returns a Valorant map by its exact name.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Map found successfully",
-            content = @Content(schema = @Schema(implementation = ValorantMap.class))),
-        @ApiResponse(responseCode = "404", description = "Map not found"),
-        @ApiResponse(responseCode = "400", description = "Invalid parameter")
+            @ApiResponse(responseCode = "200", description = "Map found successfully", content = @Content(schema = @Schema(implementation = ValorantMap.class))),
+            @ApiResponse(responseCode = "404", description = "Map not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameter")
     })
     @GetMapping("/{name}")
     public ResponseEntity<ValorantMap> getMapByName(
-            @Parameter(description = "Name of the map to search for", example = "Ascent")
-            @PathVariable String name) {
+            @Parameter(description = "Name of the map to search for", example = "Ascent") @PathVariable String name) {
         ValorantMap map = valorantMapService.findByName(name);
         return ResponseEntity.ok(map);
     }

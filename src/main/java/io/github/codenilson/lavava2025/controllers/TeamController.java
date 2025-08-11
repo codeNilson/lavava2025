@@ -48,13 +48,9 @@ public class TeamController {
 
     private final TeamMapper teamMapper;
 
-    @Operation(
-        summary = "Get all teams",
-        description = "Retrieves a list of all teams in the system"
-    )
+    @Operation(summary = "Get all teams", description = "Retrieves a list of all teams in the system")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Teams retrieved successfully",
-            content = @Content(schema = @Schema(implementation = TeamResponseDTO.class)))
+            @ApiResponse(responseCode = "200", description = "Teams retrieved successfully", content = @Content(schema = @Schema(implementation = TeamResponseDTO.class)))
     })
     @GetMapping
     public ResponseEntity<List<TeamResponseDTO>> findAll() {
@@ -65,14 +61,10 @@ public class TeamController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(
-        summary = "Get team by ID",
-        description = "Retrieves a specific team by its unique identifier"
-    )
+    @Operation(summary = "Get team by ID", description = "Retrieves a specific team by its unique identifier")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Team found and retrieved successfully",
-            content = @Content(schema = @Schema(implementation = TeamResponseDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Team not found")
+            @ApiResponse(responseCode = "200", description = "Team found and retrieved successfully", content = @Content(schema = @Schema(implementation = TeamResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Team not found")
     })
     @GetMapping("/{id}")
     public ResponseEntity<TeamResponseDTO> findById(
@@ -82,13 +74,10 @@ public class TeamController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(
-        summary = "Delete team",
-        description = "Deletes a team from the system"
-    )
+    @Operation(summary = "Delete team", description = "Deletes a team from the system")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Team deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "Team not found")
+            @ApiResponse(responseCode = "204", description = "Team deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Team not found")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(
@@ -98,14 +87,10 @@ public class TeamController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(
-        summary = "Create new team",
-        description = "Creates a new team with automatic player performance generation"
-    )
+    @Operation(summary = "Create new team", description = "Creates a new team with automatic player performance generation")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Team created successfully",
-            content = @Content(schema = @Schema(implementation = TeamResponseDTO.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid team data provided")
+            @ApiResponse(responseCode = "201", description = "Team created successfully", content = @Content(schema = @Schema(implementation = TeamResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid team data provided")
     })
     @PostMapping
     public ResponseEntity<TeamResponseDTO> createTeam(
@@ -116,15 +101,11 @@ public class TeamController {
         return ResponseEntity.status(201).body(response);
     }
 
-    @Operation(
-        summary = "Update team players",
-        description = "Updates the player lineup of a team (add or remove players)"
-    )
+    @Operation(summary = "Update team players", description = "Updates the player lineup of a team (add or remove players)")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Team players updated successfully",
-            content = @Content(schema = @Schema(implementation = TeamResponseDTO.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid update data provided"),
-        @ApiResponse(responseCode = "404", description = "Team not found")
+            @ApiResponse(responseCode = "200", description = "Team players updated successfully", content = @Content(schema = @Schema(implementation = TeamResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid update data provided"),
+            @ApiResponse(responseCode = "404", description = "Team not found")
     })
     @PatchMapping("/{id}/players")
     public ResponseEntity<TeamResponseDTO> updateTeam(
