@@ -179,6 +179,13 @@ public class PlayerController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("username/{username}/activate")
+    public ResponseEntity<PlayerResponseDTO> activatePlayerByUsername(@PathVariable("username") String username) {
+        PlayerResponseDTO response = playerService.activatePlayer(username);
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deactivatePlayerById(@PathVariable("id") UUID id) {
         playerService.deactivatePlayer(id);

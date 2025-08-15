@@ -214,7 +214,7 @@ public class PlayerService {
      * Busca jogadores ativos pelos IDs fornecidos.
      * 
      * @param playerIds lista de IDs dos jogadores
-     * @return lista de jogadores ativos encontrados
+     * @return lista de jogadores ativos encontrados.
      */
     public List<Player> findPlayersByIds(List<UUID> playerIds) {
         return playerRepository.findAllByIdInAndActiveTrue(playerIds);
@@ -240,6 +240,23 @@ public class PlayerService {
      */
     public List<Player> findInactivePlayers() {
         return playerRepository.findByActiveFalse();
+    }
+
+    /**
+     * Ativa um jogador inativo.
+     * Remove a data e motivo de inativação.
+     * Método restrito para administradores.
+     * 
+     * @param username username do jogador a ser ativado
+     * @return DTO com os dados do jogador ativado
+     */
+    public PlayerResponseDTO activatePlayer(String username) {
+        Player player = findByUsername(username);
+        player.setActive(true);
+        player.setInactivatedAt(null);
+        player.setInactivationReason(null);
+        playerRepository.save(player);
+        return new PlayerResponseDTO(player);
     }
 
     /**
