@@ -1,6 +1,9 @@
 package io.github.codenilson.lavava2025.controllers;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -570,6 +573,109 @@ public class PlayerControllerTest {
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.username").value("player4"))
                                 .andExpect(jsonPath("$.active").value(false));
+        }
+
+        @Test
+        public void testDeactivatePlayerById() throws Exception {
+                Player player = playerService.findByUsername("player1");
+
+                mockMvc.perform(delete("/players/{id}", player.getId())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNoContent());
+
+                // Verify that the player was deactivated
+                Player deactivatedPlayer = playerService.findById(player.getId());
+                assertFalse(deactivatedPlayer.isActive());
+                assertNotNull(deactivatedPlayer.getInactivatedAt());
+                assertEquals("Deactivated by admin", deactivatedPlayer.getInactivationReason());
+        }
+
+        @Test
+        public void testDeactivatePlayerById_PlayerNotFound() throws Exception {
+                mockMvc.perform(delete("/players/{id}", "00000000-0000-0000-0000-000000000000")
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.message")
+                                                .value("Player not found with id: 00000000-0000-0000-0000-000000000000"))
+                                .andExpect(jsonPath("$.error").value("Resource Not Found"))
+                                .andExpect(jsonPath("$.timestamp").exists())
+                                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+        }
+
+        @Test
+        public void testDeactivatePlayerById_Unauthenticated() throws Exception {
+                Player player = playerService.findByUsername("player1");
+
+                mockMvc.perform(delete("/players/{id}", player.getId()))
+                                .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        public void testDeactivatePlayerById_UserNotAdmin() throws Exception {
+                Player player = playerService.findByUsername("player1");
+                Player player2 = playerService.findByUsername("player2");
+
+                PlayerDetails playerDetails = new PlayerDetails(player2);
+
+                // Attempting to deactivate player without ADMIN role should be forbidden
+                mockMvc.perform(delete("/players/{id}", player.getId())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isForbidden())
+                                .andExpect(jsonPath("$.timestamp").exists())
+                                .andExpect(jsonPath("$.message").value("Access Denied"))
+                                .andExpect(jsonPath("$.error").value("Forbidden"))
+                                .andExpect(jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()));
+        }
+
+        @Test
+        public void testDeactivatePlayerByUsername() throws Exception {
+                Player player = playerService.findByUsername("player3");
+
+                mockMvc.perform(delete("/players/username/{username}", player.getUsername())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNoContent());
+
+                // Verify that the player was deactivated
+                Player deactivatedPlayer = playerService.findByUsername(player.getUsername());
+                assertFalse(deactivatedPlayer.isActive());
+                assertNotNull(deactivatedPlayer.getInactivatedAt());
+                assertEquals("Deactivated by admin", deactivatedPlayer.getInactivationReason());
+        }
+
+        @Test
+        public void testDeactivatePlayerByUsername_PlayerNotFound() throws Exception {
+                mockMvc.perform(delete("/players/username/{username}", "nonexistent")
+                                .with(user(playerDetails)))
+                                .andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.message").value("Player not found with username: nonexistent"))
+                                .andExpect(jsonPath("$.error").value("Resource Not Found"))
+                                .andExpect(jsonPath("$.timestamp").exists())
+                                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
+        }
+
+        @Test
+        public void testDeactivatePlayerByUsername_Unauthenticated() throws Exception {
+                Player player = playerService.findByUsername("player1");
+
+                mockMvc.perform(delete("/players/username/{username}", player.getUsername()))
+                                .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        public void testDeactivatePlayerByUsername_UserNotAdmin() throws Exception {
+                Player player = playerService.findByUsername("player1");
+                Player player2 = playerService.findByUsername("player2");
+
+                PlayerDetails playerDetails = new PlayerDetails(player2);
+
+                // Attempting to deactivate player without ADMIN role should be forbidden
+                mockMvc.perform(delete("/players/username/{username}", player.getUsername())
+                                .with(user(playerDetails)))
+                                .andExpect(status().isForbidden())
+                                .andExpect(jsonPath("$.timestamp").exists())
+                                .andExpect(jsonPath("$.message").value("Access Denied"))
+                                .andExpect(jsonPath("$.error").value("Forbidden"))
+                                .andExpect(jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()));
         }
 
 }

@@ -51,13 +51,9 @@ public class PlayerController {
 
     private final PlayerMapper playerMapper;
 
-    @Operation(
-        summary = "Get all active players",
-        description = "Retrieves a list of all active players in the system"
-    )
+    @Operation(summary = "Get all active players", description = "Retrieves a list of all active players in the system")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Active players retrieved successfully",
-            content = @Content(schema = @Schema(implementation = PlayerResponseDTO.class)))
+            @ApiResponse(responseCode = "200", description = "Active players retrieved successfully", content = @Content(schema = @Schema(implementation = PlayerResponseDTO.class)))
     })
     @GetMapping
     public ResponseEntity<List<PlayerResponseDTO>> findAllActivePlayers() {
@@ -68,15 +64,11 @@ public class PlayerController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(
-        summary = "Create new player",
-        description = "Creates a new player account in the system"
-    )
+    @Operation(summary = "Create new player", description = "Creates a new player account in the system")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Player created successfully",
-            content = @Content(schema = @Schema(implementation = PlayerResponseDTO.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid player data provided"),
-        @ApiResponse(responseCode = "409", description = "Username already exists")
+            @ApiResponse(responseCode = "201", description = "Player created successfully", content = @Content(schema = @Schema(implementation = PlayerResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid player data provided"),
+            @ApiResponse(responseCode = "409", description = "Username already exists")
     })
     @PostMapping
     public ResponseEntity<PlayerResponseDTO> createPlayer(
@@ -90,17 +82,17 @@ public class PlayerController {
     // @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
     // @DeleteMapping("/id/{id}")
     // public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
-    //     Player player = playerService.findById(id);
-    //     playerService.delete(player);
-    //     return ResponseEntity.noContent().build();
+    // Player player = playerService.findById(id);
+    // playerService.delete(player);
+    // return ResponseEntity.noContent().build();
     // }
 
     // @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
     // @DeleteMapping("/username/{username}")
     // public ResponseEntity<Void> deleteByUsername(@PathVariable String username) {
-    //     Player player = playerService.findByUsername(username);
-    //     playerService.delete(player);
-    //     return ResponseEntity.noContent().build();
+    // Player player = playerService.findByUsername(username);
+    // playerService.delete(player);
+    // return ResponseEntity.noContent().build();
     // }
 
     @GetMapping("/{id}")
