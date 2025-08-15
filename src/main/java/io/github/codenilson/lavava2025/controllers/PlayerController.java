@@ -87,21 +87,21 @@ public class PlayerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
-        Player player = playerService.findById(id);
-        playerService.delete(player);
-        return ResponseEntity.noContent().build();
-    }
+    // @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
+    // @DeleteMapping("/id/{id}")
+    // public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
+    //     Player player = playerService.findById(id);
+    //     playerService.delete(player);
+    //     return ResponseEntity.noContent().build();
+    // }
 
-    @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
-    @DeleteMapping("/username/{username}")
-    public ResponseEntity<Void> deleteByUsername(@PathVariable String username) {
-        Player player = playerService.findByUsername(username);
-        playerService.delete(player);
-        return ResponseEntity.noContent().build();
-    }
+    // @PreAuthorize("@playerDetailsServices.isAdminOrOwner(#id, authentication)")
+    // @DeleteMapping("/username/{username}")
+    // public ResponseEntity<Void> deleteByUsername(@PathVariable String username) {
+    //     Player player = playerService.findByUsername(username);
+    //     playerService.delete(player);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @GetMapping("/{id}")
     public ResponseEntity<PlayerResponseDTO> findById(@PathVariable("id") UUID id) {
@@ -187,9 +187,16 @@ public class PlayerController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivatePlayer(@PathVariable("id") UUID id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deactivatePlayerById(@PathVariable("id") UUID id) {
         playerService.deactivatePlayer(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/username/{username}")
+    public ResponseEntity<Void> deactivatePlayerByUsername(@PathVariable("username") String username) {
+        playerService.deactivatePlayer(username);
         return ResponseEntity.noContent().build();
     }
 

@@ -332,4 +332,114 @@ public class PlayerRepositoryTest {
         // Then
         assertEquals(2, players.size());
     }
+
+    @Test
+    @DisplayName("Should find Player by Discord ID")
+    public void testFindByDiscordIdShouldReturnPlayer() {
+        // Given
+        Long discordId = 123456789L;
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        player.setDiscordId(discordId);
+        playerRepository.save(player);
+
+        // When
+        Optional<Player> result = playerRepository.findByDiscordId(discordId);
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(discordId, result.get().getDiscordId());
+        assertEquals("testUser", result.get().getUsername());
+    }
+
+    @Test
+    @DisplayName("Should return empty Optional when Discord ID not found")
+    public void testFindByDiscordIdShouldReturnEmptyWhenNotFound() {
+        // Given
+        Long nonExistentDiscordId = 999999999L;
+
+        // When
+        Optional<Player> result = playerRepository.findByDiscordId(nonExistentDiscordId);
+
+        // Then
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    @DisplayName("Should find Player with null Discord ID when searching for null")
+    public void testFindByDiscordIdShouldReturnPlayerWhenDiscordIdIsNull() {
+        // Given
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        player.setDiscordId(null);
+        playerRepository.save(player);
+
+        // When
+        Optional<Player> result = playerRepository.findByDiscordId(null);
+
+        // Then
+        assertTrue(result.isPresent());
+        assertNull(result.get().getDiscordId());
+        assertEquals("testUser", result.get().getUsername());
+    }
+
+    @Test
+    @DisplayName("Should find Player by Discord ID even if inactive")
+    public void testFindByDiscordIdShouldReturnPlayerEvenIfInactive() {
+        // Given
+        Long discordId = 123456789L;
+        Player player = new Player();
+        player.setUsername("testUser");
+        player.setPassword("example01");
+        player.setDiscordId(discordId);
+        player.setActive(false);
+        playerRepository.save(player);
+
+        // When
+        Optional<Player> result = playerRepository.findByDiscordId(discordId);
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(discordId, result.get().getDiscordId());
+        assertEquals("testUser", result.get().getUsername());
+        assertFalse(result.get().isActive());
+    }
+
+    @Test
+    @DisplayName("Should find correct Player by Discord ID when multiple players exist")
+    public void testFindByDiscordIdShouldReturnCorrectPlayerWhenMultiplePlayersExist() {
+        // Given
+        Long discordId1 = 111111111L;
+        Long discordId2 = 222222222L;
+        Long searchDiscordId = 333333333L;
+
+        Player player1 = new Player();
+        player1.setUsername("testUser1");
+        player1.setPassword("example01");
+        player1.setDiscordId(discordId1);
+        playerRepository.save(player1);
+
+        Player player2 = new Player();
+        player2.setUsername("testUser2");
+        player2.setPassword("example02");
+        player2.setDiscordId(discordId2);
+        playerRepository.save(player2);
+
+        Player targetPlayer = new Player();
+        targetPlayer.setUsername("targetUser");
+        targetPlayer.setPassword("example03");
+        targetPlayer.setDiscordId(searchDiscordId);
+        playerRepository.save(targetPlayer);
+
+        // When
+        Optional<Player> result = playerRepository.findByDiscordId(searchDiscordId);
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(searchDiscordId, result.get().getDiscordId());
+        assertEquals("targetUser", result.get().getUsername());
+        assertNotNull(result.get().getId());
+    }
 }

@@ -494,55 +494,11 @@ public class PlayerControllerTest {
         }
 
         @Test
-        public void testDeletePlayer() throws Exception {
-                Player player = playerService.findByUsername("player2");
-
-                mockMvc.perform(delete("/players/id/{id}", player.getId())
-                                .with(user(playerDetails)))
-                                .andExpect(status().isNoContent());
-
-                // Verify that the player is no longer in the database
-                mockMvc.perform(get("/players/{id}", player.getId())
-                                .with(user(playerDetails)))
-                                .andExpect(status().isNotFound());
-        }
-
-        @Test
-        public void testDeletePlayer_PlayerNotFound() throws Exception {
-                mockMvc.perform(delete("/players/id/{id}", "00000000-0000-0000-0000-000000000000")
-                                .with(user(playerDetails)))
-                                .andExpect(status().isNotFound())
-                                .andExpect(
-                                                jsonPath("$.message").value(
-                                                                "Player not found with id: 00000000-0000-0000-0000-000000000000"))
-                                .andExpect(jsonPath("$.error").value("Resource Not Found"))
-                                .andExpect(jsonPath("$.timestamp").exists())
-                                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()));
-        }
-
-        @Test
         public void testDeletePlayer_Unauthenticated() throws Exception {
                 Player player = playerService.findByUsername("player1");
 
                 mockMvc.perform(delete("/players/id/{id}", player.getId()))
                                 .andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        public void testDeletePlayer_ForbiddenAccess() throws Exception {
-                Player player2 = playerService.findByUsername("player2");
-                Player player3 = playerService.findByUsername("player3");
-
-                PlayerDetails playerDetails = new PlayerDetails(player2);
-
-                // Attempting to delete another player without ADMIN role should be forbidden
-                mockMvc.perform(delete("/players/id/{id}", player3.getId())
-                                .with(user(playerDetails)))
-                                .andExpect(status().isForbidden())
-                                .andExpect(jsonPath("$.timestamp").exists())
-                                .andExpect(jsonPath("$.message").value("Access Denied"))
-                                .andExpect(jsonPath("$.error").value("Forbidden"))
-                                .andExpect(jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()));
         }
 
         @Test

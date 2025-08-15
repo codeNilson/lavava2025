@@ -89,7 +89,8 @@ public class PlayerService {
      * 
      * @param id ID do jogador
      * @return o jogador ativo encontrado
-     * @throws EntityNotFoundException se o jogador não for encontrado ou estiver inativo
+     * @throws EntityNotFoundException se o jogador não for encontrado ou estiver
+     *                                 inativo
      */
     public Player findByIdAndActiveTrue(UUID id) {
         return playerRepository.findByIdAndActiveTrue(id)
@@ -113,7 +114,8 @@ public class PlayerService {
      * 
      * @param username username do jogador
      * @return o jogador ativo encontrado
-     * @throws EntityNotFoundException se o jogador não for encontrado ou estiver inativo
+     * @throws EntityNotFoundException se o jogador não for encontrado ou estiver
+     *                                 inativo
      */
     public Player findByUsernameAndActiveTrue(String username) {
         return playerRepository.findByUsernameAndActiveTrue(username)
@@ -132,7 +134,7 @@ public class PlayerService {
     /**
      * Atualiza os dados de um jogador ativo.
      * 
-     * @param id ID do jogador
+     * @param id  ID do jogador
      * @param dto dados de atualização
      * @return DTO com os dados atualizados do jogador
      */
@@ -146,7 +148,7 @@ public class PlayerService {
      * Atualiza os dados de um jogador.
      * 
      * @param player o jogador a ser atualizado
-     * @param dto dados de atualização
+     * @param dto    dados de atualização
      * @return DTO com os dados atualizados do jogador
      */
     public PlayerResponseDTO updatePlayer(Player player, PlayerUpdateDTO dto) {
@@ -158,7 +160,7 @@ public class PlayerService {
      * Se uma nova senha for fornecida, ela será criptografada.
      * 
      * @param player o jogador a ser atualizado
-     * @param dto dados de atualização
+     * @param dto    dados de atualização
      * @return DTO com os dados atualizados do jogador
      */
     private PlayerResponseDTO updatePlayerData(Player player, PlayerUpdateDTO dto) {
@@ -175,7 +177,7 @@ public class PlayerService {
     /**
      * Adiciona roles a um jogador.
      * 
-     * @param id ID do jogador
+     * @param id    ID do jogador
      * @param roles conjunto de roles a serem adicionadas
      */
     public void addRoles(UUID id, Set<Roles> roles) {
@@ -188,7 +190,7 @@ public class PlayerService {
      * Remove roles de um jogador.
      * O role PLAYER não pode ser removido para manter a integridade do sistema.
      * 
-     * @param id ID do jogador
+     * @param id    ID do jogador
      * @param roles conjunto de roles a serem removidas
      */
     public void removeRoles(UUID id, Set<Roles> roles) {
@@ -268,14 +270,36 @@ public class PlayerService {
     }
 
     /**
-     * Desativa um jogador com motivo específico.
+     * Desativa um jogador com motivo padrão "Deactivated by admin".
      * Método restrito para administradores.
      * 
      * @param id ID do jogador a ser desativado
+     */
+    public void deactivatePlayer(String username) {
+        deactivatePlayer(username, "Deactivated by admin");
+    }
+
+    /**
+     * Desativa um jogador com motivo específico.
+     * Método restrito para administradores.
+     * 
+     * @param id     ID do jogador a ser desativado
      * @param reason motivo da desativação
      */
     public void deactivatePlayer(UUID id, String reason) {
         Player player = findById(id);
+        deactivatePlayerWithReason(player, reason);
+    }
+
+    /**
+     * Desativa um jogador com motivo específico.
+     * Método restrito para administradores.
+     * 
+     * @param id     ID do jogador a ser desativado
+     * @param reason motivo da desativação
+     */
+    public void deactivatePlayer(String username, String reason) {
+        Player player = findByUsername(username);
         deactivatePlayerWithReason(player, reason);
     }
 
@@ -303,14 +327,15 @@ public class PlayerService {
         if (password == null || password.trim().isEmpty()) {
             return; // Password is optional
         }
-        
+
         if (password.length() < 8 || password.length() > 20) {
             throw new IllegalArgumentException("Password must be between 8 and 20 characters");
         }
-        
+
         Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$");
         if (!pattern.matcher(password).matches()) {
-            throw new IllegalArgumentException("Password must have at least one uppercase letter, one lowercase letter, one number, and one special character");
+            throw new IllegalArgumentException(
+                    "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character");
         }
     }
 
