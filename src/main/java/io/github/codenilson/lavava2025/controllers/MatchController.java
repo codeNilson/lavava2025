@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.codenilson.lavava2025.entities.Match;
-import io.github.codenilson.lavava2025.entities.dto.match.MatchCompleteCreateDTO;
-import io.github.codenilson.lavava2025.entities.dto.match.MatchCompleteResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchPerformancesBatchUpdateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchResponseDTO;
@@ -117,32 +115,6 @@ public class MatchController {
         Match match = matchMapper.toEntity(matchDTO);
         matchService.save(match);
         MatchResponseDTO response = new MatchResponseDTO(match);
-        return ResponseEntity.status(201).body(response);
-    }
-
-    /**
-     * Creates a complete match with both teams in a single request.
-     * This convenience endpoint creates the match and both teams with their players
-     * in one transaction, automatically generating performance records for all players.
-     * 
-     * @param completeMatchDTO the data transfer object containing match and teams information
-     * @return ResponseEntity with status 201 and the complete match details
-     */
-    @Operation(
-        summary = "Create complete match with teams",
-        description = "Creates a complete match with both teams in a single request. This convenience endpoint creates the match, both teams, and automatically generates performance records for all players."
-    )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Complete match created successfully",
-            content = @Content(schema = @Schema(implementation = MatchCompleteResponseDTO.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid match or team data provided"),
-        @ApiResponse(responseCode = "404", description = "Map or player not found")
-    })
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/complete")
-    public ResponseEntity<MatchCompleteResponseDTO> createCompleteMatch(
-            @Parameter(description = "Complete match creation data") @RequestBody @Valid MatchCompleteCreateDTO completeMatchDTO) {
-        MatchCompleteResponseDTO response = matchService.createCompleteMatch(completeMatchDTO);
         return ResponseEntity.status(201).body(response);
     }
 

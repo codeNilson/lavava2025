@@ -10,9 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.Team;
-import io.github.codenilson.lavava2025.entities.ValorantMap;
-import io.github.codenilson.lavava2025.entities.dto.match.MatchCompleteCreateDTO;
-import io.github.codenilson.lavava2025.entities.dto.match.MatchCompleteResponseDTO;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +31,6 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
     private final PlayerRankingService playerRankingService;
-    private final TeamService teamService;
-    private final PlayerService playerService;
-    private final ValorantMapService valorantMapService;
 
     @Transactional
     public Match save(Match match) {
@@ -65,89 +59,6 @@ public class MatchService {
     public void deleteById(UUID id) {
         Match match = findById(id);
         delete(match);
-    }
-
-    /**
-     * Creates a complete match with both teams in a single transaction.
-     * This method creates the match and both teams with their players,
-     * and automatically creates performance records for all players.
-     * 
-     * @param createDTO the complete match creation data
-     * @return response with match and teams details
-     */
-    @Transactional
-    public MatchCompleteResponseDTO createCompleteMatch(MatchCompleteCreateDTO createDTO) {
-        // Validate that all players exist and are active
-        validatePlayersExist(createDTO.getTeamA());
-        validatePlayersExist(createDTO.getTeamB());
-        
-        // Check for duplicate players between teams
-        validateNoDuplicatePlayers(createDTO.getTeamA(), createDTO.getTeamB());
-        
-        // Find the Valorant map
-        ValorantMap valorantMap = valorantMapService.findByName(createDTO.getMapName());
-        
-        // Create the match
-        Match match = new Match(valorantMap);
-        Match savedMatch = matchRepository.save(match);
-        
-        // Get players for team creation
-        List<Player> teamAPlayers = createDTO.getTeamA().stream()
-                .map(playerService::findByUsername)
-                .collect(Collectors.toList());
-                
-        List<Player> teamBPlayers = createDTO.getTeamB().stream()
-                .map(playerService::findByUsername)
-                .collect(Collectors.toList());
-        
-        // Create teams manually since TeamService doesn't have createTeamWithPlayers method
-        Team teamA = new Team();
-        teamA.setMatch(savedMatch);
-        teamA.getPlayers().addAll(teamAPlayers);
-        Team savedTeamA = teamService.createTeam(teamA);
-        
-        Team teamB = new Team();
-        teamB.setMatch(savedMatch);
-        teamB.getPlayers().addAll(teamBPlayers);
-        Team savedTeamB = teamService.createTeam(teamB);
-        
-        // Build response
-        return new MatchCompleteResponseDTO(
-            savedMatch.getId(),
-            savedMatch.getMap().getName(),
-            savedTeamA.getId(),
-            savedTeamB.getId(),
-            createDTO.getTeamA(),
-            createDTO.getTeamB(),
-            "Match created successfully with both teams"
-        );
-    }
-    
-    /**
-     * Validates that all players exist and are active.
-     */
-    private void validatePlayersExist(List<String> usernames) {
-        for (String username : usernames) {
-            try {
-                Player player = playerService.findByUsername(username);
-                if (!player.isActive()) {
-                    throw new IllegalArgumentException("Player '" + username + "' is not active");
-                }
-            } catch (EntityNotFoundException e) {
-                throw new IllegalArgumentException("Player '" + username + "' not found");
-            }
-        }
-    }
-    
-    /**
-     * Validates that there are no duplicate players between teams.
-     */
-    private void validateNoDuplicatePlayers(List<String> teamA, List<String> teamB) {
-        for (String player : teamA) {
-            if (teamB.contains(player)) {
-                throw new IllegalArgumentException("Player '" + player + "' cannot be in both teams");
-            }
-        }
     }
 
     /**
