@@ -33,6 +33,7 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.RoleDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
+import io.github.codenilson.lavava2025.repositories.PlayerRankingRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
 
 @SpringBootTest
@@ -48,6 +49,9 @@ public class PlayerControllerTest {
 
         @Autowired
         private PlayerRepository playerRepository;
+
+        @Autowired
+        private PlayerRankingRepository playerRankingRepository;
 
         private PlayerDetails playerDetails;
 
@@ -95,7 +99,8 @@ public class PlayerControllerTest {
 
         @AfterEach
         public void tearDown() {
-                // Clear the database after each test
+                // Clear the database after each test - must delete PlayerRankings first due to FK constraints
+                playerRankingRepository.deleteAll();
                 playerRepository.deleteAll();
         }
 
