@@ -16,11 +16,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Serviço responsável pela gestão de times.
+ * Service responsible for team management operations.
  * 
- * Este serviço gerencia todas as operações relacionadas aos times,
- * incluindo criação, atualização de jogadores, operações de adicionar/remover
- * jogadores e busca de times por partidas.
+ * This service manages all team-related operations including
+ * creation, player updates, add/remove player operations,
+ * and team search by matches.
  * 
  * @author lavava2025
  * @version 1.0
@@ -34,11 +34,11 @@ public class TeamService {
     private final PlayerPerformanceService playerPerformanceService;
 
     /**
-     * Cria um novo time e gera automaticamente as performances dos jogadores.
-     * Para cada jogador do time, uma entrada de performance é criada automaticamente.
+     * Creates a new team and automatically generates player performances.
+     * For each player in the team, a performance entry is created automatically.
      * 
-     * @param team o time a ser criado
-     * @return o time criado com ID gerado
+     * @param team the team to be created
+     * @return the created team with generated ID
      */
     @Transactional
     public Team createTeam(Team team) {
@@ -57,20 +57,20 @@ public class TeamService {
     }
 
     /**
-     * Busca todos os times do sistema.
+     * Finds all teams in the system.
      * 
-     * @return lista de todos os times
+     * @return list of all teams
      */
     public List<Team> findAllTeams() {
         return teamRepository.findAll();
     }
 
     /**
-     * Busca um time pelo ID.
+     * Finds a team by ID.
      * 
-     * @param id ID do time
-     * @return o time encontrado
-     * @throws EntityNotFoundException se o time não for encontrado
+     * @param id team's ID
+     * @return the found team
+     * @throws EntityNotFoundException if the team is not found
      */
     public Team findById(UUID id) {
         return teamRepository.findById(id)
@@ -78,23 +78,23 @@ public class TeamService {
     }
 
     /**
-     * Remove um time do sistema.
+     * Removes a team from the system.
      * 
-     * @param team o time a ser removido
+     * @param team the team to be removed
      */
     public void delete(Team team) {
         teamRepository.delete(team);
     }
 
     /**
-     * Atualiza a lista de jogadores de um time.
-     * Permite adicionar ou remover jogadores conforme a operação especificada.
+     * Updates a team's player list.
+     * Allows adding or removing players according to the specified operation.
      * 
-     * @param teamId ID do time
-     * @param playersIds lista de IDs dos jogadores
-     * @param operation tipo de operação (ADD ou REMOVE)
-     * @return DTO com os dados atualizados do time
-     * @throws IllegalArgumentException se o tipo de operação for inválido
+     * @param teamId team's ID
+     * @param playersIds list of player IDs
+     * @param operation operation type (ADD or REMOVE)
+     * @return DTO with the updated team data
+     * @throws IllegalArgumentException if the operation type is invalid
      */
     public TeamResponseDTO updateTeamPlayers(UUID teamId, List<UUID> playersIds, OperationType operation) {
         var team = findById(teamId);
@@ -110,11 +110,11 @@ public class TeamService {
     }
 
     /**
-     * Método interno para adicionar jogadores a um time.
+     * Internal method to add players to a team.
      * 
-     * @param team o time
-     * @param players lista de jogadores a serem adicionados
-     * @return DTO com os dados atualizados do time
+     * @param team the team
+     * @param players list of players to be added
+     * @return DTO with the updated team data
      */
     private TeamResponseDTO addPlayersToTeam(Team team, List<Player> players) {
         team.getPlayers().addAll(players);
@@ -123,11 +123,11 @@ public class TeamService {
     }
 
     /**
-     * Método interno para remover jogadores de um time.
+     * Internal method to remove players from a team.
      * 
-     * @param team o time
-     * @param players lista de jogadores a serem removidos
-     * @return DTO com os dados atualizados do time
+     * @param team the team
+     * @param players list of players to be removed
+     * @return DTO with the updated team data
      */
     private TeamResponseDTO removePlayersFromTeam(Team team, List<Player> players) {
         team.getPlayers().removeAll(players);
@@ -136,10 +136,10 @@ public class TeamService {
     }
 
     /**
-     * Busca todos os times de uma partida específica.
+     * Finds all teams from a specific match.
      * 
-     * @param matchId ID da partida
-     * @return lista de times da partida
+     * @param matchId match's ID
+     * @return list of teams from the match
      */
     public List<Team> findByMatch(UUID matchId) {
         return teamRepository.findByMatchId(matchId);

@@ -7,10 +7,10 @@ import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Serviço responsável pela gestão dos mapas do Valorant.
+ * Service responsible for Valorant maps management.
  * 
- * Este serviço gerencia todas as operações relacionadas aos mapas
- * oficiais do Valorant utilizados nas partidas competitivas.
+ * This service manages all operations related to official
+ * Valorant maps used in competitive matches.
  * 
  * @author lavava2025
  * @version 1.0

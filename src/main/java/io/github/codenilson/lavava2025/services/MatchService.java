@@ -15,11 +15,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Serviço responsável pela gestão de partidas.
+ * Service responsible for match management operations.
  * 
- * Este serviço gerencia todas as operações relacionadas às partidas,
- * incluindo operações CRUD e atualização automática dos rankings
- * dos jogadores quando partidas são salvas ou modificadas.
+ * This service manages all match-related operations including
+ * CRUD operations and automatic player ranking updates
+ * when matches are saved or modified.
  * 
  * @author lavava2025
  * @version 1.0
@@ -62,7 +62,8 @@ public class MatchService {
     }
 
     /**
-     * Updates player rankings based on match results
+     * Updates player rankings based on match results.
+     * Only updates rankings if the match has a winner (completed match).
      */
     private void updatePlayerRankings(Match match) {
         // Only update rankings if the match has a winner (completed match)

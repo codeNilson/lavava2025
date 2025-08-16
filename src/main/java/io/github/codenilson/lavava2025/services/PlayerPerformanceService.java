@@ -22,11 +22,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Serviço responsável pela gestão das performances dos jogadores em partidas.
+ * Service responsible for managing player performances in matches.
  * 
- * Este serviço gerencia todas as operações relacionadas às estatísticas
- * dos jogadores em partidas, incluindo criação, atualização de estatísticas,
- * tracking de K/D/A e agentes utilizados.
+ * This service manages all operations related to player statistics
+ * in matches, including creation, statistics updates,
+ * K/D/A tracking and agents used.
  * 
  * @author lavava2025
  * @version 1.0
