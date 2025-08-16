@@ -15,13 +15,15 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Service class responsible for managing match operations and business logic.
- * Handles match CRUD operations and automatically updates player rankings
- * when matches are saved or modified.
+ * Serviço responsável pela gestão de partidas.
  * 
- * @author codenilson
+ * Este serviço gerencia todas as operações relacionadas às partidas,
+ * incluindo operações CRUD e atualização automática dos rankings
+ * dos jogadores quando partidas são salvas ou modificadas.
+ * 
+ * @author lavava2025
  * @version 1.0
- * @since 2025-01-01
+ * @since 2025
  */
 @Service
 @RequiredArgsConstructor

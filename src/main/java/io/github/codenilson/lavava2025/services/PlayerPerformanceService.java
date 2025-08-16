@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +16,22 @@ import io.github.codenilson.lavava2025.entities.dto.playerperformance.PlayerPerf
 import io.github.codenilson.lavava2025.entities.dto.playerperformance.PlayerPerformanceCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.playerperformance.PlayerPerformanceResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.playerperformance.PlayerPerformanceUpdateDTO;
-
 import io.github.codenilson.lavava2025.repositories.PlayerPerformanceRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Serviço responsável pela gestão das performances dos jogadores em partidas.
+ * 
+ * Este serviço gerencia todas as operações relacionadas às estatísticas
+ * dos jogadores em partidas, incluindo criação, atualização de estatísticas,
+ * tracking de K/D/A e agentes utilizados.
+ * 
+ * @author lavava2025
+ * @version 1.0
+ * @since 2025
+ */
 @Service
 @RequiredArgsConstructor
 public class PlayerPerformanceService {

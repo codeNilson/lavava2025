@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.github.codenilson.lavava2025.entities.Player;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
@@ -56,6 +57,7 @@ public class PlayerService {
      * @return o jogador salvo
      * @throws UsernameAlreadyExistsException se o username já existir
      */
+    @Transactional
     public Player save(Player player) {
 
         if (existsByUsername(player.getUsername())) {
@@ -151,6 +153,7 @@ public class PlayerService {
      * @param dto dados de atualização
      * @return DTO com os dados atualizados do jogador
      */
+    @Transactional
     public PlayerResponseDTO updatePlayer(UUID id, PlayerUpdateDTO dto) {
         Player player = findByIdAndActiveTrue(id);
 
@@ -193,6 +196,7 @@ public class PlayerService {
      * @param id    ID do jogador
      * @param roles conjunto de roles a serem adicionadas
      */
+    @Transactional
     public void addRoles(UUID id, Set<Roles> roles) {
         Player player = findById(id);
         player.getRoles().addAll(roles);
@@ -206,6 +210,7 @@ public class PlayerService {
      * @param id    ID do jogador
      * @param roles conjunto de roles a serem removidas
      */
+    @Transactional
     public void removeRoles(UUID id, Set<Roles> roles) {
         Player player = findById(id);
         roles.removeIf(role -> role.equals(Roles.PLAYER)); // Prevent removing PLAYER role

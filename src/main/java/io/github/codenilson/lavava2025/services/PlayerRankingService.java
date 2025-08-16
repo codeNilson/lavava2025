@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +18,7 @@ import io.github.codenilson.lavava2025.entities.dto.ranking.PlayerRankingRespons
 import io.github.codenilson.lavava2025.repositories.PlayerRankingRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Serviço responsável pela gestão do sistema de ranking dos jogadores.
@@ -32,14 +32,11 @@ import jakarta.persistence.EntityNotFoundException;
  * @since 2025
  */
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class PlayerRankingService {
 
-    @Autowired
-    private PlayerRankingRepository playerRankingRepository;
-
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRankingRepository playerRankingRepository;
+    private final PlayerRepository playerRepository;
 
     private static final String CURRENT_SEASON = "2025";
 
@@ -87,6 +84,7 @@ public class PlayerRankingService {
      * @param playerIds lista de IDs dos jogadores do time
      * @param isWin indica se o time ganhou a partida
      */
+    @Transactional
     public void updateTeamRankings(List<UUID> playerIds, boolean isWin) {
         updateTeamRankings(playerIds, isWin, CURRENT_SEASON);
     }
@@ -413,6 +411,7 @@ public class PlayerRankingService {
      * 
      * @param season temporada a ser resetada
      */
+    @Transactional
     public void resetSeasonRankings(String season) {
         List<PlayerRanking> seasonRankings = playerRankingRepository.findBySeasonOrderByTotalPointsDesc(season);
         playerRankingRepository.deleteAll(seasonRankings);
