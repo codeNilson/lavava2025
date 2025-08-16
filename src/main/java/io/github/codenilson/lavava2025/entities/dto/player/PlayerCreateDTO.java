@@ -22,6 +22,8 @@ public class PlayerCreateDTO {
 
     private Long discordId;
 
+    private String displayIcon;
+
     private String password;
 
     public PlayerCreateDTO() {

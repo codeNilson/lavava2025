@@ -63,6 +63,11 @@ public class Player {
     @Setter
     private Long discordId;
 
+    @Column(nullable = true)
+    @Getter
+    @Setter
+    private String displayIcon;
+
     @Comment("Set of roles assigned to the player, e.g., ADMIN, PLAYER, etc.")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable

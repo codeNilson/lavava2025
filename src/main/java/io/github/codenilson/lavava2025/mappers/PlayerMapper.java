@@ -30,6 +30,7 @@ public class PlayerMapper {
         player.setUsername(playerCreateDTO.getUsername());
         player.setPassword(playerCreateDTO.getPassword());
         player.setDiscordId(playerCreateDTO.getDiscordId());
+        player.setDisplayIcon(playerCreateDTO.getDisplayIcon());
         return player;
     }
 
