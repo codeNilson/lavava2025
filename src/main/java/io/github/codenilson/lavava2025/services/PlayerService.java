@@ -36,6 +36,7 @@ public class PlayerService {
     private final PlayerRepository playerRepository;
     private final PasswordEncoder encoder;
     private final PlayerMapper playerMapper;
+    private final PlayerRankingService playerRankingService;
 
     /**
      * Busca todos os jogadores ativos no sistema.
@@ -49,6 +50,7 @@ public class PlayerService {
     /**
      * Salva um novo jogador no sistema.
      * A senha será criptografada e o role PLAYER será adicionado automaticamente.
+     * Além disso, o jogador será automaticamente adicionado ao ranking da temporada atual.
      * 
      * @param player o jogador a ser salvo
      * @return o jogador salvo
@@ -68,7 +70,18 @@ public class PlayerService {
         }
 
         player.getRoles().add(Roles.PLAYER); // Ensure PLAYER role is added
-        return playerRepository.save(player);
+        Player savedPlayer = playerRepository.save(player);
+        
+        // Automatically create initial ranking for the new player in current season
+        try {
+            playerRankingService.createInitialPlayerRanking(savedPlayer);
+        } catch (Exception e) {
+            // Log the error but don't fail the player creation
+            System.err.println("Warning: Failed to create initial ranking for player " + 
+                             savedPlayer.getUsername() + ": " + e.getMessage());
+        }
+        
+        return savedPlayer;
     }
 
     /**
@@ -256,6 +269,15 @@ public class PlayerService {
         player.setInactivatedAt(null);
         player.setInactivationReason(null);
         playerRepository.save(player);
+        
+        // Ensure player has ranking in current season when reactivated
+        try {
+            playerRankingService.createInitialPlayerRanking(player);
+        } catch (Exception e) {
+            System.err.println("Warning: Failed to ensure ranking for reactivated player " + 
+                             player.getUsername() + ": " + e.getMessage());
+        }
+        
         return new PlayerResponseDTO(player);
     }
 
@@ -273,6 +295,15 @@ public class PlayerService {
         player.setInactivatedAt(null);
         player.setInactivationReason(null);
         playerRepository.save(player);
+        
+        // Ensure player has ranking in current season when reactivated
+        try {
+            playerRankingService.createInitialPlayerRanking(player);
+        } catch (Exception e) {
+            System.err.println("Warning: Failed to ensure ranking for reactivated player " + 
+                             player.getUsername() + ": " + e.getMessage());
+        }
+        
         return new PlayerResponseDTO(player);
     }
 

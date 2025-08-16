@@ -207,6 +207,17 @@ public class PlayerRankingService {
     }
 
     /**
+     * Cria um ranking inicial para um novo jogador na temporada atual.
+     * Este método é chamado automaticamente quando um novo jogador é criado.
+     * 
+     * @param player o jogador para criar o ranking inicial
+     * @return o ranking inicial criado
+     */
+    public PlayerRanking createInitialPlayerRanking(Player player) {
+        return getOrCreatePlayerRanking(player, CURRENT_SEASON);
+    }
+
+    /**
      * Busca ou cria um ranking para um jogador em uma temporada específica.
      * Se o ranking já existir, retorna o existente. Caso contrário, cria um novo.
      * 
@@ -214,7 +225,7 @@ public class PlayerRankingService {
      * @param season a temporada
      * @return o ranking do jogador na temporada
      */
-    private PlayerRanking getOrCreatePlayerRanking(Player player, String season) {
+    public PlayerRanking getOrCreatePlayerRanking(Player player, String season) {
         Optional<PlayerRanking> existingRanking = playerRankingRepository
                 .findByPlayerAndSeason(player, season);
 
