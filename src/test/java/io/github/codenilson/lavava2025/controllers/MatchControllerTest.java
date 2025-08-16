@@ -31,6 +31,7 @@ import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
+import io.github.codenilson.lavava2025.repositories.PlayerRankingRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
@@ -71,8 +72,25 @@ public class MatchControllerTest {
     @Autowired
     private MatchRepository matchRepository;
 
+    @Autowired
+    private PlayerRankingRepository playerRankingRepository;
+
+    private String testSuffix;
+    private String player1Username;
+    private String player2Username;  
+    private String player3Username;
+    private String player4Username;
+
     @BeforeEach
     public void setUp() {
+        // Generate unique suffix for this test run to avoid username conflicts
+        testSuffix = "_" + System.currentTimeMillis();
+        
+        // Create unique usernames
+        player1Username = "player1" + testSuffix;
+        player2Username = "player2" + testSuffix;
+        player3Username = "player3" + testSuffix;
+        player4Username = "player4" + testSuffix;
 
         // Create test players
 
@@ -90,14 +108,14 @@ public class MatchControllerTest {
         matchService.save(match1);
         matchService.save(match2);
 
-        Player player1 = new Player("player1", "Test@1234");
+        Player player1 = new Player(player1Username, "Test@1234");
         player1.getRoles().add(Roles.PLAYER); // Ensure PLAYER role is added
 
-        Player player2 = new Player("player2", "Test@1234");
+        Player player2 = new Player(player2Username, "Test@1234");
 
-        Player player3 = new Player("player3", "Test@1234");
+        Player player3 = new Player(player3Username, "Test@1234");
 
-        Player player4 = new Player("player4", "Test@1234");
+        Player player4 = new Player(player4Username, "Test@1234");
         player4.setActive(false); // Set player4 as inactive
 
         // Save players to the database
@@ -131,6 +149,7 @@ public class MatchControllerTest {
         valorantMapRepository.deleteAll();
         matchRepository.deleteAll();
         teamRepository.deleteAll();
+        playerRankingRepository.deleteAll();
         playerRepository.deleteAll();
     }
 
@@ -145,7 +164,7 @@ public class MatchControllerTest {
                 .andExpect(jsonPath("$[1].map.name").value("Map2"))
                 .andExpect(jsonPath("$[*].playerPerformances[*]", hasSize(4)))
                 .andExpect(jsonPath("$[*].playerPerformances[*].username", containsInAnyOrder(
-                        "player1", "player2", "player3", "player4")));
+                        player1Username, player2Username, player3Username, player4Username)));
     }
 
     @Test

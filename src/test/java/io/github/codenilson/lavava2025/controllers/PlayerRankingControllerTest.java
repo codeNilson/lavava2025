@@ -23,6 +23,7 @@ import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.PlayerRankingRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 import io.github.codenilson.lavava2025.services.PlayerService;
+import io.github.codenilson.lavava2025.services.PlayerRankingService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,6 +42,9 @@ public class PlayerRankingControllerTest {
     @Autowired
     private PlayerRankingRepository playerRankingRepository;
 
+    @Autowired
+    private PlayerRankingService playerRankingService;
+
     private Player testPlayer;
     private PlayerRanking testRanking;
     private PlayerDetails adminPlayerDetails;
@@ -55,10 +59,9 @@ public class PlayerRankingControllerTest {
         testPlayer.setActive(true);
         testPlayer = playerService.save(testPlayer);
 
-        // Create test ranking
-        testRanking = new PlayerRanking();
-        testRanking.setPlayer(testPlayer);
-        testRanking.setSeason("2025");
+        // Create or get test ranking using defensive approach
+        testRanking = playerRankingService.getOrCreatePlayerRanking(testPlayer, "2025");
+        // Update ranking with test data
         testRanking.setTotalPoints(15);
         testRanking.setMatchesWon(5);
         testRanking.setMatchesPlayed(7);
@@ -72,6 +75,8 @@ public class PlayerRankingControllerTest {
         adminPlayer.getRoles().add(Roles.ADMIN);
         adminPlayer.setActive(true);
         adminPlayer = playerService.save(adminPlayer);
+        // Ensure admin ranking exists (defensive)
+        playerRankingService.getOrCreatePlayerRanking(adminPlayer, "2025");
         adminPlayerDetails = new PlayerDetails(adminPlayer);
 
         // Create regular user for authentication
@@ -81,6 +86,8 @@ public class PlayerRankingControllerTest {
         regularPlayer.getRoles().add(Roles.PLAYER);
         regularPlayer.setActive(true);
         regularPlayer = playerService.save(regularPlayer);
+        // Ensure user ranking exists (defensive)
+        playerRankingService.getOrCreatePlayerRanking(regularPlayer, "2025");
         userPlayerDetails = new PlayerDetails(regularPlayer);
     }
 
