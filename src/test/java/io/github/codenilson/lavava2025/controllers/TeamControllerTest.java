@@ -28,6 +28,7 @@ import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.MatchRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
+import io.github.codenilson.lavava2025.repositories.PlayerRankingRepository;
 import io.github.codenilson.lavava2025.repositories.TeamRepository;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import io.github.codenilson.lavava2025.services.MatchService;
@@ -49,6 +50,9 @@ public class TeamControllerTest {
 
         @Autowired
         private PlayerRepository playerRepository;
+
+        @Autowired
+        private PlayerRankingRepository playerRankingRepository;
 
         @Autowired
         private ValorantMapRepository valorantMapRepository;
@@ -121,10 +125,11 @@ public class TeamControllerTest {
 
         @AfterEach
         public void tearDown() {
-                // Clear the database after each test
+                // Clear the database after each test - respect FK constraints order
                 valorantMapRepository.deleteAll();
                 matchRepository.deleteAll();
                 teamRepository.deleteAll();
+                playerRankingRepository.deleteAll(); // Must delete before players
                 playerRepository.deleteAll();
         }
 
