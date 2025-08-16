@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchCreateDTO;
+import io.github.codenilson.lavava2025.entities.dto.match.MatchPerformancesBatchUpdateDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.match.MatchUpdateDTO;
 import io.github.codenilson.lavava2025.mappers.MatchMapper;
 import io.github.codenilson.lavava2025.services.MatchService;
+import io.github.codenilson.lavava2025.services.PlayerPerformanceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,6 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * REST controller responsible for managing match operations.
@@ -43,8 +46,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MatchController {
     private final MatchService matchService;
-
     private final MatchMapper matchMapper;
+    private final PlayerPerformanceService playerPerformanceService;
 
     /**
      * Retrieves all matches in the system.
@@ -160,5 +163,41 @@ public class MatchController {
             @Parameter(description = "Match unique identifier") @PathVariable UUID id) {
         matchService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Updates multiple player performances for a specific match in batch using usernames.
+     * This is the main endpoint used after a match ends to update all player statistics at once.
+     * 
+     * @param matchId the unique identifier of the match
+     * @param batchUpdateDTO the data transfer object containing all performance updates with usernames
+     * @return ResponseEntity containing the updated match with performance data
+     */
+    @Operation(
+        summary = "Batch update player performances for match (by username)",
+        description = "Updates multiple player performances for a specific match after it ends using player usernames. This endpoint allows updating kills, deaths, assists, and agents for all players in one request."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Performances updated successfully",
+            content = @Content(schema = @Schema(implementation = MatchResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid performance data provided"),
+        @ApiResponse(responseCode = "404", description = "Match, player, or player performance not found")
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/performances")
+    public ResponseEntity<MatchResponseDTO> batchUpdatePerformances(
+            @Parameter(description = "Match unique identifier") @PathVariable("id") UUID matchId,
+            @Parameter(description = "Batch performance update data with usernames") @RequestBody @Valid MatchPerformancesBatchUpdateDTO batchUpdateDTO) {
+        
+        // Set the match ID in the DTO to ensure consistency
+        batchUpdateDTO.setMatchId(matchId);
+        
+        // Update performances in batch using usernames
+        playerPerformanceService.updatePerformancesByUsername(batchUpdateDTO);
+        
+        // Return updated match data
+        Match updatedMatch = matchService.findById(matchId);
+        MatchResponseDTO response = new MatchResponseDTO(updatedMatch);
+        return ResponseEntity.ok(response);
     }
 }

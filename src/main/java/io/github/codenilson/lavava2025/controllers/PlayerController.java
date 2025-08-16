@@ -3,6 +3,7 @@ package io.github.codenilson.lavava2025.controllers;
 import java.util.List;
 import java.util.UUID;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +21,9 @@ import io.github.codenilson.lavava2025.entities.dto.player.PlayerCreateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerResponseDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.PlayerUpdateDTO;
 import io.github.codenilson.lavava2025.entities.dto.player.RoleDTO;
+import io.github.codenilson.lavava2025.entities.dto.playerperformance.PlayerPerformanceResponseDTO;
 import io.github.codenilson.lavava2025.mappers.PlayerMapper;
+import io.github.codenilson.lavava2025.services.PlayerPerformanceService;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -50,6 +53,8 @@ public class PlayerController {
     private final PlayerService playerService;
 
     private final PlayerMapper playerMapper;
+    
+    private final PlayerPerformanceService playerPerformanceService;
 
     @Operation(summary = "Get all active players", description = "Retrieves a list of all active players in the system")
     @ApiResponses(value = {
@@ -197,6 +202,64 @@ public class PlayerController {
     public ResponseEntity<Void> deactivatePlayerByUsername(@PathVariable("username") String username) {
         playerService.deactivatePlayer(username);
         return ResponseEntity.noContent().build();
+    }
+
+    // ========== PLAYER PERFORMANCE ENDPOINTS ==========
+
+    /**
+     * Retrieves all performances for a specific player.
+     *
+     * @param id Player unique identifier
+     * @return List of player performances
+     */
+    @Operation(
+        summary = "Get player performances",
+        description = "Retrieves all match performances for a specific player"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player performances retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerPerformanceResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Player not found")
+    })
+    @GetMapping("/{id}/performances")
+    public ResponseEntity<List<PlayerPerformanceResponseDTO>> getPlayerPerformances(
+            @Parameter(description = "Player unique identifier") @PathVariable UUID id) {
+        
+        // Verifica se o player existe
+        playerService.findByIdAndActiveTrue(id);
+        
+        List<PlayerPerformanceResponseDTO> performances = 
+            playerPerformanceService.getPlayerPerformances(id);
+        
+        return ResponseEntity.ok(performances);
+    }
+
+    /**
+     * Retrieves all performances for a specific player by username.
+     *
+     * @param username Player username
+     * @return List of player performances
+     */
+    @Operation(
+        summary = "Get player performances by username",
+        description = "Retrieves all match performances for a specific player by username"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player performances retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerPerformanceResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Player not found")
+    })
+    @GetMapping("/username/{username}/performances")
+    public ResponseEntity<List<PlayerPerformanceResponseDTO>> getPlayerPerformancesByUsername(
+            @Parameter(description = "Player username") @PathVariable String username) {
+        
+        // Verifica se o player existe e obtém o ID
+        Player player = playerService.findByUsernameAndActiveTrue(username);
+        
+        List<PlayerPerformanceResponseDTO> performances = 
+            playerPerformanceService.getPlayerPerformances(player.getId());
+        
+        return ResponseEntity.ok(performances);
     }
 
 }
