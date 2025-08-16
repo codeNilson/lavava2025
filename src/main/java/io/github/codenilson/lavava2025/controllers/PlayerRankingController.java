@@ -171,6 +171,48 @@ public class PlayerRankingController {
     }
 
     /**
+     * Get ranking for a specific player by username in current season
+     */
+    @Operation(
+        summary = "Get player ranking by username in current season",
+        description = "Returns the ranking and statistics of a specific player by username in the current season"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player ranking retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Player not found or no ranking in current season")
+    })
+    @GetMapping("/username/{username}")
+    public ResponseEntity<PlayerRankingResponseDTO> getPlayerRankingByUsername(
+            @Parameter(description = "Player username") @PathVariable String username) {
+        Optional<PlayerRankingResponseDTO> ranking = playerRankingService.getPlayerRankingByUsername(username);
+        return ranking.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Get ranking for a specific player by username in a specific season
+     */
+    @Operation(
+        summary = "Get player ranking by username in specific season",
+        description = "Returns the ranking and statistics of a specific player by username in a specific season"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player ranking retrieved successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Player not found or no ranking in specified season")
+    })
+    @GetMapping("/username/{username}/season/{season}")
+    public ResponseEntity<PlayerRankingResponseDTO> getPlayerRankingByUsernameAndSeason(
+            @Parameter(description = "Player username") @PathVariable String username,
+            @Parameter(description = "Season name") @PathVariable String season) {
+
+        Optional<PlayerRankingResponseDTO> ranking = playerRankingService.getPlayerRankingByUsername(username, season);
+        return ranking.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
      * Get all available seasons with ranking data
      */
     @Operation(
@@ -260,6 +302,66 @@ public class PlayerRankingController {
 
         playerRankingService.updatePlayerRanking(playerId, isWin, season);
         Optional<PlayerRankingResponseDTO> updatedRanking = playerRankingService.getPlayerRanking(playerId, season);
+
+        return updatedRanking.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Add bonus points to a player by username (MVP, Ace, etc.) - Admin only
+     */
+    @Operation(
+        summary = "Add bonus points to player by username (Admin only)",
+        description = "Allows adding extra points to a player by username for special performance (MVP, Ace, etc.)"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Bonus points added successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Access denied - admins only"),
+        @ApiResponse(responseCode = "404", description = "Player not found")
+    })
+    @PostMapping("/username/{username}/bonus")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PlayerRankingResponseDTO> addBonusPointsByUsername(
+            @Parameter(description = "Player username") @PathVariable String username,
+            @Parameter(description = "Ranking update request data")
+            @Valid @RequestBody RankingUpdateRequestDTO request) {
+
+        String season = request.getSeason() != null ? request.getSeason() : "2025";
+        int points = request.getPoints() != null ? request.getPoints() : 0;
+
+        playerRankingService.addBonusPointsByUsername(username, points, season);
+        Optional<PlayerRankingResponseDTO> updatedRanking = playerRankingService.getPlayerRankingByUsername(username, season);
+
+        return updatedRanking.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Manually update player ranking by username after a match - Admin only
+     */
+    @Operation(
+        summary = "Manually update player ranking by username (Admin only)",
+        description = "Manually updates a player's ranking by username after a match result"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Player ranking updated successfully",
+            content = @Content(schema = @Schema(implementation = PlayerRankingResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Access denied - admins only"),
+        @ApiResponse(responseCode = "404", description = "Player not found")
+    })
+    @PostMapping("/username/{username}/update")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PlayerRankingResponseDTO> updatePlayerRankingByUsername(
+            @Parameter(description = "Player username") @PathVariable String username,
+            @Parameter(description = "Ranking update request data")
+            @Valid @RequestBody RankingUpdateRequestDTO request) {
+
+        String season = request.getSeason() != null ? request.getSeason() : "2025";
+        boolean isWin = request.getIsWin() != null ? request.getIsWin() : false;
+
+        playerRankingService.updatePlayerRankingByUsername(username, isWin, season);
+        Optional<PlayerRankingResponseDTO> updatedRanking = playerRankingService.getPlayerRankingByUsername(username, season);
 
         return updatedRanking.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

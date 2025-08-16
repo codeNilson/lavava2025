@@ -137,6 +137,76 @@ public class PlayerRankingService {
     }
 
     /**
+     * Adiciona pontos extras a um jogador por username na temporada atual (MVP, Ace, etc.).
+     * 
+     * @param username username do jogador
+     * @param bonusPoints quantidade de pontos extras a adicionar
+     * @return o ranking atualizado do jogador
+     * @throws EntityNotFoundException se o jogador não for encontrado
+     */
+    public PlayerRanking addBonusPointsByUsername(String username, int bonusPoints) {
+        return addBonusPointsByUsername(username, bonusPoints, CURRENT_SEASON);
+    }
+
+    /**
+     * Adiciona pontos extras a um jogador por username em uma temporada específica.
+     * 
+     * @param username username do jogador
+     * @param bonusPoints quantidade de pontos extras a adicionar
+     * @param season temporada para adicionar os pontos
+     * @return o ranking atualizado do jogador
+     * @throws EntityNotFoundException se o jogador não for encontrado
+     */
+    public PlayerRanking addBonusPointsByUsername(String username, int bonusPoints, String season) {
+        Player player = playerRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with username: " + username));
+
+        PlayerRanking ranking = getOrCreatePlayerRanking(player, season);
+        ranking.addPoints(bonusPoints);
+        ranking.setLastUpdated(LocalDateTime.now());
+        
+        return playerRankingRepository.save(ranking);
+    }
+
+    /**
+     * Atualiza o ranking de um jogador por username após uma partida na temporada atual.
+     * 
+     * @param username username do jogador
+     * @param isWin indica se o jogador ganhou a partida
+     * @return o ranking atualizado do jogador
+     * @throws EntityNotFoundException se o jogador não for encontrado
+     */
+    public PlayerRanking updatePlayerRankingByUsername(String username, boolean isWin) {
+        return updatePlayerRankingByUsername(username, isWin, CURRENT_SEASON);
+    }
+
+    /**
+     * Atualiza o ranking de um jogador por username após uma partida em uma temporada específica.
+     * 
+     * @param username username do jogador
+     * @param isWin indica se o jogador ganhou a partida
+     * @param season temporada para atualizar o ranking
+     * @return o ranking atualizado do jogador
+     * @throws EntityNotFoundException se o jogador não for encontrado
+     */
+    public PlayerRanking updatePlayerRankingByUsername(String username, boolean isWin, String season) {
+        Player player = playerRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with username: " + username));
+
+        PlayerRanking ranking = getOrCreatePlayerRanking(player, season);
+        
+        if (isWin) {
+            ranking.recordMatch(true);
+        } else {
+            ranking.recordMatch(false);
+        }
+        
+        ranking.setLastUpdated(LocalDateTime.now());
+        
+        return playerRankingRepository.save(ranking);
+    }
+
+    /**
      * Busca ou cria um ranking para um jogador em uma temporada específica.
      * Se o ranking já existir, retorna o existente. Caso contrário, cria um novo.
      * 
@@ -250,6 +320,41 @@ public class PlayerRankingService {
         
         if (ranking.isPresent()) {
             Long position = getPlayerPosition(playerId, season);
+            return Optional.of(new PlayerRankingResponseDTO(ranking.get(), position));
+        }
+        
+        return Optional.empty();
+    }
+
+    /**
+     * Busca o ranking de um jogador específico por username na temporada atual.
+     * 
+     * @param username username do jogador
+     * @return Optional contendo o ranking se encontrado, vazio caso contrário
+     * @throws EntityNotFoundException se o jogador não for encontrado
+     */
+    @Transactional(readOnly = true)
+    public Optional<PlayerRankingResponseDTO> getPlayerRankingByUsername(String username) {
+        return getPlayerRankingByUsername(username, CURRENT_SEASON);
+    }
+
+    /**
+     * Busca o ranking de um jogador específico por username em uma temporada específica.
+     * 
+     * @param username username do jogador
+     * @param season temporada desejada
+     * @return Optional contendo o ranking se encontrado, vazio caso contrário
+     * @throws EntityNotFoundException se o jogador não for encontrado
+     */
+    @Transactional(readOnly = true)
+    public Optional<PlayerRankingResponseDTO> getPlayerRankingByUsername(String username, String season) {
+        Player player = playerRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found with username: " + username));
+
+        Optional<PlayerRanking> ranking = playerRankingRepository.findByPlayerAndSeason(player, season);
+        
+        if (ranking.isPresent()) {
+            Long position = getPlayerPosition(player.getId(), season);
             return Optional.of(new PlayerRankingResponseDTO(ranking.get(), position));
         }
         
