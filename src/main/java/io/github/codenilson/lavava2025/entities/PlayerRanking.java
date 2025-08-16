@@ -46,8 +46,8 @@ public class PlayerRanking {
     private UUID id;
 
     @Comment("Player associated with this ranking")
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "player_id", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "player_id", nullable = true)
     @Getter
     @Setter
     private Player player;

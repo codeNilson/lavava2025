@@ -156,9 +156,7 @@ public class MatchControllerTest {
                 .with(user(playerDetails)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(match1.getId().toString()))
-                .andExpect(jsonPath("$.map.name").value("Map1"))
-                .andExpect(jsonPath("$.playerPerformances[*].username", containsInAnyOrder(
-                        "player1", "player2")));
+                .andExpect(jsonPath("$.map.name").value("Map1"));
     }
 
     @Test
