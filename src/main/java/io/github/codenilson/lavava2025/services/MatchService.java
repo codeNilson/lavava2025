@@ -89,9 +89,9 @@ public class MatchService {
             
             // Add bonus points for MVP if available
             if (match.getMvp() != null) {
-                playerRankingService.addBonusPoints(match.getMvp().getPlayer().getId(), 2); // 2 bonus points for MVP
+                playerRankingService.addBonusPoints(match.getMvp().getPlayer().getId(), 1); // 1 bonus point for MVP
             }
-            
+
             // Add bonus points for Ace if available
             if (match.getAce() != null) {
                 playerRankingService.addBonusPoints(match.getAce().getPlayer().getId(), 1); // 1 bonus point for Ace
