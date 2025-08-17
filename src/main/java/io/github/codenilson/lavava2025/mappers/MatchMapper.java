@@ -64,10 +64,17 @@ public class MatchMapper {
       savedMatch.setMvp(mvp);
     }
 
+
     if (matchUpdateDto.getAceId() != null) {
       Player player = playerService.findById(matchUpdateDto.getAceId());
       PlayerPerformance ace = playerPerformanceService.findByPlayerAndMatch(player.getId(), savedMatch.getId());
       savedMatch.setAce(ace);
+    }
+
+    if (matchUpdateDto.getLoserMvpId() != null) {
+      Player player = playerService.findById(matchUpdateDto.getLoserMvpId());
+      PlayerPerformance loserMvp = playerPerformanceService.findByPlayerAndMatch(player.getId(), savedMatch.getId());
+      savedMatch.setLoserMvp(loserMvp);
     }
 
     if (matchUpdateDto.getMapName() != null) {

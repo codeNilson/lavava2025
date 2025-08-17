@@ -76,12 +76,20 @@ public class Match {
     @Setter
     private PlayerPerformance mvp;
 
+
     @Comment("Ace of the match. This references the PlayerPerformance entity, not the Player entity.")
     @OneToOne
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @Getter
     @Setter
     private PlayerPerformance ace;
+
+    @Comment("Best player of the losing team (loser MVP). This references the PlayerPerformance entity, not the Player entity.")
+    @OneToOne
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @Getter
+    @Setter
+    private PlayerPerformance loserMvp;
 
     @Comment("All player's performances in this match.")
     @OneToMany(mappedBy = "match")
