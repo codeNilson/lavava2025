@@ -98,7 +98,11 @@ public class PlayerPerformanceService {
         performance.setKills(createDTO.getKills());
         performance.setDeaths(createDTO.getDeaths());
         performance.setAssists(createDTO.getAssists());
+
         performance.setAgent(createDTO.getAgent());
+        if (createDTO.getAce() != null) {
+            performance.setAce(createDTO.getAce());
+        }
 
         return playerPerformanceRepository.save(performance);
     }
@@ -129,7 +133,20 @@ public class PlayerPerformanceService {
         performance.setKills(createDTO.getKills());
         performance.setDeaths(createDTO.getDeaths());
         performance.setAssists(createDTO.getAssists());
+
         performance.setAgent(createDTO.getAgent());
+        // If PlayerPerformanceCreateByUsernameDTO has getAce(), set it; otherwise, skip
+        try {
+            var aceMethod = createDTO.getClass().getMethod("getAce");
+            Object aceValue = aceMethod.invoke(createDTO);
+            if (aceValue != null) {
+                performance.setAce((Integer) aceValue);
+            }
+        } catch (NoSuchMethodException ignore) {
+            // DTO does not have ace, skip
+        } catch (Exception e) {
+            throw new RuntimeException("Error accessing ace property", e);
+        }
 
         return playerPerformanceRepository.save(performance);
     }
@@ -156,8 +173,12 @@ public class PlayerPerformanceService {
         if (updateDTO.getAssists() != null) {
             performance.setAssists(updateDTO.getAssists());
         }
+
         if (updateDTO.getAgent() != null) {
             performance.setAgent(updateDTO.getAgent());
+        }
+        if (updateDTO.getAce() != null) {
+            performance.setAce(updateDTO.getAce());
         }
 
         return playerPerformanceRepository.save(performance);

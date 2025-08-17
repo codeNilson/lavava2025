@@ -1,4 +1,10 @@
+
 package io.github.codenilson.lavava2025.services;
+
+import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.PlayerRanking;
+import io.github.codenilson.lavava2025.repositories.MatchRepository;
+import io.github.codenilson.lavava2025.repositories.PlayerPerformanceRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,8 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.codenilson.lavava2025.entities.Player;
-import io.github.codenilson.lavava2025.entities.PlayerRanking;
 import io.github.codenilson.lavava2025.entities.dto.ranking.PlayerRankingResponseDTO;
 import io.github.codenilson.lavava2025.repositories.PlayerRankingRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
@@ -37,6 +41,18 @@ public class PlayerRankingService {
 
     private final PlayerRankingRepository playerRankingRepository;
     private final PlayerRepository playerRepository;
+
+    private final MatchRepository matchRepository;
+    private final PlayerPerformanceRepository playerPerformanceRepository;
+    /**
+     * Sums all aces for a player in a given season.
+     */
+    public int getTotalAcesForPlayerInSeason(UUID playerId, String season) {
+        var matches = matchRepository.findBySeason(season);
+        var matchIds = matches.stream().map(m -> m.getId()).toList();
+        var performances = playerPerformanceRepository.findByPlayerIdAndMatchIdIn(playerId, matchIds);
+        return performances.stream().mapToInt(p -> p.getAce()).sum();
+    }
 
     private static final String CURRENT_SEASON = "2025";
 
@@ -66,15 +82,19 @@ public class PlayerRankingService {
                 .orElseThrow(() -> new EntityNotFoundException("Player not found with id: " + playerId));
 
         PlayerRanking ranking = getOrCreatePlayerRanking(player, season);
-        
+
         if (isWin) {
             ranking.recordMatch(true);
         } else {
             ranking.recordMatch(false);
         }
-        
+
+        // Integrate ACE points: sum all aces for this player in this season
+        int acePoints = getTotalAcesForPlayerInSeason(playerId, season);
+        ranking.setTotalPoints((ranking.getTotalPoints() != null ? ranking.getTotalPoints() : 0) + acePoints);
+
         ranking.setLastUpdated(LocalDateTime.now());
-        
+
         return playerRankingRepository.save(ranking);
     }
 

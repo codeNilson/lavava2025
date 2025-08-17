@@ -39,6 +39,10 @@ public class PlayerPerformanceCreateDTO {
     @Schema(description = "Number of assists", example = "5")
     private Integer assists;
 
+
     @Schema(description = "Agent used by the player", example = "Jett")
     private String agent;
+
+    @Schema(description = "Number of aces (full team eliminations) in this match", example = "1")
+    private Integer ace = 0;
 }

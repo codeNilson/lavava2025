@@ -30,8 +30,12 @@ import io.github.codenilson.lavava2025.entities.dto.ranking.PlayerRankingRespons
 import io.github.codenilson.lavava2025.repositories.PlayerRankingRepository;
 import io.github.codenilson.lavava2025.repositories.PlayerRepository;
 
+import io.github.codenilson.lavava2025.repositories.MatchRepository;
+import io.github.codenilson.lavava2025.repositories.PlayerPerformanceRepository;
+
 @ExtendWith(MockitoExtension.class)
 class PlayerRankingServiceTest {
+
 
     @Mock
     private PlayerRankingRepository playerRankingRepository;
@@ -39,9 +43,14 @@ class PlayerRankingServiceTest {
     @Mock
     private PlayerRepository playerRepository;
 
+    @Mock
+    private MatchRepository matchRepository;
+
+    @Mock
+    private PlayerPerformanceRepository playerPerformanceRepository;
+
     @InjectMocks
     private PlayerRankingService playerRankingService;
-
     private Player testPlayer;
     private PlayerRanking testRanking;
     private UUID playerId;

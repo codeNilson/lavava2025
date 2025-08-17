@@ -67,9 +67,18 @@ public class PlayerPerformance {
     @Setter
     private Integer deaths;
 
+
     @Getter
     @Setter
     private Integer assists;
+
+    /**
+     * Quantidade de aces (eliminação de todo o time adversário em um round) nesta partida.
+     * Cada ace vale 1 ponto extra no ranking.
+     */
+    @Getter
+    @Setter
+    private int ace = 0;
 
     @Comment("Agent used by the player in this specific match performance")
     @Getter

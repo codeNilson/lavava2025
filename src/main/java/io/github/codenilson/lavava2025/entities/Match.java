@@ -23,7 +23,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -91,10 +91,17 @@ public class Match {
     @Setter
     private PlayerPerformance loserMvp;
 
+
     @Comment("All player's performances in this match.")
     @OneToMany(mappedBy = "match")
     @Getter
     private Set<PlayerPerformance> playerPerformances = new HashSet<>();
+
+    @Comment("Season identifier for this match.")
+    @Column(nullable = false)
+    @Getter
+    @Setter
+    private String season = "2025";
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -106,11 +113,14 @@ public class Match {
     @Getter
     private LocalDateTime updatedAt;
 
+
     public Match() {
+        this.season = "2025";
     }
 
     public Match(ValorantMap map) {
         this.map = map;
+        this.season = "2025";
     }
 
     @Override

@@ -14,6 +14,7 @@ public class PlayerPerformanceResponseDTO {
     private Integer kills;
     private Integer deaths;
     private Integer assists;
+    private Integer ace;
 
     public PlayerPerformanceResponseDTO(PlayerPerformance pf) {
         this.performanceId = pf.getId();
@@ -23,5 +24,6 @@ public class PlayerPerformanceResponseDTO {
         this.kills = pf.getKills();
         this.deaths = pf.getDeaths();
         this.assists = pf.getAssists();
+        this.ace = pf.getAce();
     }
 }

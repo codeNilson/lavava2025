@@ -10,7 +10,7 @@ import io.github.codenilson.lavava2025.entities.PlayerPerformance;
 
 public interface PlayerPerformanceRepository extends JpaRepository<PlayerPerformance, UUID> {
     Optional<PlayerPerformance> findByPlayerIdAndMatchId(UUID playerId, UUID matchId);
-    
+
     /**
      * Finds all performances for a specific player.
      *
@@ -18,4 +18,9 @@ public interface PlayerPerformanceRepository extends JpaRepository<PlayerPerform
      * @return List of player performances
      */
     List<PlayerPerformance> findByPlayerId(UUID playerId);
+
+    /**
+     * Finds all performances for a player in a list of matches (for a season).
+     */
+    List<PlayerPerformance> findByPlayerIdAndMatchIdIn(UUID playerId, List<UUID> matchIds);
 }
