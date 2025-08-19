@@ -1,7 +1,9 @@
 package io.github.codenilson.lavava2025.config.seeders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -10,11 +12,13 @@ import org.springframework.context.annotation.Profile;
 
 import io.github.codenilson.lavava2025.entities.Match;
 import io.github.codenilson.lavava2025.entities.Player;
+import io.github.codenilson.lavava2025.entities.PlayerPerformance;
 import io.github.codenilson.lavava2025.entities.Team;
 import io.github.codenilson.lavava2025.entities.ValorantMap;
 import io.github.codenilson.lavava2025.entities.valueobjects.Roles;
 import io.github.codenilson.lavava2025.repositories.ValorantMapRepository;
 import io.github.codenilson.lavava2025.services.MatchService;
+import io.github.codenilson.lavava2025.services.PlayerPerformanceService;
 import io.github.codenilson.lavava2025.services.PlayerService;
 import io.github.codenilson.lavava2025.services.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -25,118 +29,228 @@ import lombok.RequiredArgsConstructor;
 public class DevDatabaseSeeder implements CommandLineRunner {
 
     private final PlayerService playerService;
-
     private final TeamService teamService;
-
     private final MatchService matchService;
-
+    private final PlayerPerformanceService playerPerformanceService;
     private final ValorantMapRepository valorantMapRepository;
+
+    // Dados realistas do Valorant
+    private static final List<String> VALORANT_MAPS = Arrays.asList(
+            "Ascent", "Bind", "Haven", "Split", "Icebox", "Breeze", "Fracture", "Pearl", "Lotus", "Sunset");
+
+    private static final List<String> VALORANT_AGENTS = Arrays.asList(
+            // Duelistas
+            "Jett", "Phoenix", "Reyna", "Raze", "Yoru", "Neon", "Iso",
+            // Iniciadores
+            "Sova", "Breach", "Skye", "KAY/O", "Fade", "Gekko",
+            // Controladores
+            "Brimstone", "Omen", "Viper", "Astra", "Harbor", "Clove",
+            // Sentinelas
+            "Sage", "Cypher", "Killjoy", "Chamber", "Deadlock", "Vyse");
+
+    private static final List<String> PLAYER_NAMES = Arrays.asList(
+            "TenZ", "ScreaM", "s1mple", "ShahZaM", "SicK", "dapr", "zombs", "crashies", "Victor", "yay",
+            "Aspas", "Less", "Sacy", "pANcada", "Saadhak", "dgzin", "cauanzin", "tuyz", "qck", "Loud_cortezia");
+
+    private final Random random = new Random();
 
     @Override
     public void run(String... args) throws Exception {
-        // Create 10 players keeping the username/password pattern
-        List<Player> players = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            Player p = new Player();
-            p.setUsername("Jogador" + i);
-            p.setPassword("Abc@123456");
-            playerService.save(p);
-            players.add(p);
-        }
+        System.out.println("🎮 Iniciando configuração do ambiente de desenvolvimento...");
 
-        // Assign roles: first player is ADMIN + PLAYER, others are PLAYER
-        Player player1 = players.get(0);
-        Player player2 = players.get(1);
-        Player player3 = players.get(2);
+        // 1. Criar todos os mapas do Valorant
+        List<ValorantMap> maps = createValorantMaps();
+        System.out.println("✅ " + maps.size() + " mapas do Valorant criados");
 
-        playerService.addRoles(player1.getId(), Set.of(Roles.ADMIN, Roles.PLAYER));
-        for (int i = 1; i < players.size(); i++) {
-            playerService.addRoles(players.get(i).getId(), Set.of(Roles.PLAYER));
-        }
+        // 2. Criar jogadores com nomes realistas
+        List<Player> players = createPlayers();
+        System.out.println("✅ " + players.size() + " jogadores criados");
 
-        var map = valorantMapRepository.findByName("Ascent").orElseGet(() -> {
-            var newMap = new ValorantMap();
-            newMap.setName("Ascent");
-            return valorantMapRepository.save(newMap);
-        });
-        Match match = new Match(map);
-        matchService.save(match);
+        // 3. Atribuir roles aos jogadores
+        assignPlayerRoles(players);
+        System.out.println("✅ Roles atribuídas aos jogadores");
 
-        Team team1 = new Team();
-        team1.setMatch(match);
-        team1.getPlayers().add(player1);
-        team1.getPlayers().add(player2);
+        // 4. Criar partidas diversificadas com performances detalhadas
+        createDetailedMatches(players, maps);
+        System.out.println("✅ Partidas com performances detalhadas criadas");
 
-        Team team2 = new Team();
-        team2.setMatch(match);
-        team2.getPlayers().add(player3);
-
-        teamService.createTeam(team1);
-        teamService.createTeam(team2);
-
-        match.setWinner(team1);
-        match.setLoser(team2);
-        matchService.save(match);
-
-        // Create additional matches for ranking data (using first three players)
-        createAdditionalMatches(player1, player2, player3);
-
-        System.out.println("Relacionamentos criados com sucesso!");
-        System.out.println("Sistema de ranking configurado!");
+        System.out.println("🚀 Ambiente de desenvolvimento configurado com sucesso!");
+        System.out.println("📊 Sistema de ranking populado com dados realistas!");
+        System.out.println("🎯 Total de jogadores: " + players.size());
+        System.out.println("🗺️ Total de mapas: " + maps.size());
     }
 
     /**
-     * Creates additional matches to populate ranking data
+     * Cria todos os mapas oficiais do Valorant
      */
-    private void createAdditionalMatches(Player player1, Player player2, Player player3) {
-        var map = valorantMapRepository.findByName("Bind").orElseGet(() -> {
-            var newMap = new ValorantMap();
-            newMap.setName("Bind");
-            return valorantMapRepository.save(newMap);
-        });
+    private List<ValorantMap> createValorantMaps() {
+        List<ValorantMap> maps = new ArrayList<>();
 
-        // Match 2: player1 vs player2 (player1 wins)
-        Match match2 = new Match(map);
-        matchService.save(match2);
+        for (String mapName : VALORANT_MAPS) {
+            ValorantMap map = valorantMapRepository.findByName(mapName).orElseGet(() -> {
+                ValorantMap newMap = new ValorantMap();
+                newMap.setName(mapName);
+                // URLs de imagens dos mapas (podem ser adicionadas posteriormente)
+                newMap.setSplashUrl("https://valorant-assets.com/maps/" + mapName.toLowerCase() + "/splash.jpg");
+                return valorantMapRepository.save(newMap);
+            });
+            maps.add(map);
+        }
 
-        Team team3 = new Team();
-        team3.setMatch(match2);
-        team3.getPlayers().add(player1);
+        return maps;
+    }
 
-        Team team4 = new Team();
-        team4.setMatch(match2);
-        team4.getPlayers().add(player2);
+    /**
+     * Cria jogadores com nomes realistas do cenário competitivo
+     */
+    private List<Player> createPlayers() {
+        List<Player> players = new ArrayList<>();
 
-        teamService.createTeam(team3);
-        teamService.createTeam(team4);
+        for (int i = 0; i < PLAYER_NAMES.size(); i++) {
+            Player player = new Player();
+            player.setUsername(PLAYER_NAMES.get(i));
+            player.setPassword("Abc@123456");
 
-        match2.setWinner(team3);
-        match2.setLoser(team4);
-        matchService.save(match2);
+            // Simular alguns Discord IDs para realismo
+            if (random.nextBoolean()) {
+                player.setDiscordId(1000000000L + random.nextInt(999999999));
+            }
 
-        // Match 3: player2 vs player3 (player2 wins)
-        var mapHaven = valorantMapRepository.findByName("Haven").orElseGet(() -> {
-            var newMap = new ValorantMap();
-            newMap.setName("Haven");
-            return valorantMapRepository.save(newMap);
-        });
+            playerService.save(player);
+            players.add(player);
+        }
 
-        Match match3 = new Match(mapHaven);
-        matchService.save(match3);
+        return players;
+    }
 
-        Team team5 = new Team();
-        team5.setMatch(match3);
-        team5.getPlayers().add(player2);
+    /**
+     * Atribui roles aos jogadores
+     */
+    private void assignPlayerRoles(List<Player> players) {
+        // Primeiro jogador é ADMIN + PLAYER
+        if (!players.isEmpty()) {
+            playerService.addRoles(players.get(0).getId(), Set.of(Roles.ADMIN, Roles.PLAYER));
+        }
 
-        Team team6 = new Team();
-        team6.setMatch(match3);
-        team6.getPlayers().add(player3);
+        // Segundo jogador também pode ser ADMIN para testes
+        if (players.size() > 1) {
+            playerService.addRoles(players.get(1).getId(), Set.of(Roles.ADMIN, Roles.PLAYER));
+        }
 
-        teamService.createTeam(team5);
-        teamService.createTeam(team6);
+        // Resto dos jogadores são apenas PLAYER
+        for (int i = 2; i < players.size(); i++) {
+            playerService.addRoles(players.get(i).getId(), Set.of(Roles.PLAYER));
+        }
+    }
 
-        match3.setWinner(team5);
-        match3.setLoser(team6);
-        matchService.save(match3);
+    /**
+     * Cria partidas detalhadas com performances realistas
+     */
+    private void createDetailedMatches(List<Player> players, List<ValorantMap> maps) {
+        // Criar 8 partidas variadas para ter dados suficientes para ranking
+        for (int matchIndex = 0; matchIndex < 8; matchIndex++) {
+            ValorantMap selectedMap = maps.get(random.nextInt(maps.size()));
+
+            System.out.println("🎮 Criando partida " + (matchIndex + 1) + "/8 no mapa: " + selectedMap.getName());
+
+            // Criar partida
+            Match match = new Match(selectedMap);
+            matchService.save(match);
+
+            // Dividir jogadores em 2 times (2-5 jogadores por time, sem repetição)
+            List<Player> shuffledPlayers = new ArrayList<>(players);
+            java.util.Collections.shuffle(shuffledPlayers);
+
+            int team1Size = Math.min(2 + random.nextInt(4), players.size() / 2); // 2-5 jogadores, máximo metade dos
+                                                                                 // jogadores
+            int maxTeam2Size = Math.min(5, players.size() - team1Size);
+            int team2Size = Math.max(2, Math.min(2 + random.nextInt(4), maxTeam2Size));
+
+            // Garantir que não há sobreposição entre times
+            List<Player> team1Players = shuffledPlayers.subList(0, team1Size);
+            List<Player> team2Players = shuffledPlayers.subList(team1Size, team1Size + team2Size);
+
+            Team team1 = createTeamWithPlayers(match, team1Players);
+            Team team2 = createTeamWithPlayers(match, team2Players);
+
+            // Determinar vencedor aleatoriamente
+            boolean team1Wins = random.nextBoolean();
+            Team winner = team1Wins ? team1 : team2;
+            Team loser = team1Wins ? team2 : team1;
+
+            match.setWinner(winner);
+            match.setLoser(loser);
+            matchService.save(match);
+
+            System.out.println("  📊 Time 1: " + team1Players.size() + " jogadores");
+            System.out.println("  📊 Time 2: " + team2Players.size() + " jogadores");
+            System.out.println("  🏆 Vencedor: Time " + (team1Wins ? "1" : "2"));
+
+            // Criar performances detalhadas para cada jogador
+            createPlayerPerformances(team1, match, team1Wins);
+            createPlayerPerformances(team2, match, !team1Wins);
+        }
+    }
+
+    /**
+     * Cria um time com jogadores específicos
+     */
+    private Team createTeamWithPlayers(Match match, List<Player> teamPlayers) {
+        Team team = new Team();
+        team.setMatch(match);
+
+        for (Player player : teamPlayers) {
+            team.getPlayers().add(player);
+        }
+
+        return teamService.createTeam(team);
+    }
+
+    /**
+     * Cria performances realistas para jogadores de um time
+     */
+    private void createPlayerPerformances(Team team, Match match, boolean isWinnerTeam) {
+        for (Player player : team.getPlayers()) {
+            // Verificar se já existe performance para este jogador nesta partida
+            try {
+                playerPerformanceService.findByPlayerAndMatch(player.getId(), match.getId());
+                System.out.println("⚠️  Performance já existe para jogador " + player.getUsername() + " na partida "
+                        + match.getId());
+                continue; // Pular este jogador se já tem performance
+            } catch (jakarta.persistence.EntityNotFoundException e) {
+                // Performance não existe, criar nova
+            }
+
+            PlayerPerformance performance = new PlayerPerformance(player, team, match);
+
+            // Estatísticas baseadas em dados reais do Valorant
+            if (isWinnerTeam) {
+                // Time vencedor tem estatísticas melhores
+                performance.setKills(15 + random.nextInt(15)); // 15-29 kills
+                performance.setDeaths(8 + random.nextInt(10)); // 8-17 deaths
+                performance.setAssists(3 + random.nextInt(8)); // 3-10 assists
+            } else {
+                // Time perdedor tem estatísticas um pouco piores
+                performance.setKills(8 + random.nextInt(15)); // 8-22 kills
+                performance.setDeaths(10 + random.nextInt(12)); // 10-21 deaths
+                performance.setAssists(2 + random.nextInt(7)); // 2-8 assists
+            }
+
+            // Chance pequena de ace (1 em 20)
+            if (random.nextInt(20) == 0) {
+                performance.setAce(1);
+            }
+
+            // Agente aleatório
+            String selectedAgent = VALORANT_AGENTS.get(random.nextInt(VALORANT_AGENTS.size()));
+            performance.setAgent(selectedAgent);
+
+            try {
+                playerPerformanceService.save(performance);
+                System.out.println("✅ Performance criada para " + player.getUsername() + " com " + selectedAgent);
+            } catch (Exception e) {
+                System.out.println("❌ Erro ao criar performance para " + player.getUsername() + ": " + e.getMessage());
+            }
+        }
     }
 }
