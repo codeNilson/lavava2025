@@ -5,10 +5,12 @@ services:
     build: .
     container_name: lavava_app
     restart: always
+    env_file:
+      - .env
     environment:
-    - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-    - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-    - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    - SPRING_PROFILES_ACTIVE=prod
+    ports:
+      - "8080:8080"
     depends_on:
       - db
     networks:
