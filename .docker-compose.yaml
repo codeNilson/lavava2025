@@ -6,9 +6,9 @@ services:
     container_name: lavava_app
     restart: always
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/lavava-db
-      - SPRING_DATASOURCE_USERNAME=meuuser
-      - SPRING_DATASOURCE_PASSWORD=senhasecreta
+    - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+    - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+    - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     depends_on:
       - db
     networks:
@@ -19,9 +19,9 @@ services:
     container_name: postgres_db
     restart: always
     environment:
-      - POSTGRES_DB=lavava-db
-      - POSTGRES_USER=meuuser
-      - POSTGRES_PASSWORD=senhasecreta
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
