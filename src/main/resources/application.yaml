@@ -2,7 +2,7 @@ spring:
   application:
     name: lavava2025
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 
 # Configuração personalizada dos mapas do Valorant
 valorant:
