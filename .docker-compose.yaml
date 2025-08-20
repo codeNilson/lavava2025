@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: lavava_app
+    restart: always
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/lavava-db
+      - SPRING_DATASOURCE_USERNAME=meuuser
+      - SPRING_DATASOURCE_PASSWORD=senhasecreta
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    environment:
+      - POSTGRES_DB=lavava-db
+      - POSTGRES_USER=meuuser
+      - POSTGRES_PASSWORD=senhasecreta
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  nginx:
+    image: staticfloat/nginx-certbot
+    container_name: nginx_certbot
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAINS=lavava.com.br,www.lavava.com.br
+      - EMAIL=fcodenilson@gmail.com
+      - STAGE=false
+    volumes:
+      - certs:/etc/letsencrypt
+    depends_on:
+      - app
+    networks:
+      - app_network
+
+volumes:
+  db_data:
+  certs:
+
+networks:
+  app_network:
