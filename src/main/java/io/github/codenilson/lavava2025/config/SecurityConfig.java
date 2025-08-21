@@ -28,7 +28,6 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Configuration
 @EnableMethodSecurity
-@Profile({ "dev", "test" })
 public class SecurityConfig {
 
     @Bean
