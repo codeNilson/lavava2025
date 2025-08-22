@@ -38,7 +38,7 @@ services:
       - "443:443"
     environment:
       - DOMAINS=lavava.com.br,www.lavava.com.br
-      - EMAIL=fcodenilson@gmail.com
+      - CERTBOT_EMAIL=fcodenilson@gmail.com
       - STAGE=false
     volumes:
       - certs:/etc/letsencrypt
