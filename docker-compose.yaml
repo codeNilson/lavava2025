@@ -46,6 +46,7 @@ services:
       - app
     networks:
       - app_network
+    command: ["sleep", "3600"]
 
 volumes:
   db_data:
