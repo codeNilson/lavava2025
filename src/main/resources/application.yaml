@@ -4,6 +4,11 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
+server:
+  port: 8000
+  servlet:
+    context-path: "/api/v1"
+
 # Configuração personalizada dos mapas do Valorant
 valorant:
   maps:
