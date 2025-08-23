@@ -109,32 +109,32 @@ The application provides comprehensive interactive API documentation through Swa
 
 - **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 - **OpenAPI JSON**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
-- **Base API Path**: `/api/v1`
+- **Base API Path**: `/v1`
 
 ### 📚 Available Endpoints
 
-#### 🏆 Player Rankings (`/api/v1/rankings`)
+#### 🏆 Player Rankings (`/v1/rankings`)
 - `GET /leaderboard` - Global player leaderboard with pagination
 - `GET /player/{playerId}` - Individual player ranking details
 - `GET /season/{seasonId}` - Seasonal rankings
 - `POST /update` - Update player rankings (Admin only)
 - `DELETE /{rankingId}` - Remove ranking entry (Admin only)
 
-#### 👤 Player Management (`/api/v1/players`)  
+#### 👤 Player Management (`/v1/players`)  
 - `GET /` - List all players with pagination and search
 - `GET /{id}` - Get player details
 - `POST /` - Create new player
 - `PUT /{id}` - Update player information
 - `DELETE /{id}` - Remove player (Admin only)
 
-#### 👥 Team Management (`/api/v1/teams`)
+#### 👥 Team Management (`/v1/teams`)
 - `GET /` - List all teams with pagination
 - `GET /{id}` - Get team details
 - `POST /` - Create new team
 - `PUT /{id}` - Update team information
 - `DELETE /{id}` - Remove team (Admin only)
 
-#### 🎮 Match Management (`/api/v1/matches`)
+#### 🎮 Match Management (`/v1/matches`)
 - `GET /` - List matches with filters
 - `GET /{id}` - Get match details
 - `POST /` - Create new match
