@@ -5,7 +5,7 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
 server:
-  port: 8000
+  port: 8080
   servlet:
     context-path: "/v1"
 
