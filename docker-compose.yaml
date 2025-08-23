@@ -4,9 +4,7 @@ services:
   app:
     build: .
     container_name: lavava_app
-    restart: always
-    ports:
-      - "8080:8080"
+    restart: unless-stopped
     env_file:
       - .env
     environment:
@@ -19,7 +17,7 @@ services:
   db:
     image: postgres:16
     container_name: postgres_db
-    restart: always
+    restart: unless-stopped
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -30,18 +28,16 @@ services:
       - app_network
 
   nginx:
-    image: staticfloat/nginx-certbot
-    container_name: nginx_certbot
-    restart: always
+    image: jonasal/nginx-certbot:latest
     ports:
       - "80:80"
       - "443:443"
-    environment:
-      - DOMAINS=lavava.com.br,www.lavava.com.br
-      - CERTBOT_EMAIL=fcodenilson@gmail.com
-      - STAGE=false
     volumes:
-      - certs:/etc/letsencrypt
+      - nginx_secrets:/etc/letsencrypt
+      - ./user_conf.d:/etc/nginx/user_conf.d:ro
+    environment:
+      - CERTBOT_EMAIL=fcodenilson@gmail.com
+      - DHPARAM_SIZE=4096
     depends_on:
       - app
     networks:
@@ -50,6 +46,7 @@ services:
 volumes:
   db_data:
   certs:
+  nginx_secrets:
 
 networks:
   app_network:
