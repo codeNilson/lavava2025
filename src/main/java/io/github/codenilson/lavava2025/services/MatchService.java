@@ -93,8 +93,8 @@ public class MatchService {
             }
 
             // Add bonus points for Ace if available
-            if (match.getAce() != null) {
-                playerRankingService.addBonusPoints(match.getAce().getPlayer().getId(), 1); // 1 bonus point for Ace
+            if (match.getLoserMvp() != null) {
+                playerRankingService.addBonusPoints(match.getLoserMvp().getPlayer().getId(), 1); // 1 bonus point for Ace
             }
         }
     }

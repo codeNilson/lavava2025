@@ -45,7 +45,7 @@ public class MatchResponseDTO {
         Team winner = match.getWinner();
         Team loser = match.getLoser();
         PlayerPerformance mvp = match.getMvp();
-        PlayerPerformance ace = match.getAce();
+        PlayerPerformance ace = match.getLoserMvp();
 
     ValorantMap map = match.getMap();
 

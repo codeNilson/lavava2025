@@ -68,7 +68,7 @@ public class MatchMapper {
     if (matchUpdateDto.getAceId() != null) {
       Player player = playerService.findById(matchUpdateDto.getAceId());
       PlayerPerformance ace = playerPerformanceService.findByPlayerAndMatch(player.getId(), savedMatch.getId());
-      savedMatch.setAce(ace);
+      savedMatch.setLoserMvp(ace);
     }
 
     if (matchUpdateDto.getLoserMvpId() != null) {
