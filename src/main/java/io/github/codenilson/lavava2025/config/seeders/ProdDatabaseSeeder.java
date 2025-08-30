@@ -18,10 +18,10 @@ import lombok.RequiredArgsConstructor;
 public class ProdDatabaseSeeder implements CommandLineRunner {
 
     private final PlayerService playerService;
-    
+
     @Value("${ADMIN_USERNAME}")
     private String adminUsername;
-    
+
     @Value("${ADMIN_PASSWORD}")
     private String adminPassword;
 
@@ -34,11 +34,11 @@ public class ProdDatabaseSeeder implements CommandLineRunner {
         if (!playerService.existsByUsername(adminUsername)) {
             playerService.save(player);
             System.out.println("Admin player created with username: " + adminUsername);
+            playerService.addRoles(player.getId(), Set.of(Roles.ADMIN));
         } else {
             System.out.println("Admin player already exists with username: " + adminUsername);
         }
 
-        playerService.addRoles(player.getId(), Set.of(Roles.ADMIN));
     }
 
 }
