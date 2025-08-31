@@ -143,7 +143,7 @@ public class TeamServiceTest {
         // Given
         var team1 = new Team();
         var team2 = new Team();
-        when(teamRepository.findAll()).thenReturn(List.of(team1, team2));
+        when(teamRepository.findAllWithPlayers()).thenReturn(List.of(team1, team2));
 
         // When
         List<Team> teams = teamService.findAllTeams();
@@ -153,7 +153,7 @@ public class TeamServiceTest {
         assertEquals(2, teams.size());
         assertEquals(team1.getId(), teams.get(0).getId());
         assertEquals(team2.getId(), teams.get(1).getId());
-        verify(teamRepository).findAll();
+        verify(teamRepository).findAllWithPlayers();
     }
 
     @Test
@@ -162,7 +162,7 @@ public class TeamServiceTest {
         UUID teamId = UUID.randomUUID();
         var team = new Team();
         team.setId(teamId);
-        when(teamRepository.findById(teamId)).thenReturn(Optional.of(team));
+        when(teamRepository.findByIdWithPlayers(teamId)).thenReturn(Optional.of(team));
 
         // When
         Team foundTeam = teamService.findById(teamId);
@@ -170,14 +170,14 @@ public class TeamServiceTest {
         // Then
         assertNotNull(foundTeam);
         assertEquals(teamId, foundTeam.getId());
-        verify(teamRepository).findById(teamId);
+        verify(teamRepository).findByIdWithPlayers(teamId);
     }
 
     @Test
     public void findByIdShouldThrowExceptionWhenTeamNotFound() {
         // Given
         UUID teamId = UUID.randomUUID();
-        when(teamRepository.findById(teamId)).thenReturn(Optional.empty());
+        when(teamRepository.findByIdWithPlayers(teamId)).thenReturn(Optional.empty());
 
         // When & Then
         try {
@@ -185,7 +185,7 @@ public class TeamServiceTest {
         } catch (Exception e) {
             assertEquals("Team not found with id: " + teamId, e.getMessage());
         }
-        verify(teamRepository).findById(teamId);
+        verify(teamRepository).findByIdWithPlayers(teamId);
     }
 
     @Test
@@ -202,7 +202,7 @@ public class TeamServiceTest {
         players.add(player2);
         team.setPlayers(new HashSet<>(players));
 
-        when(teamRepository.findById(teamId)).thenReturn(Optional.of(team));
+        when(teamRepository.findByIdWithPlayers(teamId)).thenReturn(Optional.of(team));
         when(playerService.findPlayersByIds(playersIds)).thenReturn(players);
         when(teamRepository.save(any(Team.class))).thenReturn(team);
 
@@ -213,7 +213,7 @@ public class TeamServiceTest {
         assertNotNull(response);
         assertEquals(teamId, response.getId());
         assertEquals(2, response.getPlayers().size());
-        verify(teamRepository).findById(teamId);
+        verify(teamRepository).findByIdWithPlayers(teamId);
         verify(playerService).findPlayersByIds(playersIds);
         verify(teamRepository).save(team);
     }
@@ -232,7 +232,7 @@ public class TeamServiceTest {
         players.add(player2);
         team.setPlayers(new HashSet<>(players));
 
-        when(teamRepository.findById(teamId)).thenReturn(Optional.of(team));
+        when(teamRepository.findByIdWithPlayers(teamId)).thenReturn(Optional.of(team));
         when(playerService.findPlayersByIds(playersIds)).thenReturn(players);
         when(teamRepository.save(any(Team.class))).thenReturn(team);
 
@@ -243,7 +243,7 @@ public class TeamServiceTest {
         assertNotNull(response);
         assertEquals(teamId, response.getId());
         assertEquals(0, response.getPlayers().size());
-        verify(teamRepository).findById(teamId);
+        verify(teamRepository).findByIdWithPlayers(teamId);
         verify(playerService).findPlayersByIds(playersIds);
         verify(teamRepository).save(team);
     }

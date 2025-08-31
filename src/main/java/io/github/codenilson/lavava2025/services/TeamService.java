@@ -57,23 +57,25 @@ public class TeamService {
     }
 
     /**
-     * Finds all teams in the system.
+     * Finds all teams in the system with players loaded (resolves lazy loading).
      * 
-     * @return list of all teams
+     * @return list of all teams with players
      */
+    @Transactional(readOnly = true)
     public List<Team> findAllTeams() {
-        return teamRepository.findAll();
+        return teamRepository.findAllWithPlayers();
     }
 
     /**
-     * Finds a team by ID.
+     * Finds a team by ID with players loaded (resolves lazy loading).
      * 
      * @param id team's ID
-     * @return the found team
+     * @return the found team with players
      * @throws EntityNotFoundException if the team is not found
      */
+    @Transactional(readOnly = true)
     public Team findById(UUID id) {
-        return teamRepository.findById(id)
+        return teamRepository.findByIdWithPlayers(id)
                 .orElseThrow(() -> new EntityNotFoundException("Team not found with id: " + id));
     }
 
