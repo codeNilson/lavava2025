@@ -17,7 +17,7 @@ import lombok.Data;
 public class PlayerCreateDTO {
 
     @NotBlank(message = "Username is required")
-    @Size(max = 15, min = 4, message = "Username must be between 4 and 15 characters")
+    @Size(max = 30, min = 4, message = "Username must be between 4 and 30 characters")
     private String username;
 
     private Long discordId;
