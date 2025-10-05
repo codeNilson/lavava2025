@@ -193,7 +193,7 @@ public class PlayerControllerTest {
                                 .andExpect(status().isBadRequest())
                                 .andExpect(jsonPath("$.error").value("Validation Error"))
                                 .andExpect(jsonPath("$.errors.username")
-                                                .value("Username must be between 4 and 15 characters"))
+                                                .value("Username must be between 4 and 30 characters"))
                                 .andExpect(jsonPath("$.timestamp").exists())
                                 .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()));
         }

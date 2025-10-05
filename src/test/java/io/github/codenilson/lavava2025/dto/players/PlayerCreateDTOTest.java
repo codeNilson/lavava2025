@@ -52,19 +52,19 @@ public class PlayerCreateDTOTest {
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("username")));
         assertTrue(violations.stream()
-                .anyMatch(v -> v.getMessage().contains("Username must be between 4 and 15 characters")));
+                .anyMatch(v -> v.getMessage().contains("Username must be between 4 and 30 characters")));
     }
 
     @Test
     void testUsernameTooLong() {
         PlayerCreateDTO dto = new PlayerCreateDTO();
-        dto.setUsername("thisusernameistoolong");
+        dto.setUsername("thisusernameistoolong111111111111111111");
         dto.setPassword("Valid@123");
 
         Set<ConstraintViolation<PlayerCreateDTO>> violations = validator.validate(dto);
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("username")));
         assertTrue(violations.stream()
-                .anyMatch(v -> v.getMessage().contains("Username must be between 4 and 15 characters")));
+                .anyMatch(v -> v.getMessage().contains("Username must be between 4 and 30 characters")));
     }
 
     @Test
